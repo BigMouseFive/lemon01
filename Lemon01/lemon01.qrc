@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/Lemon01">
+        <file alias="account">account.png</file>
+        <file alias="down">down.png</file>
+        <file alias="password">password.png</file>
+        <file alias="percent">percent.png</file>
+        <file alias="running">run.png</file>
+        <file alias="run">running.png</file>
+        <file alias="shop">shop.png</file>
+        <file>lemon.png</file>
+        <file>black.qss</file>
+    </qresource>
+</RCC>
