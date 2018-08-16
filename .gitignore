@@ -1,0 +1,14 @@
+*.obj
+*.out
+*.sdf
+*.APS
+Lemon01/Debug
+Lemon01/Release
+Lemon01/x64
+x64/Debug
+ipch
+*.suo
+*.user
+*.opensdf
+GeneratedFiles
+*.exe
