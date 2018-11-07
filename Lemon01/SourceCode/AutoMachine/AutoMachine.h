@@ -10,7 +10,7 @@ Q_DECLARE_METATYPE(std::string)
 class AutoMachine : public QThread{
 	Q_OBJECT
 public:
-	AutoMachine(std::string name, std::string password, float percent, float lowwer, std::string loginUrl = LOGIN_URL, QObject* parent = nullptr);
+	AutoMachine(std::string name, std::string password, float percent, float lowwer, int times, float upload, int minute, int mode, std::string loginUrl = LOGIN_URL, QObject* parent = nullptr);
 	~AutoMachine();
 	void killProcess();
 signals:
@@ -27,5 +27,9 @@ public:
 	std::string _loginUrl;
 	float _percent;
 	float _lowwer;
+	float _upload;
+	int _times;
+	int _mintue;
+	int _mode;
 	PROCESS_INFORMATION pinfo;
 };

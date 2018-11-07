@@ -18,21 +18,6 @@
 using namespace std;
 string getHostMacAddress()
 {
-	//QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
-	//int nCnt = nets.count();
-	//QString strMacAddr = "";
-	//for (int i = 0; i < nCnt; i++)
-	//{
-	//	// 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
-	//	if (nets[i].flags().testFlag(QNetworkInterface::IsUp) && 
-	//		nets[i].flags().testFlag(QNetworkInterface::IsRunning) && 
-	//		!nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
-	//	{
-	//		strMacAddr = nets[i].hardwareAddress();
-	//		break;
-	//	}
-	//}
-	//return strMacAddr;
 	std::vector<string> vtMacAddress;
 	CTemporary temporary;
 	temporary.GetMacAddress(vtMacAddress);
@@ -416,6 +401,10 @@ void Lemon01::setEmpty(){
 	ui.passwordline->setText("");
 	ui.lowwerspin->setValue(0);
 	ui.percentspin->setValue(10);
+	ui.times->setValue(5);
+	ui.upload->setValue(15);
+	ui.time->setValue(0);
+	ui.mode->setCurrentIndex(0);
 }
 void Lemon01::initList(){
 	QStringList list;
@@ -528,6 +517,10 @@ void Lemon01::SlotListItemClicked(QListWidgetItem *item){
 		ui.passwordline->setText(QString::fromStdString(it->second->password));
 		ui.percentspin->setValue(int(it->second->percent * 100));
 		ui.lowwerspin->setValue(it->second->lowwer);
+		ui.times->setValue(it->second->times);
+		ui.upload->setValue(int(it->second->upload * 100));
+		ui.time->setValue(it->second->minute);
+		ui.mode->setCurrentIndex(it->second->mode);
 	}
 	else{
 		setEmpty();
@@ -548,7 +541,17 @@ void Lemon01::SlotAutoFinish(std::string name){
 		auto iter = threadMap.find(name);
 		if (iter != threadMap.end()){
 			AutoMachine* tmp = iter->second;
-			writeXml(tmp->_name, tmp->_password, tmp->_percent, tmp->_lowwer);
+			Info* info = it->second;
+			info->name = name;
+			info->password = tmp->_password;
+			info->percent = tmp->_percent;
+			info->lowwer = tmp->_lowwer;
+			info->times = tmp->_times;
+			info->upload = tmp->_upload;
+			info->minute = tmp->_mintue;
+			info->mode = tmp->_mode;
+			writeXml(tmp->_name, tmp->_password, tmp->_percent, tmp->_lowwer
+				, tmp->_times, tmp->_upload, tmp->_mintue, tmp->_mode);
 		}
 	}
 	else{
@@ -559,7 +562,18 @@ void Lemon01::SlotAutoFinish(std::string name){
 		auto iter = threadMap.find(name);
 		if (iter != threadMap.end()){
 			AutoMachine* tmp = iter->second;
-			writeXml(tmp->_name, tmp->_password, tmp->_percent, tmp->_lowwer);
+			Info* info = new Info;
+			info->name = name;
+			info->password = tmp->_password;
+			info->percent = tmp->_percent;
+			info->lowwer = tmp->_lowwer;
+			info->times = tmp->_times;
+			info->upload = tmp->_upload;
+			info->minute = tmp->_mintue;
+			info->mode = tmp->_mode;
+			infoMap[name] = info;
+			writeXml(tmp->_name, tmp->_password, tmp->_percent, tmp->_lowwer
+				, tmp->_times, tmp->_upload, tmp->_mintue, tmp->_mode);
 		}
 	}
 	ui.btnNewMachine->setDisabled(true);
@@ -612,9 +626,13 @@ void Lemon01::SlotNewAutoMachine(){
 	if (password.empty()) return;
 	float percent = float(ui.percentspin->value()) / 100;
 	float lowwer = ui.lowwerspin->value();
+	int times = ui.times->value();
+	float upload = float(ui.upload->value()) / 100;
+	int mintue = ui.time->value();
+	int mode = ui.mode->currentIndex();
 	auto iter = threadMap.find(name);
 	if (iter == threadMap.end()){
-		AutoMachine* thread = new AutoMachine(name, password, percent, lowwer);
+		AutoMachine* thread = new AutoMachine(name, password, percent, lowwer, times, upload, mintue, mode);
 		threadMap[name] = thread;
 		connect(thread, SIGNAL(success(std::string)), this, SLOT(SlotAutoFinish(std::string)));
 		connect(thread, SIGNAL(failed(std::string)), this, SLOT(SlotAutoFailed(std::string)));
@@ -655,12 +673,11 @@ void Lemon01::readXml()
 						info->name = subElement.attribute("name").toStdString();
 						info->password = subElement.attribute("password").toStdString();
 						info->percent = subElement.attribute("percent").toFloat();
-						char buf[10];
-						sprintf(buf, "%.2f", info->percent);
-						sscanf(buf, "%f", &info->percent);
 						info->lowwer = subElement.attribute("lowwer").toFloat();
-						sprintf(buf, "%.2f", info->lowwer);
-						sscanf(buf, "%f", &info->lowwer);
+						info->times = subElement.attribute("times").toInt();
+						info->upload = subElement.attribute("upload").toFloat();
+						info->minute = subElement.attribute("minute").toInt();
+						info->mode = subElement.attribute("mode").toInt();
 						infoMap[info->name] = info;
 					}
 					subNode = subNode.nextSibling();
@@ -684,14 +701,10 @@ void Lemon01::createXml(){
 	doc.save(out, 4);
 	file.close();
 }
-void Lemon01::writeXml(std::string name, std::string password, float percent, float lowwer)
+void Lemon01::writeXml(std::string name, std::string password, 
+	float percent, float lowwer, int times, float upload, int minute, int mode)
 {
-	Info* info = new Info;
-	info->name = name;
-	info->password = password;
-	info->percent = percent;
-	info->lowwer = lowwer;
-	infoMap[info->name] = info;
+	
 	QString filePath = FILE_PATH;
 	QFile file;
 	if (!file.exists(filePath)){
@@ -713,7 +726,11 @@ void Lemon01::writeXml(std::string name, std::string password, float percent, fl
 				elem.setAttribute("password", QString::fromStdString(password));
 				elem.setAttribute("percent", QString("%1").arg(percent));
 				elem.setAttribute("lowwer", QString("%1").arg(lowwer));
-				QDomNodeList list = dom.childNodes();
+				elem.setAttribute("times", QString("%1").arg(times));
+				elem.setAttribute("upload", QString("%1").arg(upload));
+				elem.setAttribute("minute", QString("%1").arg(minute));
+				elem.setAttribute("mode", QString("%1").arg(mode));
+				QDomNodeList list = rootDom.childNodes();
 				int i = 0;
 				for (; i < list.size(); ++i){
 					if (list.at(i).toElement().attribute("name") == QString::fromStdString(name)){
@@ -735,7 +752,6 @@ void Lemon01::writeXml(std::string name, std::string password, float percent, fl
 		file.close(); 
 	}
 }
-
 void Lemon01::delXml(std::string name)
 {
 	QString filePath = FILE_PATH;

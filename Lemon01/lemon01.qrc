@@ -9,5 +9,9 @@
         <file alias="shop">shop.png</file>
         <file>lemon.png</file>
         <file>black.qss</file>
+        <file alias="mode">mode.png</file>
+        <file alias="time">time.png</file>
+        <file alias="times">changetimes.png</file>
+        <file alias="upload">upload.png</file>
     </qresource>
 </RCC>

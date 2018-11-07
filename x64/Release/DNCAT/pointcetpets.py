@@ -1,10 +1,9 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 import re
 import time
 import os
@@ -47,14 +46,14 @@ def NewInventory(chrome, percent, lowwer, currentDir, account, dictean, maxtimes
     mkdir(path)
     filepath = path + "\\UpdateRecord.txt"
     try:
-        record = open(filepath, "a")
+        record = open(filepath, "a", encoding='utf-8')
     except:
-        record = open(filepath, "x")
+        record = open(filepath, "x", encoding='utf-8')
     filepath = path + "\\Attention.txt"
     try:
-        attention = open(filepath, "a")
+        attention = open(filepath, "a", encoding='utf-8')
     except:
-        attention = open(filepath, "x")
+        attention = open(filepath, "x", encoding='utf-8')
     loginHandler = chrome.current_window_handle
     handlers = chrome.window_handles
     unknownHandler = ""
@@ -64,21 +63,11 @@ def NewInventory(chrome, percent, lowwer, currentDir, account, dictean, maxtimes
             break
     readyUri = "https://sell.souq.com/inventory/inventory-management?tab=live"
     js = 'window.open("' + readyUri + '")'
-    time.sleep(2)
     chrome.execute_script(js)
     handlers = chrome.window_handles
     for handler in handlers:
         if handler != loginHandler and handler != unknownHandler:
             inventoryHandler = handler
-            break
-    serachUri = "https://uae.souq.com/ae-en/"
-    js = 'window.open("' + serachUri + '")'
-    time.sleep(2)
-    chrome.execute_script(js)
-    handlers = chrome.window_handles
-    for handler in handlers:
-        if handler != loginHandler and handler != unknownHandler and handler != inventoryHandler:
-            searchHandler = handler
             break
     while 1:
         try:
@@ -88,8 +77,9 @@ def NewInventory(chrome, percent, lowwer, currentDir, account, dictean, maxtimes
             print("循环处理每一页")
             index = 0
             pageCount = 1  # 起始页为第一页
-            OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer, searchHandler, dictean, maxtimes, maxtprice, minute)
+            OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer, dictean, maxtimes, maxtprice, minute)
         except:
+            time.sleep(minute*60)
             continue
 
 
@@ -107,60 +97,16 @@ def checkPage(driver):
     return driver.execute_script(checkPageFinishScript)
 
 
-def GetPricesByEan(chrome, strean, currentPrice):
-    global cssText
-    time.sleep(0.5)
-    for t in range(5):
-        try:
-            cssText = "#search_value"
-            WebDriverWait(chrome, 40, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssText)))
-        except:
-            if t <= 1:
-                continue
-            else:
-                raise
-    elemInput = chrome.find_element_by_css_selector(cssText)
-    elemInput.send_keys(strean)
-    cssText = "#searchButton"
-    elemSearch = chrome.find_element_by_css_selector(cssText)
-    elemSearch.click()
-    cssText = "a.show-for-medium.bold-text"
-    WebDriverWait(chrome, 40, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssText)))
-    elemOffer = chrome.find_element_by_css_selector(cssText)
-    chrome.execute_script("arguments[0].click()", elemOffer)
-    cssText = "div#condition-all div.field.price-field"
-    WebDriverWait(chrome, 40, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssText)))
-    elems = chrome.find_elements_by_css_selector(cssText)
-    leastPrice = 999999
-    secondPrice = 999999
-    count = 0
-    for elem in elems:
-        ret = re.findall(r"\d+\.?\d*", elem.text)
-        price = round(float(ret[0]), 2)
-        if price < leastPrice:
-            leastPrice = price
-        elif price == leastPrice:
-            count = count + 1
-        elif leastPrice < price < secondPrice:
-            secondPrice = price
-    if currentPrice < leastPrice:
-        return 0
-    if currentPrice == leastPrice:
-        if count == 0:
-            return secondPrice
-        elif count > 0:
-            return leastPrice
-    else:
-        return leastPrice
-
-
-def OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer, searchHandler, dictean, maxtimes, maxtprice, minute):
+def OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer, dictean, maxtimes, maxtprice, minute):
     global elemLeastDiv, elemSelf, elemLeast, elem
-    inventoryHandler = chrome.current_window_handle
+    xpathText = '//*[@id="liveId"]/div[1]/div[1]/div/ng-include/div/div/div[3]/select/option[5]'
+    WebDriverWait(chrome, 40, 0.5).until(EC.presence_of_element_located((By.XPATH, xpathText)))
+    chrome.find_element_by_xpath(xpathText).click()
     while 1:
         # 处理当前这一页
         showPage = "处理第" + str(pageCount) + "页"
         print(showPage)
+        time.sleep(1)
         WebDriverWait(chrome, 60, 0.5).until(checkPage)
         cssText = "table#table-inventory tbody>tr"
         elems = chrome.find_elements_by_css_selector(cssText)
@@ -169,85 +115,55 @@ def OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer,
         for i in range(elemsize):
             rowCount = rowCount + 1
             elemIter = elems[i]
-            chrome.execute_script("arguments[0].click()", elemIter)
-            time.sleep(0.2)
-            cssText = '//*[@id="offerListitng"]/div[2]/div/div[1]/div[1]/span'
-            try:
-                WebDriverWait(chrome, 40, 0.5).until(EC.presence_of_element_located((By.XPATH, cssText)))
-            except TimeoutException:
-                continue
-            elemean = chrome.find_element_by_xpath(cssText)
-            strean = elemean.text
-            strean = strean[5:]
-            cssText = '//*[@id="offerListitng"]/div[2]/div/div[2]/div/a'
-            elemclose = chrome.find_element_by_xpath(cssText)
-            try:
-                WebDriverWait(chrome, 40, 0.1).until(EC.presence_of_element_located((By.XPATH, cssText)))
-            except TimeoutException:
-                continue
-            chrome.execute_script("arguments[0].click()", elemclose)
-            time.sleep(0.2)
-            cssText = "table#table-inventory tbody>tr"
-            WebDriverWait(chrome, 40, 0.1).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssText)))
-            elems = chrome.find_elements_by_css_selector(cssText)
-            elemIter = elems[i]
             elem = elemIter.find_element_by_css_selector("td:nth-child(4)")
             elemSelf = elem.find_element_by_css_selector("div:first-child span")
             elemLeastDiv = elem.find_element_by_css_selector("div:first-child span+div")
             elemLeast = elem.find_element_by_css_selector("div:first-child span+div i")
+            elemProductName = elemIter.find_element_by_css_selector("td:nth-child(3) span")
+            strean = elemProductName.text
             try:
                 currentPrice = float(elemSelf.text)
             except:
                 continue
+            #
+            #
+            # 获取最低价格
             if not elemLeastDiv.is_displayed():
-                chrome.switch_to_window(searchHandler)
-                try:
-                    leastPrice = round(float(GetPricesByEan(chrome, strean, currentPrice)), 2)
-                except:
-                    chrome.switch_to_window(inventoryHandler)
-                    continue
-                chrome.switch_to_window(inventoryHandler)
+                leastPrice = currentPrice
             else:
                 ret = re.findall(r"\d+\.?\d*", elemLeast.get_attribute("popover"))
                 if len(ret) <= 0:
-                    chrome.switch_to_window(searchHandler)
-                    try:
-                        leastPrice = round(float(GetPricesByEan(chrome, strean, currentPrice)), 2)
-                    except:
-                        chrome.switch_to_window(inventoryHandler)
-                        continue
-                    chrome.switch_to_window(inventoryHandler)
+                    continue
                 else:
                     leastPrice = round(float(ret[0]), 2)
-            if leastPrice <= 0:
+            if leastPrice == 0:
                 continue
             subPrice = round(float(currentPrice - leastPrice), 2)
             divPrice = round(float(subPrice / currentPrice), 4)
             leastPrice = round(float(leastPrice - lowwer), 2)
+            # 获取最低价格
+            #
+            #
             if leastPrice == currentPrice or leastPrice == 0 or currentPrice == 999:
                 continue
+            #
             #                        修改次数       原价          总差价比        当前价格
             #   dictean:  {"ean0": {"ts": num, "fp": fprice, "tp": tpric, "lprice": lprice},
-            #
             flag = True
             if strean in dictean:
                 if dictean[strean]["times"] > maxtimes or dictean[strean]["tprice"] > maxtprice:
                     flag = False
-            if divPrice < 0 and -divPrice > float(minute) / 100:
-                flag = False
-            if divPrice > percent:
-                flag = False
-            if flag:
+            if divPrice <= percent and flag:
                 # 修改数据
                 chrome.execute_script("arguments[0].click()", elem)
-                time.sleep(0.1)
                 try:
+                    time.sleep(0.5)
                     elemInput = elem.find_element_by_css_selector("form:first-child sc-dynamic-input input")
                     elemBtn = elem.find_element_by_css_selector("form:first-child sc-dynamic-input+a")
                     elemInput.clear()
                     elemInput.send_keys(str(leastPrice))
+                    time.sleep(0.5)
                     chrome.execute_script("arguments[0].click()", elemBtn)
-                    time.sleep(0.1)
                     if strean in dictean:
                         dictean[strean]["times"] += 1
                         fprice = dictean[strean]["fprice"]
@@ -262,12 +178,12 @@ def OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer,
                     continue
             persentPrice = divPrice * 100
             timestr = time.strftime("%Y-%m-%d %H:%M:%S")
-            out = timestr + "\t" + strean + \
+            out = timestr + \
                   "\t原价:" + str(currentPrice) + \
                   "\t差价比:" + str(round(persentPrice, 2)) + \
                   "%\t修改后:" + str(leastPrice)
-            if not flag :
-                out = timestr + "\t" + strean + \
+            if divPrice >= percent:
+                out = timestr + \
                       "\t原价:" + str(currentPrice) + \
                       "\t差价比:" + str(round(persentPrice, 2)) + \
                       "%\t未修改"
@@ -275,20 +191,24 @@ def OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer,
                 out += "\t修改次数:" + str(dictean[strean]["times"])
                 out += "\t原始价格:" + str(dictean[strean]["fprice"])
                 out += "\t总降价比:" + str(dictean[strean]["tprice"]) + "%"
-
+            # eansize = len(strean)
+            # if eansize > 30:
+            #    eansize = 30
+            # out += "\t" + strean[0:eansize]
             print(out)
-            out = timestr + "\t" + strean + "\t" + \
+
+            out = timestr + "\t" + \
                   str(currentPrice) + "\t" + \
                   str(leastPrice) + "\t" + \
                   str(round(subPrice, 2)) + "\t" + \
                   str(round(persentPrice, 2)) + "%"
-            if not flag:
+            if divPrice >= percent:
                 out = out + "\t未修改"
             if strean in dictean:
                 out += "\t" + str(dictean[strean]["times"])
                 out += "\t" + str(dictean[strean]["fprice"])
                 out += "\t" + str(dictean[strean]["tprice"])
-            out = out + "\r\n"
+            out += "\t" + strean + "\r\n"
             if divPrice >= percent:
                 attention.write(out)
                 attention.flush()
@@ -313,16 +233,13 @@ def OperateProduct(chrome, record, attention, index, pageCount, percent, lowwer,
             index = 1 - index
         if index == 0:
             chrome.execute_script("arguments[0].click()", elem0)
-            time.sleep(0.1)
             pageCount = pageCount - 1
         else:
             chrome.execute_script("arguments[0].click()", elem1)
-            time.sleep(0.1)
             pageCount = pageCount + 1
-        # time.sleep(minute * 60)
 
 
-def skr(account, password, currentDir, percent0=0.01, lowwer0=0, maxtimes=20, maxtprice0=0.3, minute=10):
+def skr(account, password, currentDir, percent0=0.1, lowwer0=0.01, maxtimes=1, maxtprice0=0.3, minute=1):
     if not any(account) or not any(password):
         exit(0)
     percent = round(float(percent0), 2)
@@ -334,8 +251,8 @@ def skr(account, password, currentDir, percent0=0.01, lowwer0=0, maxtimes=20, ma
     print("降  价\t", lowwer, "AED")
     print("最大降价次数\t", maxtimes, "次")
     print("最大降价百分比\t", maxtprice * 100, "%")
-    print("涨价百分比\t", minute, "%")
-    print("模式1：根据产品EAN，查找所有相同EAN产品的价格，\n\t获取最低价格（除去自己店铺的报价）。")
+    print("切换下一页等待时间\t", minute, "分钟")
+    print("模式2：如果产品价格显示的地方有黄色三角感叹号，\n\t那么最低价格就是黄色三角感叹号中提示的价格。\n\t如果没有显示黄色三角感叹号，那么最低价就是该产品当前的价格。")
     print("----------------------")
     dictean = {}
     while 1:
@@ -366,7 +283,6 @@ def skr(account, password, currentDir, percent0=0.01, lowwer0=0, maxtimes=20, ma
                          maxtprice,
                          minute)
         except:
-            chrome.close()
+            chrome.quit()
             continue
 
-# skr("bestchoice_souq@126.com", "368120ba", "..", )

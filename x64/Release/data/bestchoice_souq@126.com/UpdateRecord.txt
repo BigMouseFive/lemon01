@@ -8,3 +8,154 @@
 1	6	31.19	31.18	0.01	0.03%	Detangling Handle Tangle Shower Tamer Hair Brush Comb Salon Styling Tool
 1	16	59.77	59.76	0.01	0.02%	Hands Free Magnifier With LED 3X Magnifying Glass For Reading
 13	11	207.0	205.79	205.78	1.21	0.58%	14inch Home Digital Photo Frames black with Remote Controller
+2018-08-28 19:26:02	2724339075895	37.17	37.16	0.0	0.0%	1	37.17	0.03
+2018-08-28 19:26:05	2724456545684	20.5	20.49	0.0	0.0%	1	20.5	0.05
+2018-08-28 19:26:09	2724339631992	30.74	30.73	0.0	0.0%	1	30.74	0.03
+2018-08-28 19:26:12	2724331091480	37.98	37.97	0.0	0.0%	1	37.98	0.03
+2018-08-28 19:26:16	2724338235368	14.79	14.78	0.0	0.0%	1	14.79	0.07
+2018-08-28 19:26:20	2724327844892	42.4	42.39	0.0	0.0%	1	42.4	0.02
+2018-08-28 19:26:24	2724446576780	48.88	48.87	0.0	0.0%	1	48.88	0.02
+2018-08-28 19:26:28	2724451243905	94.06	94.05	0.0	0.0%	1	94.06	0.01
+2018-08-29 21:28:40	6.87	6.86	0.0	0.0%	1	6.87	0.15	Helicopter Utility Miniature 3D Metal Model Puzzles 3D Solid Jigsaw Puzzle Toys
+2018-08-29 21:28:41	68.95	68.94	0.0	0.0%	1	68.95	0.01	Pikachu Print 3D Hoodies Hooded Sweatshirt Hoodie Fleece Winter Hoody Casual Outwear Clothes
+2018-08-29 21:28:42	59.96	59.95	0.0	0.0%	1	59.96	0.02	Multi Color Polyester Round Neck T-Shirt For Unisex
+2018-08-29 21:28:42	77.96	77.95	0.0	0.0%	1	77.96	0.01	Women Sport Clothing Demon Hoodie Fashion Long Sleeve Sweatshirt
+2018-08-29 21:28:43	27.96	27.95	0.0	0.0%	1	27.96	0.04	Ladies Long Sleeve Blouse Lace Splicing Chiffon Women Shirt Clothing Sv00161\8 M
+2018-08-29 21:28:44	64.73	64.72	0.0	0.0%	1	64.73	0.02	White Cotton V Neck Hoodie & Sweatshirt For Girls
+2018-08-29 21:28:44	88.9	88.89	0.0	0.0%	1	88.9	0.01	Camouflage Outdoor Sport Hiking Visor Hat UV Protection Face Neck Cover fishing Sun Protect Cap Best Quality
+2018-08-29 21:28:45	103.89	103.88	0.0	0.0%	1	103.89	0.01	Side Bag Saddle Bag Set for Harley Sportster Motorcycle
+2018-08-29 21:28:45	66.86	66.85	0.0	0.0%	1	66.86	0.01	Cellsafe 12x Zoom Telescope Metal Camera Lens Kit Case for Apple iPhone 5
+2018-08-29 21:28:46	49.88	49.87	0.0	0.0%	1	49.88	0.02	12X Zoom Optical Telescope Lens for iPhone 6 Plus / 6S Plus with Screen Protector
+2018-08-29 21:28:47	59.96	59.95	0.0	0.0%	1	59.96	0.02	The Punisher Skull Y back muscle sleeveless gym fitness shirt in Black - Size M
+2018-08-29 21:28:47	38.99	38.98	0.0	0.0%	1	38.99	0.03	Emerald ring for Man Size 18
+2018-08-29 21:28:48	88.96	88.95	0.0	0.0%	1	88.96	0.01	Oulm Mens Analog Wrist Watch Dual Time Zone Leather Band Watch
+2018-08-29 21:28:49	49.92	49.9	0.01	0.02%	1	49.92	0.04	12X Zoom Optical Telescope Lens for Apple iPhone 6 Plus
+2018-08-29 21:28:49	49.95	49.94	0.0	0.0%	1	49.95	0.02	12x Zoom Aluminum Alloy Telephoto Lens w/ Tripod Mount Back Case for iPhone 6/iPhone 6S - Black Silver
+2018-08-29 21:28:50	36.9	36.89	0.0	0.0%	1	36.9	0.03	Portable Pocket Guitar Practice Tool Gadget
+2018-08-29 21:28:51	68.97	68.95	0.01	0.01%	1	68.97	0.03	Huawei Mate 9 Leather case with magnetic cover form DG MING - Brown
+2018-08-29 21:28:52	77.78	77.75	0.02	0.03%	1	77.78	0.04	Multi Color Cotton Round Neck Hoodie & Sweatshirt For Unisex
+2018-08-29 21:28:52	21.93	21.91	0.01	0.05%	1	21.93	0.09	Sunglasses Frames Retro Polarized Glasses Frames for Men and Women
+2018-08-29 21:28:53	6.32	6.3	0.01	0.16%	1	6.32	0.32	Car Mount Magic Sticky Pad Anti Slip Mat Non Slip Dashboard Holder For GPS Nav Coin Phones (Black)
+2018-08-29 21:28:54	38.98	38.95	0.02	0.05%	1	38.98	0.08	Cartoon Pokemon Monster Charizard Plush toys for Boys and Girls (TP1101)
+2018-08-29 21:28:54	38.93	38.9	0.02	0.05%	1	38.93	0.08	Mini Donuts Inflatable Drink Can Holder of three color 3 PCS
+2018-08-29 21:28:55	58.36	58.33	0.02	0.03%	1	58.36	0.05	300 Cards Against Humanity: Green Box
+2018-08-29 21:28:56	49.44	49.42	0.01	0.02%	1	49.44	0.04	Cards Against Humanity - Green Box
+2018-08-29 21:28:56	37.94	37.92	0.01	0.03%	1	37.94	0.05	Deadpool elastic mask headgear[MJ0009]
+2018-08-29 21:28:57	19.5	19.47	0.02	0.1%	1	19.5	0.15	Best Friends Gift Necklaces Set of 2 Forever Love Heart Diamond Pendent Friendship Necklaces Set
+2018-08-29 21:28:57	109.7	109.68	0.01	0.01%	1	109.7	0.02	3D Printing Pen Crafting Drawing Arts Printer Modeling ABS Filament Colorful
+2018-08-29 21:28:58	17.36	17.34	0.01	0.06%	1	17.36	0.12	3 PORT HDMI 1080P Switcher Switch Splitter for HDTV DVD Xbox 360 3PORT
+2018-08-29 21:28:59	58.9	58.88	0.01	0.02%	1	58.9	0.03	ONE PIECE Wanted Monkey D Luffy anime wallet[QB0001]
+2018-08-29 21:28:59	14.87	14.85	0.01	0.07%	1	14.87	0.13	Strong muscle man pattern Apron Sexy man Apron BBQ Gifts for male/ female
+2018-08-29 21:29:00	46.98	46.96	0.01	0.02%	1	46.98	0.04	Women's Black Low-neck Close-fitting Zipper-like Slip Dress (23417/blue)
+2018-08-29 21:29:01	47.88	47.85	0.02	0.04%	1	47.88	0.06	Captain America Shield Cufflink Fashion Casual Simple Cufflink for Men
+2018-08-29 21:29:01	52.97	52.95	0.01	0.02%	1	52.97	0.04	God of War III Ghost of Sparta Kratos action figure[SB0052]
+2018-08-29 21:29:02	24.97	24.95	0.01	0.04%	1	24.97	0.08	Summer DIY Creative Cartoon Yellow Duck Silicone Ice Cube Trays
+2018-08-29 21:29:03	21.97	21.95	0.01	0.05%	1	21.97	0.09	Ultimate Compact Survival Kit: Ultimate - Multi Functional Pocket Tool, Flashlight, Wire Saw, Fire Starter, Emergency Whistle, Knife/Utensil Tool in Sturdy Tin Can
+2018-08-29 21:29:03	39.78	39.75	0.02	0.05%	1	39.78	0.08	Set of 5 pcs Orange Russian Nesting Matryoshka Wooden Dolls
+2018-08-29 21:29:04	34.99	34.96	0.02	0.06%	1	34.99	0.09	Five Column Blocks Educational Toys
+2018-08-29 21:29:05	16.98	16.95	0.02	0.12%	1	16.98	0.18	9pcs Whisky Ice Stones Drinks Cooler Cubes Beer Rocks Granite Pouch
+2018-08-29 21:29:05	48.98	48.95	0.02	0.04%	1	48.98	0.06	Clear Eyewear Unisex Simple Flat Glass
+2018-08-29 21:29:06	24.97	24.94	0.02	0.08%	1	24.97	0.12	Mens Coin Purse Pockets Credit Card Holder Dull Clutch Bifold Wallet
+2018-08-29 21:29:06	30.97	30.95	0.01	0.03%	1	30.97	0.06	Pockets Credit Card Holder Dull Clutch Bifold Mens Coin Purse Wallet
+2018-08-29 21:29:07	32.82	32.8	0.01	0.03%	1	32.82	0.06	The Witcher 3 Wild Hunt Wolf Head pendant Necklace
+2018-08-29 21:29:08	57.82	57.79	0.02	0.03%	1	57.82	0.05	Kemei KM-2209 Professional Electronic Hair Straightener Hair Curler 2 in 1 Irons 90W Hairstyling Portable Flat Straightening Corrugated Curling Styling Tools EU Plug
+2018-08-29 21:29:08	38.97	38.95	0.01	0.03%	1	38.97	0.05	How To Train Your Dragon Mini Toothless Night Fury Plush Toy 22CM
+2018-08-29 21:29:09	46.94	46.91	0.02	0.04%	1	46.94	0.06	Home Car Bed Sofa Decorative Pillow Case Cushion Cover
+2018-08-29 21:29:10	66.97	66.95	0.01	0.01%	2	48.98	-36.69	Clear Eyewear Unisex Simple Flat Glass
+2018-08-29 21:29:10	25.95	25.92	0.02	0.08%	1	25.95	0.12	Silicon Feeding Bottle and Spoon Pink
+2018-08-29 21:29:11	36.78	36.76	0.01	0.03%	1	36.78	0.05	[H8210]Black Cycling Bike Bicycle Front light Clip Rotational Flashlight Holder Torch Bracket
+2018-08-29 21:29:12	75.98	75.96	0.01	0.01%	1	75.98	0.03	Valentine's Day gift 100 purple flower blue Delilah Rose Soap heart-shaped box
+2018-08-29 21:29:12	32.93	32.91	0.01	0.03%	1	32.93	0.06	Solar Power Cooling Fan for Outdoor Golf Baseball Hat Cap GH8557 Red
+2018-08-29 21:29:19	84.96	84.95	0.0	0.0%	1	84.96	0.01	Honors Spring Autumn 3D Printed Owl O-Neck Unisex Sweatshirts
+2018-08-29 21:29:20	37.7	37.67	0.02	0.05%	1	37.7	0.08	Baby sliding closet door window lock
+2018-08-29 21:29:20	28.96	28.93	0.02	0.07%	2	21.93	-31.92	Sunglasses Frames Retro Polarized Glasses Frames for Men and Women
+2018-08-29 21:29:21	41.04	41.01	0.02	0.05%	1	41.04	0.07	Universal Aluminum Headphone Holder Headset Showing Display Stand Hanger for All Headphones,black
+2018-08-29 21:29:21	76.87	76.84	0.02	0.03%	1	76.87	0.04	Creative Simple Adjustable Couple Rings Fashion Rhinestone Rings
+2018-08-29 21:29:22	30.85	30.82	0.02	0.06%	1	30.85	0.1	50kg / 10g Digital weighing scale Electronic Hanging Luggage Balance Weight
+2018-08-29 21:29:23	149.03	148.99	0.03	0.02%	1	149.03	0.03	Multi Color Mixed Mixed Neck Hoodie & Sweatshirt For Unisex
+2018-08-29 21:32:21	23.97	23.96	0.01	0.04%	1	23.97	0.04	Ultrafire-Cree-XM-L-T6-2000-lumens-Zoomable-Cree-LED-Flashlight-Torch-Light-Lamp
+2018-08-29 21:32:21	38.97	38.96	0.01	0.03%	1	38.97	0.03	Azora Couple Titanium Lover Bracelet Men and Women
+2018-08-29 21:32:22	56.19	56.18	0.01	0.02%	1	56.19	0.02	OPK Korean Style Fish Skull Design Pendant Titanium Steel Men Necklace
+2018-08-29 21:32:22	13.99	13.98	0.01	0.07%	1	13.99	0.07	Fashion comfortable White Navy Hat(P001)
+2018-08-29 21:32:23	39.68	39.65	0.03	0.08%	1	39.68	0.08	Vacuum Space Saver Reusable Sealer Storage Bags 60x80cm, With Suction Pump, Pack Of 6
+2018-08-29 21:32:24	148.94	148.93	0.01	0.01%	1	148.94	0.01	8x40 Night vision Zoom Optical military Binoculars Telescope
+2018-08-29 21:32:24	26.79	26.77	0.02	0.07%	1	26.79	0.07	925 Silver bracelet glass Beads Pandora Style Charm Bracelets for women
+2018-08-29 21:32:25	73.99	73.97	0.02	0.03%	1	73.99	0.03	Fashion Rick Morty T-Shirt Men Harajuku Tee Shirt Printed 3D Cartoon T Shirt Clothes
+2018-08-29 21:32:26	29.76	29.74	0.02	0.07%	1	29.76	0.07	Chrome M Power Grille Emblem for BMW
+2018-08-29 21:32:26	36.61	36.59	0.02	0.05%	1	36.61	0.05	Cards Against Humanity - Red Box
+2018-08-29 21:32:27	124.12	124.11	0.01	0.01%	1	124.12	0.01	Updating Loupe 10x 15x 20x 25x Watch Repair Glasses Style Magnifier Eyewear Magnifier
+2018-08-29 21:32:27	67.99	67.96	0.03	0.04%	1	67.99	0.04	Ultrafire E17 CREE XM-L T6 2000 LM LED Flashlight
+2018-08-29 21:32:28	51.88	51.86	0.02	0.04%	1	51.88	0.04	12X Optical Zoom Telephoto Camera Lens Aluminum Tripod Case for iPhone 6/iPhone 6S
+2018-08-29 21:32:29	53.89	53.87	0.02	0.04%	1	53.89	0.04	Ventilate Masks For Diving Gopro Hero/4/3 3/2 Action Camera Underwater Accessories Mask
+2018-08-29 21:32:29	71.99	71.97	0.02	0.03%	1	71.99	0.03	Medicine Pill Jewelry Storage Organizer Box Plastic Adjustable Tablet Container Drug Storage Box
+2018-08-29 21:32:30	38.89	38.87	0.02	0.05%	1	38.89	0.05	13 Piece Watch Link Repair Remover Holder Tool Kit Set
+2018-08-29 21:32:31	67.58	67.56	0.02	0.03%	1	67.58	0.03	Knitting Needles Handle Bamboo Crochet Hooks Knitting Needles Set Weave Craft Tool with Bag Mummy Necessary
+2018-08-29 21:32:31	28.47	28.45	0.02	0.07%	1	28.47	0.07	Travel Universal Cable Organizer Electronics Accessories Cases
+2018-08-29 21:32:32	136.88	136.86	0.02	0.01%	1	136.88	0.01	R-sim10 Plus Repair Tool for Iphone
+2018-08-29 21:32:33	26.98	26.97	0.01	0.04%	1	26.98	0.04	EVERDIGI 2 Pack Ice Cube Tray Silicone Sphere & Square Ice Ball Maker (Black)
+2018-08-29 21:32:34	47.98	47.96	0.02	0.04%	1	47.98	0.04	Universal Smartphones Car Air Vent Mount Holder Cradle, Black
+2018-08-29 21:32:34	30.39	30.37	0.02	0.07%	1	30.39	0.07	Professional Hair Fixer Set Hair Cutting Scissors Shears Barber Thinning Set Kit
+2018-08-29 21:32:35	51.58	51.56	0.02	0.04%	1	51.58	0.04	Stroller Hooks -Multi-Purpose - Hanger for Baby Diaper Bags or Groceries, Pack of 2,Black
+2018-08-29 21:32:36	38.92	38.9	0.02	0.05%	1	38.92	0.05	Vintage Fountain Pen (Gold Nib) Natural Handcrafted Bamboo with Case and Refill Converter
+2018-08-29 21:32:36	21.68	21.66	0.02	0.09%	1	21.68	0.09	Wayfarer Sunglasses For Women, Clear
+2018-08-29 21:32:37	30.26	30.24	0.02	0.07%	1	30.26	0.07	Mini Numeric Keypad 18Keys Digital Keypad 2.4G USB Wireless Keyboard Numpad For Desktop Notebook Compatible
+2018-08-29 21:32:37	166.83	166.81	0.02	0.01%	1	166.83	0.01	Multi Color Polyester Round Neck Hoodie & Sweatshirt For Unisex
+2018-08-29 21:32:38	52.98	52.0	0.98	1.85%	1	52.98	1.85	Fashion Harry Potter Make-up Brush Metal Handle Brush Set
+2018-08-29 21:32:39	38.99	38.97	0.02	0.05%	1	38.99	0.05	Lexus Car Logo Leather Key Remoto Bag Chain Keychain
+2018-08-29 21:32:39	98.93	98.91	0.02	0.02%	1	98.93	0.02	Silver Plated Couple Rings Fashion Rhinestone Adjustable Rings
+2018-08-29 21:32:40	65.29	65.27	0.02	0.03%	1	65.29	0.03	Pocket Watch Pendant Roman Number Antiqued Silver Black
+2018-08-29 21:32:41	84.86	84.84	0.02	0.02%	1	84.86	0.02	2pcs Fashion Azora Couple Titanium Lover Bracelet Men and Women
+2018-08-29 21:32:41	11.79	11.78	0.01	0.08%	1	11.79	0.08	Acquarium joyful accessory Luminous fish tank Landscaping Decoration Simulation fluorescent jellyfish floating soft jelly fish Imitation fish-voc,pink
+2018-08-29 21:32:42	66.67	66.66	0.01	0.01%	1	66.67	0.01	8pcs Dinosaur Kid Baby Toy Mini Blocks Sets Model Toys
+2018-08-29 21:32:43	26.58	26.57	0.01	0.04%	1	26.58	0.04	Battery Terminal Link Switch Quick Cut-off Disconnect Car Truck Auto Vehicle Parts
+2018-08-29 21:32:43	85.86	85.85	0.01	0.01%	1	85.86	0.01	Titanium Steel Fashion Endless Love Shining Diamond Couple Bracelet Set For Male and Female cb24
+2018-08-29 21:32:44	29.91	29.9	0.01	0.03%	1	29.91	0.03	For Gopro Hero - Orion Handsfree Camera Hat P-Cap Head Mount Video Shoot For Gopro -Black
+2018-08-29 21:32:51	23.21	23.2	0.01	0.04%	1	23.21	0.04	Game Card Storage Stand CD Disk Collection box Holder For Nintendo Nintend Switch
+2018-08-29 21:32:51	38.98	38.97	0.01	0.03%	1	38.98	0.03	spiderman costume for boys
+2018-08-29 21:32:52	24.98	24.97	0.01	0.04%	1	24.98	0.04	Swarovski Elements fashion lady 18K rose gold Plated Simple generous glisten diamonds bangle crystal Charm Bracelet JINB3
+2018-08-29 21:32:53	26.99	26.98	0.01	0.04%	1	26.99	0.04	UV 50 Protection Outdoor Multifunctional Flap Cap Sun Shield Mask Perfect Sport Hat Baseball cap
+2018-08-29 21:32:53	10.41	10.4	0.01	0.1%	1	10.41	0.1	10 x Wearable Salon DIY Nail Acrylic UV Gel Polish Remover Soak Soakers Cap Tool
+2018-08-29 21:32:54	17.96	17.95	0.01	0.06%	1	17.96	0.06	Sliding Window Kids Safety Lock
+2018-08-29 21:32:54	35.85	35.84	0.01	0.03%	1	35.85	0.03	Electronic Adjustable Dog No-Bark Anti-Bark Shock Control Pet Training Collar For 15-120 Pounds Dogs
+2018-08-29 21:32:55	197.69	197.68	0.01	0.01%	1	197.69	0.01	Cartoon Love Rabbit Cosplay Costume Kigurumi Pajamas Sleepwear White Gh2901
+2018-08-29 21:32:56	17.99	17.98	0.01	0.06%	1	17.99	0.06	[PA2675]Ultra Light Flip Up Clip On Driving Sunglasses Night Vision Polarizer Lenses for Men Women
+2018-08-29 21:32:56	47.98	47.97	0.01	0.02%	1	47.98	0.02	Metal Grab Handle for 2 Door Jeep Wrangler JK
+2018-08-29 21:32:57	83.91	83.9	0.01	0.01%	1	83.91	0.01	Multi Color Costume For Unisex
+2018-08-29 21:32:57	27.99	27.98	0.01	0.04%	1	27.99	0.04	PK-1070SR Fashionable Stainless Steel Long Chain Necklace for Men
+2018-08-29 21:32:58	38.82	38.81	0.01	0.03%	1	38.82	0.03	Display Headphone Stand Headset Holder Earphone Bracket Earbud Hanger Metal and Soft TUP for Headphone Black
+2018-08-29 21:32:59	36.47	36.46	0.01	0.03%	1	36.47	0.03	Educational Toy Math for children ,Multi Color
+2018-08-29 21:32:59	79.66	79.65	0.01	0.01%	1	79.66	0.01	Head bed baby nursing breastfeeding u shape pillow - Panda Pattern
+2018-08-29 21:33:00	42.26	42.25	0.01	0.02%	1	42.26	0.02	Lady wallet long litchi girl change purse hand phone package handbag
+2018-08-29 21:33:00	12.73	12.72	0.01	0.08%	1	12.73	0.08	Nail Art and Acrylic Brush Set - 5 Brushes
+2018-08-29 21:33:01	45.39	45.38	0.01	0.02%	1	45.39	0.02	Toplus Digital Touchscreen Meat Thermometer with Timer Alert Food Grade Probe for Kitchen Cooking BBQ Grill (Battery Included)
+2018-08-29 21:33:02	63.85	63.84	0.01	0.02%	1	63.85	0.02	5mm Alphabet Letter Number Punch Steel Stamp Engraving Tool for Leather Wood & Metal
+2018-08-29 21:33:02	22.7	22.68	0.02	0.09%	2	28.47	20.34	Travel Universal Cable Organizer Electronics Accessories Cases
+2018-08-29 21:33:03	47.58	47.56	0.02	0.04%	1	47.58	0.04	Vacuum Space Saver Reusable Sealer Storage Bags 70x100cm, With Suction Pump, Pack Of 6
+2018-08-29 21:33:04	48.8	48.79	0.01	0.02%	1	48.8	0.02	Samsung Galaxy A5 (2017 Version) Painted Pattern PU Leather Case Cover Card Slot Wallet Stand Holder -Cute Cat
+2018-08-29 21:33:04	62.19	62.18	0.01	0.02%	1	62.19	0.02	Survival 14 in 1 Multi Tool Hammer Claw Knife Opener Screwdriver Plier for Outdoor Camping Travel plus vouch
+2018-08-29 21:33:05	35.44	35.42	0.02	0.06%	1	35.44	0.06	White Cowboy Hat For Kids
+2018-08-29 21:33:06	56.56	56.55	0.01	0.02%	1	56.56	0.02	Liquid Silicone Scuba Full Face Diving Mask Diving Equipment for GOPRO XIAOMI YI SJCAM
+2018-08-29 21:33:06	34.97	34.96	0.01	0.03%	1	34.97	0.03	Anti-fog Mirror Coated Swimming Goggles UV Protection PC Lens
+2018-08-29 21:33:07	41.98	41.97	0.01	0.02%	1	41.98	0.02	منفاخ هواء يدوي DUUTI أسود بلاستيكي للدراجات الهوائية
+2018-08-29 21:33:07	69.97	69.96	0.01	0.01%	1	69.97	0.01	Small Stainless Steel Dog Cat Pet Feeding Water Bowl with Rubber Rim
+2018-08-29 21:33:08	24.86	24.85	0.01	0.04%	1	24.86	0.04	Fishing Sound / Light Alarm, YOLO, Clip-on Fishing Rod
+2018-08-29 21:33:10	54.72	54.71	0.01	0.02%	1	54.72	0.02	Portable Ultrasonic Tape LCD Digital Solid Laser Beam Pointer Tool Distance Measure Meter
+2018-08-29 21:33:19	76.98	76.97	0.01	0.01%	1	76.98	0.01	Stylish Men Women Anti Slip Bone Skeleton Cycling Racing Riding Gloves - Black & White
+2018-08-29 21:33:20	14.71	14.68	0.03	0.2%	1	14.71	0.2	13PCS Cute Soft Rubber Float Sound FEITONG Kids Wash Bath Play Random Animals Color Cartoon Toys
+2018-08-29 21:33:52	86.99	86.97	0.02	0.02%	1	86.99	0.02	Orvibo S20 Smart Socket
+2018-08-29 21:33:52	75.0	71.99	3.01	4.01%	1	75.0	4.01	ORVIBO - S20 Wi-Fi Smart Home Remote Control Timing Timer Socket Power Plug Switch
+2018-08-29 21:33:54	48.99	48.98	0.01	0.02%	1	48.99	0.02	Leather Bifold Short Wallet for Men, brown
+2018-08-29 21:33:54	48.85	48.84	0.01	0.02%	1	48.85	0.02	Mens Genuine Leather Bifold Wallet - Style Cowboy 1H
+2018-08-29 21:33:59	127.94	127.93	0.01	0.01%	1	127.94	0.01	Boya Stereo X/Y Condenser Microphone [BY-SM80]
+2018-08-29 21:34:08	32.0	31.0	1.0	3.12%	1	32.0	3.12	Mens Hip Hop 18k Real Gold Silver Plated Pendant Necklace Small finger Chain
+2018-08-29 21:34:09	43.0	42.97	0.03	0.07%	1	43.0	0.07	Fashion Long PU Leather Double Zipper Wallet Multi-Card Holder Big Capacity Purse, Black
+2018-08-29 21:34:10	44.78	44.75	0.03	0.07%	1	44.78	0.07	baellerry Black Leather For Women - Bifold Wallets
+2018-08-29 21:34:11	54.94	54.91	0.03	0.05%	1	54.94	0.05	Kigurumi Animals & Bugs Costumes For Women
+2018-08-29 21:34:12	44.88	44.85	0.03	0.07%	1	44.88	0.07	316L Stainless Steel With 3A Cubic Zirconia Men's Ring 9 US Size
+2018-08-29 21:34:12	67.75	67.72	0.03	0.04%	1	67.75	0.04	Home Doormat Outdoor Mat Floor Mat For Home Décor
+2018-08-29 21:34:14	14.99	14.96	0.03	0.2%	1	14.99	0.2	Large Wooden Ball Stacking Tower, 8-Piece Rainbow Colored Stacker
+2018-08-29 21:34:15	45.98	45.95	0.03	0.07%	1	45.98	0.07	Natural Crystal Black Onyx Obsidian Beads Multilayer Men's Bracelet
+2018-08-29 21:34:15	26.34	26.31	0.03	0.11%	1	26.34	0.11	BMW Pendant Logo KeyRing
+2018-08-29 21:35:09	38.85	38.84	0.01	0.03%	1	38.85	0.03	SUNDIX 2 Pack Square and Ball Ice Cube Tray Black
+2018-08-29 21:36:36	42.68	42.67	0.01	0.02%	1	42.68	0.02	Mens Faux Leather wallet wallet ID credit card Holder Clutch Coin Pockets
+2018-08-29 21:40:16	30.9	30.89	0.01	0.03%	1	30.9	0.03	Camera Tripod Monopod P200 Quick Release Clamp QR Plate for Manfrotto 501 500AH 701HDV 503HDV Q5 577 Quick Release Plate

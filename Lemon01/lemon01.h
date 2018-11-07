@@ -13,6 +13,10 @@ typedef struct{
 	std::string password;
 	float percent;
 	float lowwer;
+	int times;
+	float upload;
+	int minute;
+	int mode;
 }Info;
 class Lemon01 : public QWidget
 {
@@ -41,7 +45,7 @@ private:
 	void createXml();
 	void readXml();
 	void delXml(std::string name);
-	void writeXml(std::string name, std::string password, float percent, float lowwer);
+	void writeXml(std::string name, std::string password, float percent, float lowwer, int times, float upload, int minute, int mode);
 private:
 	Ui::Lemon01Class ui;
 	std::map<std::string, AutoMachine*> threadMap;

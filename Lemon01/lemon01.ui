@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>824</width>
-    <height>305</height>
+    <width>636</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,7 +26,7 @@
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,1">
+  <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0">
    <item>
     <widget class="QListWidget" name="listWidget">
      <property name="font">
@@ -38,190 +38,422 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="account">
-         <property name="toolTip">
-          <string>账号</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="lemon01.qrc">:/Lemon01/account</pixmap>
-         </property>
-        </widget>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0" colspan="2">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="account">
+           <property name="toolTip">
+            <string>账号</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="lemon01.qrc">:/Lemon01/account</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="accountline">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Consolas</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
-       <item>
-        <widget class="QLineEdit" name="accountline">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-        </widget>
+       <item row="1" column="0" colspan="2">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="password">
+           <property name="toolTip">
+            <string>密码</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="lemon01.qrc">:/Lemon01/password</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="passwordline">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Consolas</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::PasswordEchoOnEdit</enum>
+           </property>
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="password">
-         <property name="toolTip">
-          <string>密码</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="lemon01.qrc">:/Lemon01/password</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="passwordline">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="echoMode">
-          <enum>QLineEdit::PasswordEchoOnEdit</enum>
-         </property>
-         <property name="readOnly">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="lowwer">
-         <property name="toolTip">
-          <string>降价
+       <item row="2" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="lowwer">
+             <property name="toolTip">
+              <string>降价
 修改后的价格 = 最低价 - 降价</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="lemon01.qrc">:/Lemon01/down</pixmap>
-         </property>
-        </widget>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="lemon01.qrc">:/Lemon01/down</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="lowwerspin">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="suffix">
+              <string>AED</string>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;修改次数上限：每次改价中同一个产品允许的改价次数。如果超过修改次数超过最大改价次数，该产品将不进行修改&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="lemon01.qrc">:/Lemon01/times</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="times">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="suffix">
+              <string>次</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>200</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;涨价百分比&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="lemon01.qrc">:/Lemon01/time</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="time">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="suffix">
+              <string>%</string>
+             </property>
+             <property name="maximum">
+              <number>70</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
-       <item>
-        <widget class="QDoubleSpinBox" name="lowwerspin">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="suffix">
-          <string>AED</string>
-         </property>
-         <property name="maximum">
-          <double>100.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="percent">
-         <property name="toolTip">
-          <string>百分比
+       <item row="2" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="percent">
+             <property name="toolTip">
+              <string>百分比
 改价时，如果最低价降价比超过这个百分比，就不修改。
 但是会记录到Attention.txt中</string>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="lemon01.qrc">:/Lemon01/percent</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="percentspin">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="suffix">
-          <string>%</string>
-         </property>
-         <property name="prefix">
-          <string/>
-         </property>
-         <property name="minimum">
-          <number>1</number>
-         </property>
-        </widget>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="lemon01.qrc">:/Lemon01/percent</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="percentspin">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="suffix">
+              <string>%</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;总降价百分比上限：每次降价前，与最初的价格比较，如果降价比超过了总降价比，将不进行修改&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="lemon01.qrc">:/Lemon01/upload</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="upload">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="suffix">
+              <string>%</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;改价模式选择：&lt;/p&gt;&lt;p&gt;模式1：根据产品EAN，查找所有相同EAN产品的价格，获取最低价格（除去自己店铺的报价）。&lt;/p&gt;&lt;p&gt;模式2：如果产品价格显示的地方有黄色三角感叹号，那么最低价格就是黄色三角感叹号中提示的价格。如果没有显示黄色三角感叹号，那么最低价就是该产品但当前的价格。&lt;/p&gt;&lt;p&gt;注：&lt;/p&gt;&lt;p&gt;模式1可以实现将价格提高，但是改价的速度慢，网速正常大约5~10分钟20个产品。&lt;/p&gt;&lt;p&gt;模式2不能实现将价格提高，但是改价的速度快。&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="lemon01.qrc">:/Lemon01/mode</pixmap>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="mode">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Consolas</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <item>
+              <property name="text">
+               <string>1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>2</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>

@@ -18,13 +18,18 @@ BOOL CALLBACK lpEnumFunc(HWND hwnd, LPARAM lParam)
 	}
 	return TRUE;
 }
-AutoMachine::AutoMachine(std::string name, std::string password, float percent, float lowwer, std::string loginUrl, QObject* parent)
+AutoMachine::AutoMachine(std::string name, std::string password, float percent, float lowwer, int times, float upload, int minute, int mode, std::string loginUrl, QObject* parent)
 	: QThread(parent)
 	, _name(name)
 	, _password(password)
 	, _loginUrl(loginUrl)
 	, _percent(percent)
-	, _lowwer(lowwer){
+	, _lowwer(lowwer)
+	, _times(times)
+	, _upload(upload)
+	, _mintue(minute)
+	, _mode(mode)
+	{
 	pinfo.hProcess = nullptr;
 	pinfo.hThread = nullptr;
 	pinfo.dwThreadId = 0;
@@ -37,13 +42,18 @@ AutoMachine::~AutoMachine(){
 
 void AutoMachine::run(){
 	char buffer[200];
-	sprintf(buffer, "\"%s\" %s %s %.2f %.2f",
+	sprintf(buffer, "\"%s\" %s %s %.2f %.2f %d %.2f %d %d",
 		_cmdline.c_str(),
 		_name.c_str(),
 		_password.c_str(),
 		_percent,
-		_lowwer
+		_lowwer,
+		_times,
+		_upload,
+		_mode,
+		_mintue
 		);
+	
 	//int ret = WinExec(buffer, SW_SHOW);
 	STARTUPINFO StartInfo;
 	//对程序的启动信息不作任何设定，全部清0 
@@ -91,31 +101,5 @@ void AutoMachine::killProcess(){
 		char szBuf[200];
 		sprintf(szBuf, "\"c:\\windows\\system32\\taskkill.exe\" /PID %d /T /F", pinfo.dwProcessId);
 		system(szBuf);
-		//DWORD processId = pinfo.dwProcessId;
-		//PROCESSENTRY32 processEntry = { 0 };
-		//processEntry.dwSize = sizeof(PROCESSENTRY32);
-		////给系统内的所有进程拍一个快照
-		//HANDLE handleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-		////遍历每个正在运行的进程
-		//if (Process32First(handleSnap, &processEntry)){
-		//	BOOL isContinue = TRUE;
-		//	//终止子进程
-		//	do{
-		//		if (processEntry.th32ParentProcessID == processId){
-		//			HANDLE hChildProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processEntry.th32ProcessID);
-		//			if (hChildProcess){
-		//				TerminateProcess(hChildProcess, 0);
-		//				CloseHandle(hChildProcess);
-		//			}
-		//		}
-		//		isContinue = Process32Next(handleSnap, &processEntry);
-		//	} while (isContinue);
-
-		//	HANDLE hBaseProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
-		//	if (hBaseProcess){
-		//		TerminateProcess(hBaseProcess, 0);
-		//		CloseHandle(hBaseProcess);
-		//	}
-		//}
 	}
 }
