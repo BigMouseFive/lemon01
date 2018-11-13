@@ -3,7 +3,6 @@
 #include <qfile.h>
 #include <QtWidgets/QApplication>
 
-
 void setStyle(const QString &style) {
 	QFile qss(style);
 	qss.open(QFile::ReadOnly);

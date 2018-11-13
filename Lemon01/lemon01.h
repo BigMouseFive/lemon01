@@ -1,23 +1,13 @@
 #ifndef LEMON01_H
 #define LEMON01_H
-
 #include <QtWidgets/QWidget>
 #include "ui_lemon01.h"
 #include "SourceCode\AutoMachine\AutoMachine.h"
+#include "DataManager.h"
 #include <qmenu.h>
 #include <qaction.h>
 #include <map>
 #include <string>
-typedef struct{
-	std::string name;
-	std::string password;
-	float percent;
-	float lowwer;
-	int times;
-	float upload;
-	int minute;
-	int mode;
-}Info;
 class Lemon01 : public QWidget
 {
 	Q_OBJECT
@@ -45,11 +35,11 @@ private:
 	void createXml();
 	void readXml();
 	void delXml(std::string name);
-	void writeXml(std::string name, std::string password, float percent, float lowwer, int times, float upload, int minute, int mode);
+	void writeXml(ShopInfo& shopInfo);
 private:
 	Ui::Lemon01Class ui;
 	std::map<std::string, AutoMachine*> threadMap;
-	std::map<std::string, Info*> infoMap;
+	std::map<std::string, ShopInfo> infoMap;
 	QAction* delAct;
 	QAction* closeAct;
 	std::string selectName;

@@ -65,6 +65,9 @@
     <ClCompile Include="MacAddresscpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lemon01.h">
@@ -100,6 +103,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

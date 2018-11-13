@@ -23,7 +23,6 @@ string getHostMacAddress()
 	temporary.GetMacAddress(vtMacAddress);
 	return vtMacAddress[0];
 }
-
 int Lemon01::aaaab(){
 	
 	QMessageBox msg;
@@ -299,17 +298,19 @@ Lemon01::Lemon01(QWidget *parent)
 	, lastret(999)
 {
 	ui.setupUi(this);
-	threadMap.clear();
-	infoMap.clear();
 	readXml();
 	initList();
 	setEmpty();
 	ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 	delAct = new QAction(QStringLiteral("删除"), this);
 	closeAct = new QAction(QStringLiteral("关闭"), this);
-	connect(delAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAct(bool)));
-	connect(closeAct, SIGNAL(triggered(bool)), this, SLOT(SlotCloseAct(bool)));
-	connect(ui.btnNewMachine, SIGNAL(clicked()), this, SLOT(SlotNewAutoMachine()));
+	
+	{
+		connect(delAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAct(bool)));
+		connect(closeAct, SIGNAL(triggered(bool)), this, SLOT(SlotCloseAct(bool)));
+		connect(ui.btnNewMachine, SIGNAL(clicked()), this, SLOT(SlotNewAutoMachine()));
+	}
+
 	{
 		std::string macadddress = ::getHostMacAddress();
 		int i = 0;
@@ -385,13 +386,13 @@ Lemon01::Lemon01(QWidget *parent)
 		for (i = 0; i < 32; ++i){
 			_hide[i] = hide[i];
 		}
-		aaaab();
+		//aaaab();
 	}
+
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
 	timer->start(1000*60*10);
 }
-
 Lemon01::~Lemon01()
 {
 	QuitThisSystem();
@@ -409,7 +410,7 @@ void Lemon01::setEmpty(){
 void Lemon01::initList(){
 	QStringList list;
 	for (auto it = infoMap.begin(); it != infoMap.end(); ++it){
-		list.append(QString::fromStdString(it->second->name));
+		list.append(QString::fromStdString(it->second.name));
 	}
 	list.append(QStringLiteral("新账号"));
 	ui.listWidget->addItems(list);
@@ -429,9 +430,6 @@ void Lemon01::QuitThisSystem(){
 	for (auto iter = infoMap.begin(); iter != infoMap.end(); ++iter){
 		selectName = iter->first;
 		SlotCloseAct(false);
-		if (iter->second)
-			delete iter->second;
-		iter->second = nullptr;
 	}
 }
 
@@ -493,9 +491,6 @@ void Lemon01::SlotDelAct(bool flag){
 	SlotCloseAct(flag);
 	auto iter = infoMap.find(selectName);
 	if (iter != infoMap.end()){
-		if (iter->second)
-			delete iter->second;
-		iter->second = nullptr;
 		infoMap.erase(iter);
 	}
 	delXml(selectName);
@@ -513,14 +508,8 @@ void Lemon01::SlotListItemClicked(QListWidgetItem *item){
 	std::string text = item->text().toStdString();
 	auto it = infoMap.find(text);
 	if (it != infoMap.end()){
-		ui.accountline->setText(QString::fromStdString(it->second->name));
-		ui.passwordline->setText(QString::fromStdString(it->second->password));
-		ui.percentspin->setValue(int(it->second->percent * 100));
-		ui.lowwerspin->setValue(it->second->lowwer);
-		ui.times->setValue(it->second->times);
-		ui.upload->setValue(int(it->second->upload * 100));
-		ui.time->setValue(it->second->minute);
-		ui.mode->setCurrentIndex(it->second->mode);
+		ui.accountline->setText(QString::fromStdString(it->second.account));
+		ui.passwordline->setText(QString::fromStdString(it->second.password));
 	}
 	else{
 		setEmpty();
@@ -541,17 +530,11 @@ void Lemon01::SlotAutoFinish(std::string name){
 		auto iter = threadMap.find(name);
 		if (iter != threadMap.end()){
 			AutoMachine* tmp = iter->second;
-			Info* info = it->second;
-			info->name = name;
-			info->password = tmp->_password;
-			info->percent = tmp->_percent;
-			info->lowwer = tmp->_lowwer;
-			info->times = tmp->_times;
-			info->upload = tmp->_upload;
-			info->minute = tmp->_mintue;
-			info->mode = tmp->_mode;
-			writeXml(tmp->_name, tmp->_password, tmp->_percent, tmp->_lowwer
-				, tmp->_times, tmp->_upload, tmp->_mintue, tmp->_mode);
+			ShopInfo& info = it->second;
+			info.name = name;
+			info.account = name;
+			info.password = tmp->_password;
+			writeXml(info);
 		}
 	}
 	else{
@@ -562,18 +545,12 @@ void Lemon01::SlotAutoFinish(std::string name){
 		auto iter = threadMap.find(name);
 		if (iter != threadMap.end()){
 			AutoMachine* tmp = iter->second;
-			Info* info = new Info;
-			info->name = name;
-			info->password = tmp->_password;
-			info->percent = tmp->_percent;
-			info->lowwer = tmp->_lowwer;
-			info->times = tmp->_times;
-			info->upload = tmp->_upload;
-			info->minute = tmp->_mintue;
-			info->mode = tmp->_mode;
+			ShopInfo info;
+			info.name = name;
+			info.account = name;
+			info.password = tmp->_password;
 			infoMap[name] = info;
-			writeXml(tmp->_name, tmp->_password, tmp->_percent, tmp->_lowwer
-				, tmp->_times, tmp->_upload, tmp->_mintue, tmp->_mode);
+			writeXml(info);
 		}
 	}
 	ui.btnNewMachine->setDisabled(true);
@@ -644,11 +621,15 @@ void Lemon01::SlotNewAutoMachine(){
 		//该店铺已经开启了自动改价
 	}
 }
-
-
 void Lemon01::readXml()
 {
-	QString filePath = FILE_PATH;
+	std::vector<ShopInfo> vec;
+	ShopInfo cond;
+	DataManager::GetInstance()->GetShops(vec, cond);
+	for (auto iter = vec.begin(); iter != vec.end(); ++iter){
+		infoMap[iter->name] = *iter;
+	}
+	/*QString filePath = FILE_PATH;
 	QFile file;
 	if (!file.exists(filePath)){
 		file.setFileName(filePath);
@@ -685,10 +666,12 @@ void Lemon01::readXml()
 			}
 		}
 		file.close();
-	}
+	}*/
 }
+
+//TODO::DEL
 void Lemon01::createXml(){
-	QString filePath = FILE_PATH;
+	/*QString filePath = FILE_PATH;
 	QFile file(filePath);
 	file.open(QIODevice::WriteOnly | QIODevice::Text);
 	QDomDocument doc;
@@ -699,13 +682,12 @@ void Lemon01::createXml(){
 	doc.appendChild(root);
 	QTextStream out(&file);
 	doc.save(out, 4);
-	file.close();
+	file.close();*/
 }
-void Lemon01::writeXml(std::string name, std::string password, 
-	float percent, float lowwer, int times, float upload, int minute, int mode)
+void Lemon01::writeXml(ShopInfo& shopInfo)
 {
-	
-	QString filePath = FILE_PATH;
+	DataManager::GetInstance()->AddShop(shopInfo);
+	/*QString filePath = FILE_PATH;
 	QFile file;
 	if (!file.exists(filePath)){
 		file.setFileName(filePath);
@@ -750,11 +732,12 @@ void Lemon01::writeXml(std::string name, std::string password,
 			}
 		}
 		file.close(); 
-	}
+	}*/
 }
 void Lemon01::delXml(std::string name)
 {
-	QString filePath = FILE_PATH;
+	DataManager::GetInstance()->DelShop(name);
+	/*QString filePath = FILE_PATH;
 	QFile file;
 	if (!file.exists(filePath)){
 		file.setFileName(filePath);
@@ -791,5 +774,5 @@ void Lemon01::delXml(std::string name)
 			}
 		}
 		file.close();
-	}
+	}*/
 }
