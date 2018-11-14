@@ -1,0 +1,41 @@
+1	9	19.0	0.4	18.6	97.89%	Skull print Multi-Purpose Scarf/Bandana/Mask	Î´ÐÞ¸Ä
+1	12	49.95	28.86	21.090000000000003	42.22%	Big Dog Collar Neck	Î´ÐÞ¸Ä
+1	13	68.0	41.99	26.009999999999998	38.25%	Cying Lin Yellow Bikini For Women	Î´ÐÞ¸Ä
+1	14	49.0	23.99	25.01	51.04%	Fashion Pocket Monster Mega Charizard Plush Toy	Î´ÐÞ¸Ä
+1	9	19.0	0.4	18.6	97.89%	Skull print Multi-Purpose Scarf/Bandana/Mask	Î´ÐÞ¸Ä
+1	12	49.95	28.86	21.090000000000003	42.22%	Big Dog Collar Neck	Î´ÐÞ¸Ä
+1	13	68.0	41.99	26.009999999999998	38.25%	Cying Lin Yellow Bikini For Women	Î´ÐÞ¸Ä
+1	14	49.0	23.99	25.01	51.04%	Fashion Pocket Monster Mega Charizard Plush Toy	Î´ÐÞ¸Ä
+1	18	47.79	32.8	14.990000000000002	31.37%	Real 18K Gold Plated Chain Men Hip Hop Hiphop Lion King Crown Necklaces	Î´ÐÞ¸Ä
+2	5	78.0	55.0	23.0	29.49%	Natural Brazilian Human Hair Extension - 20 inches, Black	Î´ÐÞ¸Ä
+3	7	49.0	36.0	13.0	26.53%	Black Retro Exquisite Carved Resin Gold Ring for Men Size US9	Î´ÐÞ¸Ä
+4	18	19.0	16.0	3.0	15.79%	Mitsubishi Key Chain	Î´ÐÞ¸Ä
+5	3	40.0	33.0	7.0	17.5%	Mens Coin Purse Pockets Credit Card Holder Dull Clutch Bifold Wallet	Î´ÐÞ¸Ä
+5	12	77.75	42.0	35.75	45.98%	Black Beret Hat For Men	Î´ÐÞ¸Ä
+5	19	39.0	32.0	7.0	17.95%	MineCraft Baby Sheep Stuffed Plush Toy 7inch	Î´ÐÞ¸Ä
+6	6	33.0	26.0	7.0	21.21%	Minecraft Baby Ocelot Plush 7inch Soft Plush Toys Kit Stuffed Animal Dolls	Î´ÐÞ¸Ä
+6	18	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+7	19	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+7	20	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+8	1	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+9	2	198.0	49.0	149.0	75.25%	0-24V Top Mosfet Button IRF520 MOS Driver Module For Arduino MCU ARM Raspberry pi	Î´ÐÞ¸Ä
+11	20	35.86	25.0	10.86	30.28%	Retro Letter Pattern Sleeve Button Fashion Men Shirts Cufflinks	Î´ÐÞ¸Ä
+13	11	69.0	49.0	20.0	28.99%	Duplus Asymmetrical Neckline Mini Dress for Women - Free Size, Black	Î´ÐÞ¸Ä
+14	15	35.0	30.0	5.0	14.29%	Brown Wool Visor Hat For Kids	Î´ÐÞ¸Ä
+5	3	19.0	0.4	18.6	97.89%	Skull print Multi-Purpose Scarf/Bandana/Mask	Î´ÐÞ¸Ä
+5	6	49.95	28.86	21.090000000000003	42.22%	Big Dog Collar Neck	Î´ÐÞ¸Ä
+5	7	68.0	41.99	26.009999999999998	38.25%	Cying Lin Yellow Bikini For Women	Î´ÐÞ¸Ä
+5	8	49.0	23.99	25.01	51.04%	Fashion Pocket Monster Mega Charizard Plush Toy	Î´ÐÞ¸Ä
+5	11	47.79	32.8	14.990000000000002	31.37%	Real 18K Gold Plated Chain Men Hip Hop Hiphop Lion King Crown Necklaces	Î´ÐÞ¸Ä
+5	16	78.0	55.0	23.0	29.49%	Natural Brazilian Human Hair Extension - 20 inches, Black	Î´ÐÞ¸Ä
+6	10	49.0	36.0	13.0	26.53%	Black Retro Exquisite Carved Resin Gold Ring for Men Size US9	Î´ÐÞ¸Ä
+7	10	19.0	16.0	3.0	15.79%	Mitsubishi Key Chain	Î´ÐÞ¸Ä
+7	13	40.0	33.0	7.0	17.5%	Mens Coin Purse Pockets Credit Card Holder Dull Clutch Bifold Wallet	Î´ÐÞ¸Ä
+7	19	77.75	42.0	35.75	45.98%	Black Beret Hat For Men	Î´ÐÞ¸Ä
+8	3	39.0	32.0	7.0	17.95%	MineCraft Baby Sheep Stuffed Plush Toy 7inch	Î´ÐÞ¸Ä
+8	9	33.0	26.0	7.0	21.21%	Minecraft Baby Ocelot Plush 7inch Soft Plush Toys Kit Stuffed Animal Dolls	Î´ÐÞ¸Ä
+8	20	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+9	15	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+9	16	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+9	17	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+10	13	198.0	49.0	149.0	75.25%	0-24V Top Mosfet Button IRF520 MOS Driver Module For Arduino MCU ARM Raspberry pi	Î´ÐÞ¸Ä

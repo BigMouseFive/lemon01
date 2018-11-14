@@ -1,0 +1,76 @@
+1	4	39.0	37.05	1.9500000000000028	5.0%	Europe Style Men Shirt Cufflinks Fashion Casual Businessman Sleeve Button
+2	1	37.0	36.0	1.0	2.7%	Honors Polarized Sports Men Sunglasses UV Protected Sun Glasses
+2	3	29.2	29.1	0.09999999999999787	0.34%	Retro UV400 Unisex Sunglasses Polarized Sun Glasses with Carrying Box
+2	7	37.0	34.0	3.0	8.11%	Brain Shaped Ice Tray / Chocolate Jelly Mold
+2	11	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+2	12	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+2	13	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+2	14	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+2	15	39.0	38.0	1.0	2.56%	Fashion Businessman Sleeve Button Casual Men Shirts Cufflinks
+2	16	69.0	68.95	0.04999999999999716	0.07%	Black Sport Top For Women
+2	17	69.0	63.99	5.009999999999998	7.26%	Grey Sport Round Neck Short Length T-Shirt for Women
+2	18	39.0	38.0	1.0	2.56%	Classic Fashion Simple Sleeve Button Mens Shirt Cufflinks
+3	8	63.0	62.0	1.0	1.59%	Lexus Car Logo Leather Key Remoto Bag Chain Keychain
+3	13	16.99	16.0	0.9899999999999984	5.83%	Wooden Geometric puzzles Educational Toys
+3	15	20.0	19.0	1.0	5.0%	Childrens Rainbow dominoes classification Development educational toys
+3	18	37.0	36.0	1.0	2.7%	Minecraft Creeper Plush My World Toy
+3	19	26.0	24.0	2.0	7.69%	Minecraft Creeper 7inch Plush Stuffed Toy
+4	4	40.9	37.0	3.8999999999999986	9.54%	Barefoot Pearl Anklet Ankle Bracelet Foot Chain
+4	6	98.99	98.0	0.9899999999999949	1.0%	45cm minion plush toys despicable me 2
+4	7	46.0	45.0	1.0	2.17%	316L Stainless Steel With 3A Cubic Zirconia Men's Ring 9 US Size
+4	10	40.0	39.89	0.10999999999999943	0.27%	HSB-5 POKEMON Clip and Carry Poke Ball
+4	14	69.5	68.83	0.6700000000000017	0.96%	V15 Hooks Stainless Steel Coat Robe Hat Clothes Wall Mount Hook Hanger Towel Rack
+4	16	7.64	7.63	0.009999999999999787	0.13%	USB Charging Cable Charger Cord for Fitbit Flex Band Wireless Activity Bracelet
+4	17	7.94	7.93	0.010000000000000675	0.13%	Fitbit Charge Wireless Activity Wristband Charger
+4	19	45.0	41.4	3.6000000000000014	8.0%	15 Hooks Stainless Steel Coat Robe Hat Clothes Wall Mount Hook Hanger Towel Rack
+5	1	16.0	15.0	1.0	6.25%	Minecraft Creeper Plush Toy Enderman Doll Kids Favorite 7inch
+5	4	78.9	78.89	0.010000000000005116	0.01%	Jinbaolai Black Leather For Men - Zip Around Wallets
+5	7	58.0	57.9	0.10000000000000142	0.17%	Kemei KM-2209 Professional Electronic Hair Straightener Hair Curler 2 in 1 Irons 90W Hairstyling Portable Flat Straightening Corrugated Curling Styling Tools EU Plug
+5	8	23.0	22.0	1.0	4.35%	Ultimate Compact Survival Kit: Ultimate - Multi Functional Pocket Tool, Flashlight, Wire Saw, Fire Starter, Emergency Whistle, Knife/Utensil Tool in Sturdy Tin Can
+5	13	84.7	79.91	4.790000000000006	5.66%	Stylish Men Women Anti Slip Bone Skeleton Cycling Racing Riding Gloves - Black & White
+5	14	21.99	21.98	0.00999999999999801	0.05%	Sunglasses Frames Retro Polarized Glasses Frames for Men and Women
+5	16	39.9	38.2	1.6999999999999957	4.26%	Paw Patrol Pup Pals Toy Soft Plush Toy 8" Nickelodeon Dog Doll -Skye
+5	20	25.0	23.0	2.0	8.0%	MineCraft Squid Stuffed Plush Toy 7inch
+6	16	59.83	59.79	0.03999999999999915	0.07%	Cardigan For Women
+6	19	49.0	47.28	1.7199999999999989	3.51%	Pillow Cover Cotton Sofa Decor Throw Pillowcase Sham Decor Cushion Cover
+7	1	49.0	48.8	0.20000000000000284	0.41%	Minecraft Pink Soft Plush Toy Baby Pig Aminal Dolls 7inch
+7	3	33.0	32.5	0.5	1.52%	Pokemon Pikachu 9 Inch Stuffed Cartoon Doll Plush Soft Toy
+7	11	42.96	42.89	0.07000000000000028	0.16%	Mens Faux Leather wallet wallet ID credit card Holder Clutch Coin Pockets
+7	16	35.96	35.0	0.9600000000000009	2.67%	Sunglasses Frames Retro Polarized Glasses Frames for Men and Women
+7	17	34.0	33.0	1.0	2.94%	Three Pieces Night Robe Lady Lingerie Coverall Underwear Sleepwear Dresses
+8	5	64.7	59.0	5.700000000000003	8.81%	4Pcs Stainless Steel Dental Tool Dentistry Instrument Tooth Scraper Waxing Carving Kit for Teeth Care
+8	6	38.98	38.0	0.9799999999999969	2.51%	Classic Fashion Simple Sleeve Button Mens Shirt Cufflinks
+8	14	68.99	68.5	0.4899999999999949	0.71%	15 Hooks Stainless Steel Coat Robe Hat Clothes Wall Mount Hook Hanger Towel Rack
+8	15	74.99	74.98	0.009999999999990905	0.01%	15 Hooks Stainless Steel Coat Robe Hat Clothes Wall Mount Hook Hanger Towel Rack
+8	20	49.92	49.0	0.9200000000000017	1.84%	Mesh Toy Hammock Net Stuffed Plush Organizer Storage Bags Baby Toys Hanging Net
+9	6	45.0	43.0	2.0	4.44%	minecraft Cute wolf Plush Doll
+12	17	37.05	37.0	0.04999999999999716	0.13%	Retro Model Pattern Sleeve Button Fashion Men Shirts Cufflinks
+12	18	47.49	47.0	0.490000000000002	1.03%	Fashion Businessman Sleeve Button Casual Men Shirts Cufflinks
+13	2	37.04	37.0	0.03999999999999915	0.11%	Europe Style Men Shirt Cufflinks Fashion Casual Businessman Sleeve Button
+13	5	49.99	49.0	0.990000000000002	1.98%	Lztllylzt White Off Shoulder Blouse For Women
+13	8	49.99	49.0	0.990000000000002	1.98%	Lztllylzt Yellow Round Neck Hoodie & Sweatshirt For Women
+13	18	39.0	38.98	0.020000000000003126	0.05%	Home Car Bed Sofa Decorative Pillow Case Cushion Cover
+14	19	48.0	47.9	0.10000000000000142	0.21%	HSB-4 POKEMON Clip and Carry Poke Ball
+14	20	29.0	28.9	0.10000000000000142	0.34%	HSB-6 POKEMON Clip and Carry Poke Ball
+15	2	49.0	48.0	1.0	2.04%	Multifunctional Swiss Knife Outdoor Camping Survival EDC Tool Hook Multi Purpose Army Folding Pocket Knife
+15	3	49.0	45.0	4.0	8.16%	Gold Plated Fashion Chain Multi Layers Ankle Chain Charm Bangle For Women
+15	4	49.98	49.0	0.9799999999999969	1.96%	Lztllylzt White Off Shoulder Blouse For Women
+15	7	49.98	49.0	0.9799999999999969	1.96%	Lztllylzt Dark Blue Off Shoulder Blouse For Women
+15	10	49.98	45.0	4.979999999999997	9.96%	Lztllylzt Red Round Neck Hoodie & Sweatshirt For Women
+15	17	83.0	78.0	5.0	6.02%	Minecraft wolf Plush Doll
+16	14	49.0	46.0	3.0	6.12%	Home Car Bed Sofa Decorative Pillow Case Cushion Cover
+16	17	49.0	44.99	4.009999999999998	8.18%	Pokemon Pocket Monster Pocket Jeni turtle doll plush toy SSXJM2-8
+17	14	49.0	48.0	1.0	2.04%	anklet handmade
+17	20	48.92	48.0	0.9200000000000017	1.88%	Multi Color Fur Hip Scarf For Women
+22	6	39.0	38.0	1.0	2.56%	POKEMON Small Plush toys,Leafeon
+22	7	68.0	67.0	1.0	1.47%	Pokemon Plush Doll Pocket Monsters Childern Stuffed Toy
+22	19	188.0	187.6	0.4000000000000057	0.21%	Jessup Professional 10pcs Black/Silver Foundation blush Liquid Kabuki brush
+24	15	49.0	48.0	1.0	2.04%	Multi Color Round Neck Tank Top For Men
+27	1	49.0	48.0	1.0	2.04%	Multi Color Short For Men
+28	20	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+29	16	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+29	17	49.0	48.0	1.0	2.04%	Multi Color Round Neck T-Shirt For Men
+32	14	69.0	68.0	1.0	1.45%	Captain America Halloween Pet Apparel
+32	15	69.0	68.0	1.0	1.45%	Batman Pet Apparel
+32	16	69.0	65.0	4.0	5.8%	Halloween Dumbo Pet Apparel
+33	3	69.0	68.0	1.0	1.45%	Fair Maiden Dress Pet Apparel

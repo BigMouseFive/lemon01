@@ -1,0 +1,57 @@
+1	16	29.0	14.98	14.02	48.34%	Digital LCD Display Temperature Humidity Meter Hygrometer Clock Calendar HTC-1	Î´ÐÞ¸Ä
+2	2	29.0	0.4	28.6	98.62%	Skull print Multi-Purpose Scarf/Bandana/Mask	Î´ÐÞ¸Ä
+3	2	159.0	109.0	50.0	31.45%	GSM GPRS Quad Band Board SIM900 Shield for Arduino	Î´ÐÞ¸Ä
+3	3	285.0	232.99	52.00999999999999	18.25%	very huge teddy bear	Î´ÐÞ¸Ä
+3	4	60.0	32.81	27.189999999999998	45.32%	Purrfect Arch Self Groomer Scratching Base Deshedding Tool Catnip Toy For Cat Kitten	Î´ÐÞ¸Ä
+3	6	33.0	25.0	8.0	24.24%	NodeMCU v2 - Lua based ESP8266 development kit	Î´ÐÞ¸Ä
+3	9	39.0	33.1	5.899999999999999	15.13%	Men leather videng polo brand casual travel messenger bag small cross body business handbag Black	Î´ÐÞ¸Ä
+4	3	88.0	15.0	73.0	82.95%	Large Wooden Ball Stacking Tower, 8-Piece Rainbow Colored Stacker	Î´ÐÞ¸Ä
+4	4	88.83	13.83	75.0	84.43%	Rocketstone Car Holder Universal Windshield Cell Phone Holder Cradle Flexible 360 Rotating Car Mount for almost Smartphone - iPhone 7 7Plus Galaxy S7 S7Edge LG HTC up to 7 inches Device - Blue	Î´ÐÞ¸Ä
+5	17	17.0	13.0	4.0	23.53%	Garlic Peeler Silicone Tube Roller	Î´ÐÞ¸Ä
+6	12	18.99	16.0	2.9899999999999984	15.75%	Mitsubishi Key Chain	Î´ÐÞ¸Ä
+7	1	38.8	21.0	17.799999999999997	45.88%	Epoxy Enamel Flower Belly Button Sexy Body Jewelry For Women Bars Piercings	Î´ÐÞ¸Ä
+8	2	27.0	20.2	6.800000000000001	25.19%	3 PORT HDMI 1080P Switcher Switch Splitter for HDTV DVD Xbox 360 3PORT	Î´ÐÞ¸Ä
+8	9	75.0	40.0	35.0	46.67%	Pokemon black rubber 3 fold sunshade umbrella UM014	Î´ÐÞ¸Ä
+8	15	30.0	26.0	4.0	13.33%	Minecraft Baby Ocelot Plush 7inch Soft Plush Toys Kit Stuffed Animal Dolls	Î´ÐÞ¸Ä
+8	16	28.0	24.87	3.129999999999999	11.18%	Fashion trend women soft leather shoulders bag College Wind leisure travel backpack WB77 Black	Î´ÐÞ¸Ä
+8	17	75.0	39.0	36.0	48.0%	SENIOR LECTRONIC KITCHEN SCALE	Î´ÐÞ¸Ä
+9	6	54.98	39.89	15.089999999999996	27.45%	Pikachu Collection 324 Pokemon cards Album Book Top loaded List playing pokemon cards holder album toys WJ101	Î´ÐÞ¸Ä
+10	6	60.0	29.99	30.01	50.02%	Thumb Guard to Stop Thumb Sucking Thumb Gloves	Î´ÐÞ¸Ä
+10	13	85.9	74.89	11.010000000000005	12.82%	73x28cm Baby Piano Music Play Mat Children Educational Musical Carpet Rug Toys for Kids	Î´ÐÞ¸Ä
+10	18	39.8	31.9	7.899999999999999	19.85%	Half Fingers Motorcycle Bike Bicycle Gel Short Sports Racing Cycling Outdoor	Î´ÐÞ¸Ä
+11	1	45.0	39.0	6.0	13.33%	World Cup Beer Glasses	Î´ÐÞ¸Ä
+11	2	83.0	66.5	16.5	19.88%	Waterproof Electric Cute Rabbit Head Massager Magic Shampoo Massage Comb Bath Massage Brush Scalp Massager Head Hair Care	Î´ÐÞ¸Ä
+11	3	76.89	48.98	27.910000000000004	36.3%	Electric Hair Comb Brush Waterproof Scalp Massage Hairbrush Vibrating Silicone Comb Massager Electric Hair Brush	Î´ÐÞ¸Ä
+11	7	65.0	36.0	29.0	44.62%	Black Tassel Boho Dangle Drop Earring Set for Women	Î´ÐÞ¸Ä
+12	3	59.0	39.0	20.0	33.9%	Classic Fashion Simple Sleeve Button Mens Plum Pattern Shirt Cufflinks	Î´ÐÞ¸Ä
+12	4	39.0	17.94	21.06	54.0%	Multi-function folding drink holder car cup and food holder (Black)	Î´ÐÞ¸Ä
+13	2	51.0	29.0	22.0	43.14%	LightRoom Mini Portable LED Photography Studio Light Tent Box Kit	Î´ÐÞ¸Ä
+13	12	89.9	26.0	63.900000000000006	71.08%	Classy Men Earring Stud with Black Squared Cubic Zircon	Î´ÐÞ¸Ä
+14	15	39.0	29.89	9.11	23.36%	Facial Hair Remover Portable Epilator for Women - Rose Gold	Î´ÐÞ¸Ä
+15	2	49.0	29.0	20.0	40.82%	Glow in the Dark Pendant Necklace	Î´ÐÞ¸Ä
+15	7	150.0	78.0	72.0	48.0%	Simple Fashion Champagne Titanium Steel Individual Cool Black Ceram Chic Men Bracelet	Î´ÐÞ¸Ä
+15	15	49.0	20.0	29.0	59.18%	Yoga Gloves - Multi Color	Î´ÐÞ¸Ä
+15	19	168.0	128.0	40.0	23.81%	dodocool 9.7 Inch Tablet Felt Envelope Cover Sleeve Carrying Case Protective Bag for Apple 9.7-inch iPad Pro / iPad Air 2 / 1	Î´ÐÞ¸Ä
+16	10	95.0	75.0	20.0	21.05%	Moroccan Tablecloth with Star and Moon Art Arabic Words Ramadan Design Dining Room Kitchen Rectangular Table Cover 100 x 140 cm	Î´ÐÞ¸Ä
+17	5	99.0	69.0	30.0	30.3%	dodocool Nylon Grey Laptop Bags	Î´ÐÞ¸Ä
+17	6	37.0	27.0	10.0	27.03%	Outdoor survival tool set camping kit multifunctional emergency equipment	Î´ÐÞ¸Ä
+17	11	35.0	28.99	6.010000000000002	17.17%	Cartoon Unicorn Balloon Aluminum Foil Balloons for Birthday Party	Î´ÐÞ¸Ä
+17	12	99.0	69.0	30.0	30.3%	dodocool 20W 4A Smart 4 USB Charging Port Portable Multi-function Travel Power Adapter Wall Charger with Universal AC Outlet US Plug	Î´ÐÞ¸Ä
+17	13	239.0	179.0	60.0	25.1%	dodocool Wireless Stereo Wood IPX5 CVC 6.0 Noise Cancellation In-Ear Headphone	Î´ÐÞ¸Ä
+18	1	210.0	179.99	30.00999999999999	14.29%	The Legendary Assassin Game Assassin's Creed Altair Bell Tower 11inch Action Figure	Î´ÐÞ¸Ä
+18	3	69.0	59.0	10.0	14.49%	Plastic Mini Screw Wall Hooks, Multi Color	Î´ÐÞ¸Ä
+18	8	63.99	49.99	14.0	21.88%	2 Pack 3D Silicone Skull Mold Ice Cube Mold, Black	Î´ÐÞ¸Ä
+18	9	29.0	23.0	6.0	20.69%	Transparent Silicone Temple Hooks for Spectacles, Anti Slip Ear Grip	Î´ÐÞ¸Ä
+18	10	27.0	23.0	4.0	14.81%	Silicone Temple Hooks for Spectacles, Anti Slip Ear Grip	Î´ÐÞ¸Ä
+18	11	45.0	25.0	20.0	44.44%	Summer DIY Creative Cartoon Yellow Duck Silicone Ice Cube Trays	Î´ÐÞ¸Ä
+18	14	69.0	39.0	30.0	43.48%	Fashion Printing Superman UV Protection Cooler Arm Sleeves for Bike Cycling/Hiking/Golf	Î´ÐÞ¸Ä
+18	15	25.0	16.0	9.0	36.0%	SC-6 Hot shoe Adapter for flash Speedlite Standard Mount Photo Studio Accessories Adapter to 1/4 Thread tripod	Î´ÐÞ¸Ä
+18	16	95.0	23.0	72.0	75.79%	Pet Grooming Gloves Dog Cat Hair Cleaning Brush Advanced Rubber Enhanced Five Fingers Deshedding Pet Gloves For Dog Cat Animals	Î´ÐÞ¸Ä
+18	18	24.85	20.0	4.850000000000001	19.52%	Plastic Skipping Rope Jump Speed Exercise Rope Boxing Gym Fitness Workout Purple	Î´ÐÞ¸Ä
+18	20	216.0	36.0	180.0	83.33%	Ladies Colorful Beading Rose Gold Plated Earring Butterfly Pattern Jewelry	Î´ÐÞ¸Ä
+19	1	42.0	36.0	6.0	14.29%	PK-316SL Fashionable Stainless Steel Hoop Spike Punk Earring for Men	Î´ÐÞ¸Ä
+19	2	95.0	18.0	77.0	81.05%	PK-316BK Fashionable Stainless Steel Hoop Spike Punk Earring for Men	Î´ÐÞ¸Ä
+19	8	49.0	36.0	13.0	26.53%	Black Retro Exquisite Carved Resin Gold Ring for Men Size US9	Î´ÐÞ¸Ä
+34	16	35.86	25.0	10.86	30.28%	Retro Letter Pattern Sleeve Button Fashion Men Shirts Cufflinks	Î´ÐÞ¸Ä
+38	18	35.0	30.0	5.0	14.29%	Brown Wool Visor Hat For Kids	Î´ÐÞ¸Ä
+46	12	68.0	49.0	19.0	27.94%	Duplus Asymmetrical Neckline Mini Dress for Women - Free Size, Black	Î´ÐÞ¸Ä
