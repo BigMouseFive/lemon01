@@ -1,6 +1,8 @@
 #include "utils.h"
 #include "MacAddress.h"
 #include "lemon01.h"
+#include "AddShopDialog.h"
+#include "AddEanAttr.h"
 #include <QFile>
 #include <QDomDocument>
 #include <QXmlStreamWriter>
@@ -13,6 +15,9 @@
 #include <QInputDialog>
 #include <QDialogButtonBox>
 #include <QTimer>
+#include <qmessagebox.h>
+#include "SourceCode\AutoMachine\NoticeDialog.h"
+
 #define FILE_PATH "lemon.xml"
 
 using namespace std;
@@ -23,8 +28,150 @@ string getHostMacAddress()
 	temporary.GetMacAddress(vtMacAddress);
 	return vtMacAddress[0];
 }
-int Lemon01::aaaab(){
+
+Lemon01::Lemon01(QWidget *parent)
+	: QWidget(parent)
+	, lastret(999)
+{
+	ui.setupUi(this);
+	readXml();
+	initList();
+	delAct = new QAction(QStringLiteral("删除店铺"), this);
+	closeAct = new QAction(QStringLiteral("关闭店铺"), this);
+	addAct = new QAction(QStringLiteral("添加店铺"), this);
+	updateAct = new QAction(QStringLiteral("修改店铺"), this);
+	delEanAct = new QAction(QStringLiteral("删除记录"), this);
+	addEanAct = new QAction(QStringLiteral("添加记录"), this);
+	updateEanAct = new QAction(QStringLiteral("修改记录"), this);
+	setPriceAct = new QAction(QStringLiteral("设置价格"), this);
+	ignoreAct = new QAction(QStringLiteral("忽略"), this);
+	{
+		ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+		ui.myShopList->setAcceptDrops(true);
+
+		ui.tableWidget->setColumnCount(3);
+		ui.tableWidget->horizontalHeader()->setStretchLastSection(true);
+		ui.tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+		ui.tableWidget->verticalHeader()->setVisible(false);
+
+		ui.tableView->horizontalHeader()->setStretchLastSection(true);
+		ui.tableView->setUpdatesEnabled(true);//界面刷新
+		ui.tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+	}
+
+	{
+		connect(delAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAct(bool)));
+		connect(closeAct, SIGNAL(triggered(bool)), this, SLOT(SlotCloseAct(bool)));
+		connect(addAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddAct(bool)));
+		connect(updateAct, SIGNAL(triggered(bool)), this, SLOT(SlotUpdateAct(bool))); 
+		connect(delEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelEanAct(bool)));
+		connect(addEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddEanAct(bool)));
+		connect(updateEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotUpdateEanAct(bool)));
+		connect(setPriceAct, SIGNAL(triggered(bool)), this, SLOT(SlotSetPriceAct(bool)));
+		connect(ignoreAct, SIGNAL(triggered(bool)), this, SLOT(SlotIgnoreAct(bool)));
+		connect(ui.play, SIGNAL(clicked()), this, SLOT(SlotAutoPlay()));
+		connect(ui.pause, SIGNAL(clicked()), this, SLOT(SlotAutoPause()));
+		connect(ui.stop, SIGNAL(clicked()), this, SLOT(SlotAutoStop()));
+		connect(ui.update, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
+		connect(ui.notice, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
+		connect(ui.myShopList, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
+			this, SLOT(SlotDelInMyShop(QListWidgetItem *)));
+		connect(ui.tableWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+			this, SLOT(SlotTableContextRequested(const QPoint&)));
+		connect(ui.tableView, SIGNAL(customContextMenuRequested(const QPoint&)), 
+			this, SLOT(SlotTableViewContextRequest(const QPoint&)));
+	}
 	
+	setEmpty();
+	testRegister();
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
+	timer->start(1000*60*10);
+}
+Lemon01::~Lemon01()
+{
+	QuitThisSystem();
+}
+
+void Lemon01::setShopState(int control){
+	if (control == MACHINE_STOP){
+		ui.play->setHidden(0);
+		ui.pause->setHidden(1);
+		ui.stop->setHidden(1);
+		ui.update->setHidden(0);
+	}
+	else if (control == MACHINE_PAUSE){
+		ui.play->setHidden(0);
+		ui.pause->setHidden(1);
+		ui.stop->setHidden(0);
+		ui.update->setHidden(0);
+	}
+	else if (control == MACHINE_PLAY){
+		ui.play->setHidden(1);
+		ui.pause->setHidden(0);
+		ui.stop->setHidden(0);
+		ui.update->setHidden(0);
+	}
+}
+void Lemon01::setEmpty(CPAttr* attr){
+	noticeIndex = QModelIndex();
+	if (attr){
+		ui.selectShop->setText(QString::fromStdString(attr->shop));
+		ui.lowwerspin->setValue(attr->lowwer);
+		ui.percentspin->setValue(attr->percent * 100);
+		ui.times->setValue(attr->max_times);
+		ui.upload->setValue(attr->max_percent * 100);
+		ui.time->setValue(attr->minute);
+		if (attr->my_shop.find(',') != std::string::npos){
+			QStringList shops = QString::fromStdString(attr->my_shop).split(",");
+			ui.myShopList->addItems(shops);
+		}
+		setShopState(attr->control);
+	}
+	else{
+		ui.lowwerspin->setValue(0);
+		ui.percentspin->setValue(0);
+		ui.times->setValue(0);
+		ui.upload->setValue(0);
+		ui.time->setValue(0);
+		setShopState(MACHINE_STOP);
+		ui.play->setHidden(1);
+		ui.update->setHidden(1);
+		currentShop = "";
+		ui.selectShop->setText("");
+		ui.myShopList->clear();
+		ui.tableWidget->clear();
+		QStringList headers;
+		headers << "EAN" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+		ui.tableWidget->setHorizontalHeaderLabels(headers);
+		ui.tableView->setModel(NULL);
+	}
+}
+
+void Lemon01::initList(){
+	QStringList list;
+	for (auto it = infoMap.begin(); it != infoMap.end(); ++it){
+		list.append(QString::fromStdString(it->second.name));
+	}
+	ui.listWidget->addItems(list);
+	for (int i = 0; i < ui.listWidget->count(); ++i){
+		QPixmap pix(":/Lemon01/shop");
+		ui.listWidget->item(i)->setIcon(QIcon(pix.scaled(25, 25)));
+	}
+	connect(ui.listWidget, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
+		this, SLOT(SlotListItemClicked(QListWidgetItem *)));
+	connect(ui.listWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+		this, SLOT(SlotListContextRequested(const QPoint&)));
+
+}
+void Lemon01::QuitThisSystem(){
+	for (auto iter = infoMap.begin(); iter != infoMap.end(); ++iter){
+		selectName = iter->first;
+		SlotCloseAct(false);
+	}
+}
+int Lemon01::aaaab(){
+
 	QMessageBox msg;
 	msg.setWindowTitle(QStringLiteral("注册"));
 	msg.setText(QStringLiteral("对不起，您输入的注册码不正确"));
@@ -140,8 +287,8 @@ int Lemon01::aaaab(){
 					if (input[i] != hide[i]){
 						file.close();
 						::DeleteFile(ATL::CA2T(filepath));
-						int ret = 
-						fileExist = false;
+						int ret =
+							fileExist = false;
 						break;
 					}
 				}
@@ -278,7 +425,7 @@ int Lemon01::aaaab(){
 			}
 			SlotCompareTime();
 		}
-		file.open(filepath, ios::out|ios::trunc);
+		file.open(filepath, ios::out | ios::trunc);
 		if (!file)
 			printf("\n----------保存购买序列号出错-----------\n");
 		else{
@@ -289,150 +436,87 @@ int Lemon01::aaaab(){
 		msg.setText(QStringLiteral("欢迎使用自动改价控制系统"));
 		msg.exec();
 	}
-	
+
 	locale::global(loc);
 	return 1;
 }
-Lemon01::Lemon01(QWidget *parent)
-	: QWidget(parent)
-	, lastret(999)
-{
-	ui.setupUi(this);
-	readXml();
-	initList();
-	setEmpty();
-	ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-	delAct = new QAction(QStringLiteral("删除"), this);
-	closeAct = new QAction(QStringLiteral("关闭"), this);
-	
-	{
-		connect(delAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAct(bool)));
-		connect(closeAct, SIGNAL(triggered(bool)), this, SLOT(SlotCloseAct(bool)));
-		connect(ui.btnNewMachine, SIGNAL(clicked()), this, SLOT(SlotNewAutoMachine()));
-	}
-
-	{
-		std::string macadddress = ::getHostMacAddress();
-		int i = 0;
-		int tmp = 0;
-		for (auto it : macadddress){
-			if (it == ':') continue;
-			i++;
-			if (it >= '0' && it <= '9')	tmp = it - '0';
-			else if (it >= 'A' && it <= 'Z') tmp = it - 'A' + 10;
-			switch (i){
-			case 1:  _show[7] = tmp; hide[7] = tmp; break;//A
-			case 2:  _show[14] = tmp; hide[14] = tmp; break;//B
-			case 3:  _show[12] = tmp; hide[12] = tmp; break;//C
-			case 4:  _show[1] = tmp; hide[1] = tmp; break;//D
-			case 5:  _show[5] = tmp; hide[5] = tmp; break;//E
-			case 6:  _show[4] = tmp; hide[4] = tmp; break;//F
-			case 7:  _show[9] = tmp; hide[9] = tmp; break;//G
-			case 8:  _show[19] = tmp; hide[19] = tmp; break;//H
-			case 9:  _show[17] = tmp; hide[17] = tmp; break;//I
-			case 10: _show[3] = tmp; hide[3] = tmp; break;//J
-			case 11: _show[16] = tmp; hide[16] = tmp; break;//K
-			case 12: _show[10] = tmp; hide[10] = tmp; break;//L
-			}
+void Lemon01::testRegister(){
+	std::string macadddress = ::getHostMacAddress();
+	int i = 0;
+	int tmp = 0;
+	for (auto it : macadddress){
+		if (it == ':') continue;
+		i++;
+		if (it >= '0' && it <= '9')	tmp = it - '0';
+		else if (it >= 'A' && it <= 'Z') tmp = it - 'A' + 10;
+		switch (i){
+		case 1:  _show[7] = tmp; hide[7] = tmp; break;//A
+		case 2:  _show[14] = tmp; hide[14] = tmp; break;//B
+		case 3:  _show[12] = tmp; hide[12] = tmp; break;//C
+		case 4:  _show[1] = tmp; hide[1] = tmp; break;//D
+		case 5:  _show[5] = tmp; hide[5] = tmp; break;//E
+		case 6:  _show[4] = tmp; hide[4] = tmp; break;//F
+		case 7:  _show[9] = tmp; hide[9] = tmp; break;//G
+		case 8:  _show[19] = tmp; hide[19] = tmp; break;//H
+		case 9:  _show[17] = tmp; hide[17] = tmp; break;//I
+		case 10: _show[3] = tmp; hide[3] = tmp; break;//J
+		case 11: _show[16] = tmp; hide[16] = tmp; break;//K
+		case 12: _show[10] = tmp; hide[10] = tmp; break;//L
 		}
-		_show[0] = _show[9] * 2 + _show[17];
-		_show[2] = _show[10] * 3 + _show[12];
-		_show[6] = _show[4] + 8 + _show[9];
-		_show[8] = _show[16] * 4 + _show[17];
-		_show[11] = _show[14] * 4 + _show[12];
-		_show[13] = _show[17] * 5 + _show[5];
-		_show[15] = _show[5] + 8 + _show[16];
-		_show[18] = _show[3] * 3 + _show[7];
-		
-		_show[1] = _show[1] + 9;
-		_show[3] = _show[3] + 4;
-		_show[4] = _show[4] + 4;
-		_show[5] = _show[5] * 2;
-		_show[7] = _show[7] + 5;
-		_show[9] = _show[9] + 13;
-		_show[10] = _show[10] + 1;
-		_show[12] = _show[12] + 4;
-		_show[14] = _show[14] + 6;
-		_show[16] = _show[16] + 3;
-		_show[19] = _show[19] * 2;
-
-		hide[0] = hide[19] * 2 + hide[1];
-		hide[2] = hide[1] * 3 + hide[12];
-		hide[6] = hide[16] + 8 + hide[3];
-		hide[8] = hide[1] * 4 + hide[5];
-		hide[11] = hide[4] * 4 + hide[19];
-		hide[13] = hide[10] + 5 + hide[4];
-		hide[15] = hide[14] + 8 + hide[12];
-		hide[18] = hide[1] * 3 + hide[7];
-		hide[20] = hide[7] * hide[12] + hide[1];
-		hide[21] = hide[14] * hide[1] + hide[4];
-		hide[22] = hide[17] * hide[3] + hide[19];
-		hide[23] = hide[12] * hide[16] + hide[5];
-		hide[24] = hide[1] * hide[5] + hide[9];
-		hide[25] = hide[7] * hide[16] + hide[10];
-		hide[26] = hide[3] * hide[1] + hide[17];
-		hide[27] = hide[9] * hide[4] + hide[7];
-		hide[28] = hide[4] * hide[16] + hide[12];
-		hide[29] = hide[9] * hide[3] + hide[14];
-		hide[30] = hide[19] * hide[10] + hide[1];
-		hide[31] = hide[19] * hide[9] + hide[4];
-
-		hide[7] += 4; hide[14] += 3; hide[12] += 6;
-		hide[1] += 8; hide[5] += 4; hide[4] *= 6;
-		hide[9] += 7; hide[19] += 8; hide[17] += 6;
-		hide[3] *= 7; hide[16] += 2; hide[10] += 5;
-		for (i = 0; i < 20; ++i)
-			_show[i] %= 36;
-		for (i = 0; i < 32; ++i){
-			_hide[i] = hide[i];
-		}
-		//aaaab();
 	}
+	_show[0] = _show[9] * 2 + _show[17];
+	_show[2] = _show[10] * 3 + _show[12];
+	_show[6] = _show[4] + 8 + _show[9];
+	_show[8] = _show[16] * 4 + _show[17];
+	_show[11] = _show[14] * 4 + _show[12];
+	_show[13] = _show[17] * 5 + _show[5];
+	_show[15] = _show[5] + 8 + _show[16];
+	_show[18] = _show[3] * 3 + _show[7];
 
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
-	timer->start(1000*60*10);
-}
-Lemon01::~Lemon01()
-{
-	QuitThisSystem();
-}
-void Lemon01::setEmpty(){
-	ui.accountline->setText("");
-	ui.passwordline->setText("");
-	ui.lowwerspin->setValue(0);
-	ui.percentspin->setValue(10);
-	ui.times->setValue(5);
-	ui.upload->setValue(15);
-	ui.time->setValue(0);
-	ui.mode->setCurrentIndex(0);
-}
-void Lemon01::initList(){
-	QStringList list;
-	for (auto it = infoMap.begin(); it != infoMap.end(); ++it){
-		list.append(QString::fromStdString(it->second.name));
-	}
-	list.append(QStringLiteral("新账号"));
-	ui.listWidget->addItems(list);
-	for (int i = 0; i < ui.listWidget->count() - 1; ++i){
-		QPixmap pix(":/Lemon01/shop");
-		ui.listWidget->item(i)->setIcon(QIcon(pix.scaled(20,20)));
-	}
-	connect(ui.listWidget, SIGNAL(currentItemChanged(QListWidgetItem *,QListWidgetItem *)),
-		this, SLOT(SlotListItemClicked0(QListWidgetItem *, QListWidgetItem *)));
-	connect(ui.listWidget, SIGNAL(itemClicked(QListWidgetItem *)),
-		this, SLOT(SlotListItemClicked(QListWidgetItem *)));
-	connect(ui.listWidget, SIGNAL(customContextMenuRequested(const QPoint&)), 
-		this, SLOT(SlotListContextRequested(const QPoint&)));
+	_show[1] = _show[1] + 9;
+	_show[3] = _show[3] + 4;
+	_show[4] = _show[4] + 4;
+	_show[5] = _show[5] * 2;
+	_show[7] = _show[7] + 5;
+	_show[9] = _show[9] + 13;
+	_show[10] = _show[10] + 1;
+	_show[12] = _show[12] + 4;
+	_show[14] = _show[14] + 6;
+	_show[16] = _show[16] + 3;
+	_show[19] = _show[19] * 2;
 
-}
-void Lemon01::QuitThisSystem(){
-	for (auto iter = infoMap.begin(); iter != infoMap.end(); ++iter){
-		selectName = iter->first;
-		SlotCloseAct(false);
-	}
-}
+	hide[0] = hide[19] * 2 + hide[1];
+	hide[2] = hide[1] * 3 + hide[12];
+	hide[6] = hide[16] + 8 + hide[3];
+	hide[8] = hide[1] * 4 + hide[5];
+	hide[11] = hide[4] * 4 + hide[19];
+	hide[13] = hide[10] + 5 + hide[4];
+	hide[15] = hide[14] + 8 + hide[12];
+	hide[18] = hide[1] * 3 + hide[7];
+	hide[20] = hide[7] * hide[12] + hide[1];
+	hide[21] = hide[14] * hide[1] + hide[4];
+	hide[22] = hide[17] * hide[3] + hide[19];
+	hide[23] = hide[12] * hide[16] + hide[5];
+	hide[24] = hide[1] * hide[5] + hide[9];
+	hide[25] = hide[7] * hide[16] + hide[10];
+	hide[26] = hide[3] * hide[1] + hide[17];
+	hide[27] = hide[9] * hide[4] + hide[7];
+	hide[28] = hide[4] * hide[16] + hide[12];
+	hide[29] = hide[9] * hide[3] + hide[14];
+	hide[30] = hide[19] * hide[10] + hide[1];
+	hide[31] = hide[19] * hide[9] + hide[4];
 
+	hide[7] += 4; hide[14] += 3; hide[12] += 6;
+	hide[1] += 8; hide[5] += 4; hide[4] *= 6;
+	hide[9] += 7; hide[19] += 8; hide[17] += 6;
+	hide[3] *= 7; hide[16] += 2; hide[10] += 5;
+	for (i = 0; i < 20; ++i)
+		_show[i] %= 36;
+	for (i = 0; i < 32; ++i){
+		_hide[i] = hide[i];
+	}
+	//aaaab();
+}
 void Lemon01::SlotCompareTime(){
 	int ret = ::CompareTime(endtime);
 	QMessageBox msg;
@@ -470,309 +554,339 @@ void Lemon01::SlotCompareTime(){
 		}
 	}
 }
-void Lemon01::SlotListItemClicked0(QListWidgetItem * a, QListWidgetItem *b){
-	SlotListItemClicked(a);
-}
+
 void Lemon01::SlotListContextRequested(const QPoint& point){
 	selectName.clear();
 	auto item = ui.listWidget->itemAt(point);
+	QMenu menu;
+	menu.addAction(addAct);
 	if (item){
-		if (item->text() == QStringLiteral("新账号")) return;
 		selectName = item->text().toStdString();
-		QMenu menu;
 		menu.addAction(delAct);
-		if (threadMap.find(selectName) != threadMap.end())
-			menu.addAction(closeAct);
-		menu.exec(mapToGlobal(point)+ QPoint(10,10));
+		menu.addAction(updateAct);
 	}
-	
+	menu.exec(ui.listWidget->mapToGlobal(point) + QPoint(10, 10));
 }
 void Lemon01::SlotDelAct(bool flag){
-	SlotCloseAct(flag);
-	auto iter = infoMap.find(selectName);
-	if (iter != infoMap.end()){
-		infoMap.erase(iter);
+	if (delXml(selectName)){
+		RemoveItemInList(selectName);
+		SlotCloseAct(flag);
+		if (selectName == currentShop)
+			setEmpty();
 	}
-	delXml(selectName);
-	auto item = ui.listWidget->findItems(QString::fromStdString(selectName), Qt::MatchFixedString);
-	if (!item.empty())
-		ui.listWidget->takeItem(ui.listWidget->row(item[0]));
 }
 void Lemon01::SlotCloseAct(bool flag){
 	auto iter = threadMap.find(selectName);
 	if (iter != threadMap.end()){
 		iter->second->killProcess();
+		delete iter->second;
+		threadMap.erase(iter);
 	}
 }
+void Lemon01::SlotAddAct(bool){
+	SlotAddShop();
+}
+void Lemon01::SlotUpdateAct(bool){
+	auto iter = infoMap.find(selectName);
+	if (iter != infoMap.end()){
+		SlotUpdateShop(iter->second);
+	}
+}
+void Lemon01::SlotAddShop(){
+	AddShopDialog a;
+	auto ret = a.exec();
+	if (ret == AddShopDialog::Accepted){
+		ShopInfo shopInfo;
+		a.GetShopInfo(shopInfo);
+		auto it = infoMap.find(shopInfo.name);
+		if (it == infoMap.end()){
+			writeXml(shopInfo);
+			InsertItemInList(shopInfo.name);
+		}
+		else{
+			QMessageBox box(QMessageBox::Information, "Add Shop Error", QStringLiteral("此店铺名已存在, 请考虑修改"), QMessageBox::NoButton, this);
+			box.setStandardButtons(QMessageBox::Ok);
+			box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+			box.exec();
+		}
+	}
+}
+void Lemon01::SlotUpdateShop(ShopInfo& shopInfo){
+	AddShopDialog a(shopInfo);
+	auto ret = a.exec();
+	if (ret == AddShopDialog::Accepted){
+		a.GetShopInfo(shopInfo);
+		writeXml(shopInfo);
+	}
+}
+void Lemon01::SlotTableContextRequested(const QPoint& point){
+	tableRow = -1;
+	auto item = ui.tableWidget->itemAt(point);
+	QMenu menu;
+	menu.addAction(addEanAct);
+	if (item){
+		tableRow = item->row();
+		menu.addAction(delEanAct);
+		menu.addAction(updateEanAct);
+	}
+	menu.exec(ui.tableWidget->mapToGlobal(point) + QPoint(10, 10));
+}
+void Lemon01::SlotTableViewContextRequest(const QPoint& point){
+	noticeIndex = ui.tableView->indexAt(point);
+	if (noticeIndex != QModelIndex()){
+		QMenu menu;
+		menu.addAction(setPriceAct);
+		menu.addAction(ignoreAct);
+		menu.exec(ui.tableWidget->mapToGlobal(point) + QPoint(10, 10));
+	}
+	
+}
+
+void Lemon01::SlotDelEanAct(bool flag){
+	if (tableRow >= 0){
+		ui.tableWidget->removeRow(tableRow);
+	}
+}
+void Lemon01::SlotAddEanAct(bool){
+	AddEanAttr a;
+	auto ret = a.exec();
+	if (ret == AddEanAttr::Accepted){
+		CPComplexAttr attr;
+		a.GetEanAttr(attr);
+		if (!IsEanInTable(attr.ean)){
+			int row = ui.tableWidget->rowCount();
+			ui.tableWidget->insertRow(row);
+			auto item = new QTableWidgetItem(QString::fromStdString(attr.ean));
+			item->setFlags(item->flags() & (~Qt::ItemIsEditable));
+			ui.tableWidget->setItem(row, 0, item);
+			ui.tableWidget->setItem(row, 1, new QTableWidgetItem(QString("%1").arg(attr.least_price)));
+			ui.tableWidget->setItem(row, 2, new QTableWidgetItem(QString("%1").arg(attr.max_times)));
+		}
+	}
+}
+void Lemon01::SlotUpdateEanAct(bool){
+	CPComplexAttr attr;
+	attr.ean = ui.tableWidget->item(tableRow, 0)->text().toStdString();
+	attr.least_price = ui.tableWidget->item(tableRow, 1)->text().toDouble();
+	attr.max_times = ui.tableWidget->item(tableRow, 2)->text().toInt();
+	std::string tmp_ean = attr.ean;
+	AddEanAttr a(attr);
+	auto ret = a.exec();
+	if (ret == AddEanAttr::Accepted){
+		a.GetEanAttr(attr);
+		if (tmp_ean == attr.ean || !IsEanInTable(attr.ean)){
+			ui.tableWidget->item(tableRow, 0)->setText(QString::fromStdString(attr.ean));
+			ui.tableWidget->item(tableRow, 1)->setText(QString("%1").arg(attr.least_price));
+			ui.tableWidget->item(tableRow, 2)->setText(QString("%1").arg(attr.max_times));
+		}
+	}
+}
+
+void Lemon01::SlotSetPriceAct(bool){
+
+}
+void Lemon01::SlotIgnoreAct(bool){
+	if (noticeIndex != QModelIndex()){
+		auto machine = threadMap.find(currentShop);
+		if (machine->second){
+			machine->second->model->removeRow(noticeIndex.row());
+		}
+	}
+}
+
+bool Lemon01::IsEanInTable(std::string ean){
+	for (int i = 0; i < ui.tableWidget->rowCount(); ++i){
+		if (ui.tableWidget->item(i, 0)->text().compare(QString::fromStdString(ean)) == 0){
+			QMessageBox box(QMessageBox::Information, "Add Ean Error", QStringLiteral("此EAN已存在, 请考虑修改"), QMessageBox::NoButton, this);
+			box.setStandardButtons(QMessageBox::Ok);
+			box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+			box.exec();
+			return true;
+		}
+	}
+	return false;
+}
+
 void Lemon01::SlotListItemClicked(QListWidgetItem *item){
-	std::string text = item->text().toStdString();
-	auto it = infoMap.find(text);
-	if (it != infoMap.end()){
-		ui.accountline->setText(QString::fromStdString(it->second.account));
-		ui.passwordline->setText(QString::fromStdString(it->second.password));
+	if (item == nullptr) return;
+	ui.selectShop->setText(item->text());
+	currentShop = item->text().toStdString();
+	AutoMachine* machine = nullptr;
+	auto iter = threadMap.find(currentShop);
+	if (iter == threadMap.end()){
+		//创建
+		machine = new AutoMachine(currentShop);
+		threadMap[currentShop] = machine;
+		connect(machine, SIGNAL(SigFailed(std::string)), this, SLOT(SlotAutoFailed(std::string)));
+		connect(machine, SIGNAL(SigStop(std::string)), this, SLOT(SlotAutoFinish(std::string)));
 	}
-	else{
-		setEmpty();
-	}
-	auto iter = threadMap.find(text);
-	if (iter != threadMap.end()){
-		ui.btnNewMachine->setDisabled(true);
-		ui.btnNewMachine->setText(QStringLiteral("运行中......"));
-	}
-	else{
-		ui.btnNewMachine->setDisabled(false);
-		ui.btnNewMachine->setText(QStringLiteral("运行"));
-	}
+	else
+		machine = iter->second;
+	DisplayAttr(machine);
 }
-void Lemon01::SlotAutoFinish(std::string name){
-	auto it = infoMap.find(name);
-	if (it != infoMap.end()){
-		auto iter = threadMap.find(name);
-		if (iter != threadMap.end()){
-			AutoMachine* tmp = iter->second;
-			ShopInfo& info = it->second;
-			info.name = name;
-			info.account = name;
-			info.password = tmp->_password;
-			writeXml(info);
-		}
-	}
-	else{
-		int i = ui.listWidget->count() - 1;
-		ui.listWidget->insertItem(i, QString::fromStdString(name)); 
-		QPixmap pix(":/Lemon01/shop");
-		ui.listWidget->item(i)->setIcon(QIcon(pix.scaled(20, 20)));
-		auto iter = threadMap.find(name);
-		if (iter != threadMap.end()){
-			AutoMachine* tmp = iter->second;
-			ShopInfo info;
-			info.name = name;
-			info.account = name;
-			info.password = tmp->_password;
-			infoMap[name] = info;
-			writeXml(info);
-		}
-	}
-	ui.btnNewMachine->setDisabled(true);
-	ui.btnNewMachine->setText(QStringLiteral("运行中......"));
+void Lemon01::SlotDelInMyShop(QListWidgetItem *item){
+	if (item)
+		ui.myShopList->takeItem(ui.myShopList->row(item));
+}
+void Lemon01::RemoveItemInList(std::string name){
 	auto item = ui.listWidget->findItems(QString::fromStdString(name), Qt::MatchFixedString);
-	item[0]->setBackgroundColor(QColor("#36ab60"));
+	if (!item.empty())
+		ui.listWidget->takeItem(ui.listWidget->row(item[0]));
+}
+void Lemon01::InsertItemInList(std::string name){
+	QPixmap pix(":/Lemon01/shop");
+	new QListWidgetItem(QIcon(pix.scaled(25, 25)), QString::fromStdString(name), ui.listWidget);
+}
+
+void Lemon01::DisplayAttr(AutoMachine* machine){
+	ui.myShopList->clear();
+	ui.tableWidget->clear();
+	auto cpAttr = machine->GetCPAttr();
+	auto cpComplexAttr = machine->GetCPComplexAttr();
+	setEmpty(cpAttr);
+
+	QStringList headers;
+	headers << "EAN" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+	ui.tableWidget->setHorizontalHeaderLabels(headers);
+	ui.tableWidget->setRowCount(cpComplexAttr->size());
+	int i = 0;
+	for (auto iter = cpComplexAttr->begin(); iter != cpComplexAttr->end(); ++iter, ++i){
+		auto item = new QTableWidgetItem(QString::fromStdString(iter->second.ean));
+		item->setFlags(item->flags() & (~Qt::ItemIsEditable));
+		ui.tableWidget->setItem(i, 0, item);
+		ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString("%1").arg(iter->second.least_price)));
+		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
+	}
+	ui.tableView->setModel(machine->model);
+}
+
+void Lemon01::SlotAutoFinish(std::string name){
+	setShopState(MACHINE_STOP);
+	auto it = threadMap.find(name);
+	if (it != threadMap.end()){
+		it->second->SetStopState();
+	}
 }
 void Lemon01::SlotAutoFailed(std::string name){
+	setShopState(MACHINE_STOP);
 	QMessageBox::information(this, QString::fromStdString(name), QStringLiteral("自动改价启动失败"), QMessageBox::NoButton);
 	auto it = threadMap.find(name);
 	if (it != threadMap.end()){
-		if (it->second)
-			delete it->second;
-		it->second = nullptr;
-		threadMap.erase(it);
+		it->second->SetStopState();
 	}
 }
-void Lemon01::SlotAutoStop(std::string name){
-	auto it = threadMap.find(name);
-	if (it != threadMap.end()){
-		if (it->second)
-			delete it->second;
-		it->second = nullptr;
-		threadMap.erase(it);
+void Lemon01::SlotAutoStop(){
+	auto iter = threadMap.find(currentShop);
+	if (iter != threadMap.end()){
+		if (iter->second){
+			auto machine = iter->second;
+			machine->Stop();
+			setShopState(MACHINE_STOP);
+			auto item = ui.listWidget->findItems(QString::fromStdString(currentShop), Qt::MatchFixedString);
+			if (!item.empty()){
+				QPixmap pix(":/Lemon01/shop");
+				item[0]->setIcon(QIcon(pix.scaled(25, 25)));
+			}
+		}
 	}
-	if (ui.listWidget->currentItem()->text().toStdString() == name){
-		ui.btnNewMachine->setDisabled(false);
-		ui.btnNewMachine->setText(QStringLiteral("运行"));
-	}
-	auto item = ui.listWidget->findItems(QString::fromStdString(name), Qt::MatchFixedString);
-	if (!item.empty())
-		item[0]->setBackgroundColor(QColor("#252629"));
 }
-void Lemon01::SlotNewAutoMachine(){
-	if (threadMap.size() >= total){
-		QString totaltext = QString("%1").arg(total);
-		QString text = QStringLiteral("对不起，您被授权同时只能开启") + totaltext + QStringLiteral("个店铺\n如果需要增加店铺数量，请联系我们");
-		QMessageBox msg;
-		msg.setWindowTitle(QStringLiteral("通知"));
-		msg.setText(text);
-		msg.setIcon(QMessageBox::NoIcon);
-		msg.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
-		msg.addButton(QStringLiteral("确定"), QMessageBox::ActionRole);
-		msg.exec();
-		return;
+void Lemon01::SlotAutoPlay(){
+	auto iter = threadMap.find(currentShop);
+	if (iter != threadMap.end()){
+		if (iter->second){
+			auto machine = iter->second;
+			machine->PLay();
+			setShopState(MACHINE_PLAY);
+			auto item = ui.listWidget->findItems(QString::fromStdString(currentShop), Qt::MatchFixedString);
+			if (!item.empty()){
+				QPixmap pix(":/Lemon01/run");
+				item[0]->setIcon(QIcon(pix.scaled(25, 25)));
+			}
+		}
 	}
-	std::string name = ui.accountline->text().toStdString();
-	if (name.empty()) return;
-	std::string password = ui.passwordline->text().toStdString();
-	if (password.empty()) return;
-	float percent = float(ui.percentspin->value()) / 100;
-	float lowwer = ui.lowwerspin->value();
-	int times = ui.times->value();
-	float upload = float(ui.upload->value()) / 100;
-	int mintue = ui.time->value();
-	int mode = ui.mode->currentIndex();
-	auto iter = threadMap.find(name);
-	if (iter == threadMap.end()){
-		AutoMachine* thread = new AutoMachine(name, password, percent, lowwer, times, upload, mintue, mode);
-		threadMap[name] = thread;
-		connect(thread, SIGNAL(success(std::string)), this, SLOT(SlotAutoFinish(std::string)));
-		connect(thread, SIGNAL(failed(std::string)), this, SLOT(SlotAutoFailed(std::string)));
-		connect(thread, SIGNAL(stop(std::string)), this, SLOT(SlotAutoStop(std::string)));
+}
+void Lemon01::SlotAutoPause(){
+	auto iter = threadMap.find(currentShop);
+	if (iter != threadMap.end()){
+		if (iter->second){
+			auto machine = iter->second;
+			machine->Pause();
+			setShopState(MACHINE_PAUSE);
+			auto item = ui.listWidget->findItems(QString::fromStdString(currentShop), Qt::MatchFixedString);
+			if (!item.empty()){
+				QPixmap pix(":/Lemon01/pause_yellow");
+				item[0]->setIcon(QIcon(pix.scaled(25, 25)));
+			}
+		}
+	}
+}
+void Lemon01::SlotAutoUpdate(){
+	auto iter = threadMap.find(currentShop);
+	if (iter != threadMap.end()){
+		if (iter->second){
+			auto machine = iter->second;
+			CPAttr attr;
+			attr.lowwer = ui.lowwerspin->value();
+			attr.max_percent = ui.upload->value() / 100.0;
+			attr.max_times = ui.times->value();
+			attr.minute = ui.time->value();
+			attr.percent = ui.percentspin->value() / 100.0;
+			attr.my_shop = "";
+			if (ui.myShopList->count() > 0){
+				std::string shops = ui.myShopList->item(0)->text().toStdString();
+				for (int i = 1; i < ui.myShopList->count(); ++i){
+					shops += "," + ui.myShopList->item(i)->text().toStdString();
+				}
+				attr.my_shop = shops;
+			}
+			std::vector<CPComplexAttr> vec;
+			for (int i = 0; i < ui.tableWidget->rowCount(); ++i){
+				CPComplexAttr cattr;
+				cattr.ean = ui.tableWidget->item(i, 0)->text().toStdString();
+				cattr.least_price = ui.tableWidget->item(i, 1)->text().toDouble();
+				cattr.max_times = ui.tableWidget->item(i, 2)->text().toInt();
+				vec.push_back(cattr);
+			}
+			machine->UpdateAttr(attr, vec);
+		}
+	}
+}
+void Lemon01::SlotAutoNotice(){
+	//判断currentShop是否存在
+	if (!currentShop.empty()){
+		//显示通知信息
+		//不使用NoticeDialog dlg(currentShop);
 
-		thread->start();
-	}
-	else{
-		//该店铺已经开启了自动改价
 	}
 }
-void Lemon01::readXml()
+bool Lemon01::readXml()
 {
 	std::vector<ShopInfo> vec;
 	ShopInfo cond;
-	DataManager::GetInstance()->GetShops(vec, cond);
-	for (auto iter = vec.begin(); iter != vec.end(); ++iter){
-		infoMap[iter->name] = *iter;
-	}
-	/*QString filePath = FILE_PATH;
-	QFile file;
-	if (!file.exists(filePath)){
-		file.setFileName(filePath);
-		createXml();
-	}
-	file.setFileName(filePath);
-	if (file.open(QFile::ReadOnly | QFile::Text))
-	{
-		QDomDocument dom;
-		if (dom.setContent(&file))
-		{
-			QDomElement rootDom = dom.documentElement();
-			if (rootDom.tagName() == "Lemon")
-			{
-				QDomNode subNode = rootDom.firstChild();
-				while (!subNode.isNull())
-				{
-					QDomElement subElement = subNode.toElement();
-					if (subElement.tagName() == "item")
-					{
-						Info* info = new Info;
-						info->name = subElement.attribute("name").toStdString();
-						info->password = subElement.attribute("password").toStdString();
-						info->percent = subElement.attribute("percent").toFloat();
-						info->lowwer = subElement.attribute("lowwer").toFloat();
-						info->times = subElement.attribute("times").toInt();
-						info->upload = subElement.attribute("upload").toFloat();
-						info->minute = subElement.attribute("minute").toInt();
-						info->mode = subElement.attribute("mode").toInt();
-						infoMap[info->name] = info;
-					}
-					subNode = subNode.nextSibling();
-				}
-			}
+	if (DataManager::GetInstance()->GetShops(vec, cond) == SQL_OK){
+		for (auto iter = vec.begin(); iter != vec.end(); ++iter){
+			infoMap[iter->name] = *iter;
 		}
-		file.close();
-	}*/
+		return true;
+	}
+	return false;
 }
-
-//TODO::DEL
-void Lemon01::createXml(){
-	/*QString filePath = FILE_PATH;
-	QFile file(filePath);
-	file.open(QIODevice::WriteOnly | QIODevice::Text);
-	QDomDocument doc;
-	QDomProcessingInstruction instruction;
-	instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"GB2312\"");
-	doc.appendChild(instruction);
-	QDomElement root = doc.createElement("Lemon");
-	doc.appendChild(root);
-	QTextStream out(&file);
-	doc.save(out, 4);
-	file.close();*/
-}
-void Lemon01::writeXml(ShopInfo& shopInfo)
+bool Lemon01::writeXml(ShopInfo& shopInfo)
 {
-	DataManager::GetInstance()->AddShop(shopInfo);
-	/*QString filePath = FILE_PATH;
-	QFile file;
-	if (!file.exists(filePath)){
-		file.setFileName(filePath);
-		createXml();
+	if (DataManager::GetInstance()->AddShop(shopInfo) == SQL_OK){
+		infoMap[shopInfo.name] = shopInfo;
+		return true;
 	}
-	file.setFileName(filePath);
-	if (file.open(QFile::ReadOnly | QFile::Text))
-	{
-		QDomDocument dom;
-		if (dom.setContent(&file))
-		{
-			file.close();
-			QDomElement rootDom = dom.documentElement();
-			if (rootDom.tagName() == "Lemon")
-			{
-				QDomElement elem = dom.createElement(tr("item"));;
-				elem.setAttribute("name", QString::fromStdString(name));
-				elem.setAttribute("password", QString::fromStdString(password));
-				elem.setAttribute("percent", QString("%1").arg(percent));
-				elem.setAttribute("lowwer", QString("%1").arg(lowwer));
-				elem.setAttribute("times", QString("%1").arg(times));
-				elem.setAttribute("upload", QString("%1").arg(upload));
-				elem.setAttribute("minute", QString("%1").arg(minute));
-				elem.setAttribute("mode", QString("%1").arg(mode));
-				QDomNodeList list = rootDom.childNodes();
-				int i = 0;
-				for (; i < list.size(); ++i){
-					if (list.at(i).toElement().attribute("name") == QString::fromStdString(name)){
-						rootDom.replaceChild(elem, list.at(i));
-						break;
-					}
-				}
-				if (i == list.size())
-					rootDom.appendChild(elem);
-				file.setFileName(filePath);
-				if (file.open(QFile::WriteOnly | QFile::Text)){
-					QTextStream out(&file);
-					dom.save(out, 4);
-					file.close();
-					return;
-				}
-			}
-		}
-		file.close(); 
-	}*/
+	return false;
 }
-void Lemon01::delXml(std::string name)
+bool Lemon01::delXml(std::string name)
 {
-	DataManager::GetInstance()->DelShop(name);
-	/*QString filePath = FILE_PATH;
-	QFile file;
-	if (!file.exists(filePath)){
-		file.setFileName(filePath);
-		createXml();
-	}
-	file.setFileName(filePath);
-	if (file.open(QFile::ReadOnly | QFile::Text))
-	{
-		QDomDocument dom;
-		if (dom.setContent(&file))
-		{
-			file.close();
-			QDomElement rootDom = dom.documentElement();
-			if (rootDom.tagName() == "Lemon")
-			{
-				QDomNodeList nodes = rootDom.childNodes();
-				int i = 0;
-				for (; i < nodes.size(); ++i){
-					QDomElement elem = nodes.at(i).toElement();
-					if (elem.attribute("name").toStdString() == name){
-						break;
-					}
-				}
-				if (i < nodes.size()){
-					rootDom.removeChild(nodes.at(i));
-				}
-				file.setFileName(filePath);
-				if (file.open(QFile::WriteOnly | QFile::Text)){
-					QTextStream out(&file);
-					dom.save(out, 4);
-					file.close();
-					return;
-				}
-			}
+	if (DataManager::GetInstance()->DelShop(name) == SQL_OK){
+		auto iter = infoMap.find(name);
+		if (iter != infoMap.end()){
+			infoMap.erase(iter);
 		}
-		file.close();
-	}*/
+		return true;
+	}
+	return false;
 }

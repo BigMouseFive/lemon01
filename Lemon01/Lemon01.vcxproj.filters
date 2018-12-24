@@ -68,6 +68,42 @@
     <ClCompile Include="DataManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AddShopDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AddShopDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="AddShopDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BaseListWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BaseListWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEanAttr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AddEanAttr.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AddEanAttr.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\AutoMachine\NoticeDialog.cpp">
+      <Filter>Source Files\AutoMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_NoticeDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_NoticeDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lemon01.h">
@@ -80,6 +116,27 @@
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <CustomBuild Include="SourceCode\AutoMachine\AutoMachine.h">
+      <Filter>Source Files\AutoMachine</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AddShopDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AddShopDialog.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="BaseListWidget.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AddEanAttr.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AddEanAttr.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="NoticeDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SourceCode\AutoMachine\NoticeDialog.h">
       <Filter>Source Files\AutoMachine</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -107,6 +164,18 @@
     </ClInclude>
     <ClInclude Include="DataManager.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_AddShopDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataModel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_AddEanAttr.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_NoticeDialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

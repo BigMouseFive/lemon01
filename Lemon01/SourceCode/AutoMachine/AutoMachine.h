@@ -3,33 +3,45 @@
 #include <string>
 #include <Windows.h>
 #include <atlbase.h>
+#include "DataModel.h"
+#include <map>
+#include <qstandarditemmodel.h>
 
 Q_DECLARE_METATYPE(std::string)
 
-#define LOGIN_URL "https://uae.souq.com/ae-en/login.php"
 class AutoMachine : public QThread{
 	Q_OBJECT
 public:
-	AutoMachine(std::string name, std::string password, float percent, float lowwer, int times, float upload, int minute, int mode, std::string loginUrl = LOGIN_URL, QObject* parent = nullptr);
+	AutoMachine(std::string name, QObject* parent = nullptr);
 	~AutoMachine();
 	void killProcess();
+	void PLay();
+	void Stop();
+	void Pause();
+	void SetStopState();
+	void UpdateAttr(CPAttr& attr, std::vector<CPComplexAttr>& vec);
+	void ReadAttr();
+	CPAttr* GetCPAttr();
+	int GetState();
+	std::map<std::string, CPComplexAttr>* GetCPComplexAttr();
+
 signals:
-	void success(std::string);
-	void failed(std::string);
-	void stop(std::string);
+	void SigSuccess(std::string);
+	void SigFailed(std::string);
+	void SigStop(std::string);
 protected:
 	void run();
 
+private slots:
+	void onTimer();
+
 public:
-	std::string _cmdline;
 	std::string _name;
-	std::string _password;
-	std::string _loginUrl;
-	float _percent;
-	float _lowwer;
-	float _upload;
-	int _times;
-	int _mintue;
-	int _mode;
+	std::string _cmdline;
+	char _execPath[200];
+	CPAttr cpAttr;
+	int timeStamp;
+	std::map<std::string, CPComplexAttr> cpComplexAttr;
+	QStandardItemModel* model;
 	PROCESS_INFORMATION pinfo;
 };

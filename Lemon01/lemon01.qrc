@@ -1,17 +1,24 @@
 <RCC>
     <qresource prefix="/Lemon01">
-        <file alias="account">account.png</file>
-        <file alias="down">down.png</file>
-        <file alias="password">password.png</file>
-        <file alias="percent">percent.png</file>
-        <file alias="running">run.png</file>
-        <file alias="run">running.png</file>
-        <file alias="shop">shop.png</file>
-        <file>lemon.png</file>
-        <file>black.qss</file>
-        <file alias="mode">mode.png</file>
-        <file alias="time">time.png</file>
-        <file alias="times">changetimes.png</file>
-        <file alias="upload">upload.png</file>
+        <file alias="account">Resources/style/account.png</file>
+        <file alias="down">Resources/style/down.png</file>
+        <file alias="password">Resources/style/password.png</file>
+        <file alias="percent">Resources/style/percent.png</file>
+        <file alias="running">Resources/style/run.png</file>
+        <file alias="run">Resources/style/running.png</file>
+        <file alias="shop">Resources/style/shop.png</file>
+        <file alias="lemon.png">Resources/style/lemon.png</file>
+        <file alias="black.qss">Resources/style/black.qss</file>
+        <file alias="mode">Resources/style/mode.png</file>
+        <file alias="time">Resources/style/time.png</file>
+        <file alias="times">Resources/style/changetimes.png</file>
+        <file alias="upload">Resources/style/upload.png</file>
+        <file alias="pause">Resources/style/pause.png</file>
+        <file alias="pause_yellow">Resources/style/pause_yellow.png</file>
+        <file alias="stop">Resources/style/stop.png</file>
+        <file alias="stop_red">Resources/style/stop_red.png</file>
+        <file alias="update">Resources/style/update.png</file>
+        <file alias="update_red">Resources/style/update_red.png</file>
+        <file>Resources/style/notice.png</file>
     </qresource>
 </RCC>
