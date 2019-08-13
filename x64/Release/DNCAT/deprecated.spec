@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['deprecated.py'],
+a = Analysis(['deprecated.py', 'settings.py'],
              pathex=['D:\\Utils\\AutoMachine\\VisualStudio2013WorkPlatform\\lemon01\\x64\\Release\\DNCAT'],
              binaries=[],
              datas=[],
@@ -16,7 +16,7 @@ a = Analysis(['deprecated.py'],
              cipher=block_cipher,
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+             cipher=block_cipher) 
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
@@ -28,5 +28,5 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          runtime_tmpdir=None,
+		  runtime_tmpdir=None,
           console=True )

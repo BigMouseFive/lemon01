@@ -85,7 +85,7 @@ Lemon01::Lemon01(QWidget *parent)
 	setEmpty();
 	testRegister();
 	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
+	//connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
 	timer->start(1000*60*10);
 }
 Lemon01::~Lemon01()

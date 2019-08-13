@@ -5,55 +5,55 @@ import threading
 import time
 import sqlite3
 import os
-import scrapy.spiderloader
-import scrapy.statscollectors
-import scrapy.logformatter
-import scrapy.dupefilters
-import scrapy.squeues
- 
-import scrapy.extensions.spiderstate
-import scrapy.extensions.corestats
-import scrapy.extensions.telnet
-import scrapy.extensions.logstats
-import scrapy.extensions.memusage
-import scrapy.extensions.memdebug
-import scrapy.extensions.feedexport
-import scrapy.extensions.closespider
-import scrapy.extensions.debug
-import scrapy.extensions.httpcache
-import scrapy.extensions.statsmailer
-import scrapy.extensions.throttle
- 
-import scrapy.core.scheduler
-import scrapy.core.engine
-import scrapy.core.scraper
-import scrapy.core.spidermw
-import scrapy.core.downloader
- 
-import scrapy.downloadermiddlewares.stats
-import scrapy.downloadermiddlewares.httpcache
-import scrapy.downloadermiddlewares.cookies
-import scrapy.downloadermiddlewares.useragent
-import scrapy.downloadermiddlewares.httpproxy
-import scrapy.downloadermiddlewares.ajaxcrawl
-import scrapy.downloadermiddlewares.decompression
-import scrapy.downloadermiddlewares.defaultheaders
-import scrapy.downloadermiddlewares.downloadtimeout
-import scrapy.downloadermiddlewares.httpauth
-import scrapy.downloadermiddlewares.httpcompression
-import scrapy.downloadermiddlewares.redirect
-import scrapy.downloadermiddlewares.retry
-import scrapy.downloadermiddlewares.robotstxt
- 
-import scrapy.spidermiddlewares.depth
-import scrapy.spidermiddlewares.httperror
-import scrapy.spidermiddlewares.offsite
-import scrapy.spidermiddlewares.referer
-import scrapy.spidermiddlewares.urllength
- 
-import scrapy.pipelines
- 
-import scrapy.core.downloader.handlers.http
+# import scrapy.spiderloader
+# import scrapy.statscollectors
+# import scrapy.logformatter
+# import scrapy.dupefilters
+# import scrapy.squeues
+#
+# import scrapy.extensions.spiderstate
+# import scrapy.extensions.corestats
+# import scrapy.extensions.telnet
+# import scrapy.extensions.logstats
+# import scrapy.extensions.memusage
+# import scrapy.extensions.memdebug
+# import scrapy.extensions.feedexport
+# import scrapy.extensions.closespider
+# import scrapy.extensions.debug
+# import scrapy.extensions.httpcache
+# import scrapy.extensions.statsmailer
+# import scrapy.extensions.throttle
+#
+# import scrapy.core.scheduler
+# import scrapy.core.engine
+# import scrapy.core.scraper
+# import scrapy.core.spidermw
+# import scrapy.core.downloader
+#
+# import scrapy.downloadermiddlewares.stats
+# import scrapy.downloadermiddlewares.httpcache
+# import scrapy.downloadermiddlewares.cookies
+# import scrapy.downloadermiddlewares.useragent
+# import scrapy.downloadermiddlewares.httpproxy
+# import scrapy.downloadermiddlewares.ajaxcrawl
+# import scrapy.downloadermiddlewares.decompression
+# import scrapy.downloadermiddlewares.defaultheaders
+# import scrapy.downloadermiddlewares.downloadtimeout
+# import scrapy.downloadermiddlewares.httpauth
+# import scrapy.downloadermiddlewares.httpcompression
+# import scrapy.downloadermiddlewares.redirect
+# import scrapy.downloadermiddlewares.retry
+# import scrapy.downloadermiddlewares.robotstxt
+#
+# import scrapy.spidermiddlewares.depth
+# import scrapy.spidermiddlewares.httperror
+# import scrapy.spidermiddlewares.offsite
+# import scrapy.spidermiddlewares.referer
+# import scrapy.spidermiddlewares.urllength
+#
+# import scrapy.pipelines
+#
+# import scrapy.core.downloader.handlers.http
 import scrapy.core.downloader.contextfactory
 
 from scrapy.crawler import CrawlerProcess
@@ -63,6 +63,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import random
+import requests
+import json
 
 
 class QuotesSpider(scrapy.Spider):
@@ -80,55 +83,161 @@ class QuotesSpider(scrapy.Spider):
         self.name = shop_name
         self.sql_name = self.name + ".db"
         self.shop_name = shop_name.lower()
-        self.my_shop = []
         self.lock = threading.Lock()
-        self.minute = 0
-        self.max_times = 0
-        self.max_percent = 0
-        self.percent = 0
-        self.lowwer = 0
-        self.control = 0
-        self.firstInitAttr = False
-        self.start_urls = ['https://uae.souq.com/ae-en/' + self.shop_name + '/p/?section=2&page=1']
+        self.start_urls = ['https://www.noon.com/saudi-en/p-14718']
+        self.page_index = 1
         out = "抓取数据：" + self.start_urls[0]
         print(out)
 
     def parse(self, response):
-        for quote in response.xpath(".//div[@class='column column-block block-grid-large single-item']"):
-            # 对fbs的产品不处理
-            fbs = quote.xpath(".//div[@class='flag flag-fbs']")
-            if len(fbs) > 0:
-                continue
-            data_id = quote.xpath(".//a[@class='img-link quickViewAction sPrimaryLink']/@data-id").extract()[0] + "/u/"
-            data_img = str(quote.xpath(".//a[@class='img-link quickViewAction sPrimaryLink']/@data-img").extract()[0]). \
-                           split("item_L_")[-1].split("_")[0] + "/i/?ctype=dsrch"
-            uri = str(quote.xpath(".//a[@class='img-link quickViewAction sPrimaryLink']/@href").extract()[0]). \
-                replace(data_id, data_img)
+        for quote in response.xpath(".//div[@class='jsx-2127843686 productContainer']"):
+            time.sleep(random.randint(0, 1))
+            uri = "https://www.noon.com" + str(
+                quote.xpath(".//a[@class='jsx-2683212362 product gridView']/@href").extract()[0])
             if uri is not None:
+                uri = uri.split('?')[0]
                 yield response.follow(uri, callback=self.prase1)
 
         # 获取下一页的url, （DEL::如果没有就从头开始）
-        next_page = response.xpath(".//li[@class='pagination-next goToPage']/a/@href").extract()
-        if next_page is not None and len(next_page) > 0:
-            next_page = next_page[0].replace("page=", "section=2&page=")
+        value = str(response.xpath(
+            ".//div[@class='jsx-2341487112 paginationWrapper']//a[@class='nextLink']/@aria-disabled").extract()[0])
+        if value is not None and value == "false":
+            self.page_index = self.page_index + 1
+            next_page = self.start_urls[0] + "?page=" + str(self.page_index)
             yield response.follow(next_page, callback=self.parse)
 
     def prase1(self, response):
-        # 黄金购物车店铺名
-        gold_shop = response.xpath('.//span[@class="unit-seller-link"]/a/b//text()').extract()[0]
-        gold_shop = gold_shop.lower()
-        # 产品的ean
-        ean = response.xpath('.//div[@id="productTrackingParams"]/@data-ean').extract()[0]
+        infos, gold_shop = self.getAllPirce(response)  # 获取所有的价格并以此形式返回{shop_name:[price, rating, fullfilled], ...}
+        if gold_shop == "$Rt%6y":
+            gold_shop = self.shop_name
+        ean = response._get_url().split("/")[-2]  # EAN
+        self.solutionNoon(ean, infos, gold_shop)
 
-        next_page = response.xpath(".//a[@class='show-for-medium bold-text']/@href").extract()
-        if next_page is not None and len(next_page) > 0:
-            yield response.follow(next_page[0], callback=self.prase2, meta={'ean': ean, 'gold_shop': gold_shop})
+    def getAllPirce(self, response):
+        infos = {}
+        gold_shop = "$Rt%6y"
+        rows = response.xpath(".//ul[@class='jsx-1312782570 offersList']/li")
+        for row in rows:
+            price = row.xpath(".//span[@class='jsx-3799960900 sellingPrice']//text()").extract()[0]
+            price = round(float(price.strip().split('SAR')[-1]), 2)
+            shop_name = row.xpath(".//p[@class='jsx-1312782570']//text()").extract()
+            shop_name = str(shop_name[2]).lower()
+            if gold_shop == "$Rt%6y":
+                gold_shop = shop_name
+            ret = row.xpath(".//div[@class='jsx-3304762718 container']")
+            is_fbn = False
+            if len(ret) > 0:
+                is_fbn = True
+            rating = 100
+            infos[shop_name] = [price, rating, is_fbn]
+        if len(infos) == 0:
+            price = response.xpath(
+                ".//div[@class='jsx-3799960900 pdpPrice']//span[@class='jsx-3799960900 sellingPrice']//text()").extract()[
+                0]
+            price = round(float(price.strip().split('SAR')[-1]), 2)
+            is_fbn = False
+            ret = response.xpath(
+                ".//div[@class='jsx-2490358733 shippingEstimatorContainer']//div[@class='jsx-3304762718 container']")
+            if len(ret) > 0:
+                is_fbn = True
+            rating = 100
+            infos[self.shop_name] = [price, rating, is_fbn]
+        return infos, gold_shop
 
+    def getAttr(self, ean):
+        attr = {"self_least_price": 0, "minute": 0,
+                "max_times": 5, "max_percent": 0.2,
+                "percent": 0.1, "lowwer": 0,
+                "control": 0, "my_shop": []}
+
+        self.lock.acquire()
+        conn = sqlite3.connect("DataBase.db")
+        # 本店铺本产品限制的最低价
+        try:
+            ret = conn.execute("select least_price from 'CPConplexAttr' where ean=? and shop=?;",
+                               (ean, self.name)).fetchall()
+            if len(ret) > 0:
+                attr["self_least_price"] = ret[0][0]
+        except:
+            attr["self_least_price"] = 0
+
+        # 实时改价参数
+        try:
+            ret = conn.execute(
+                "select minute,max_times,max_percent,percent,lowwer,control,my_shop from 'CPAttr' where shop=?;",
+                (self.name,)).fetchall()
+            if len(ret) > 0:
+                attr["minute"] = ret[0][0]
+                attr["max_times"] = ret[0][1]
+                attr["max_percent"] = ret[0][2]
+                attr["percent"] = ret[0][3]
+                attr["lowwer"] = ret[0][4]
+                attr["control"] = ret[0][5]
+                attr["my_shop"] = ret[0][6].lower().strip().split(",")
+        except:
+            # print("获取改价参数出错，建议查明原因")
+            tmp = 1
+        conn.close()
+        self.lock.release()
+        attr["my_shop"].append(self.shop_name)
+        return attr
+
+    def solutionNoon(self, ean, infos, gold_shop):
+        attr = self.getAttr(ean)
+        out = time.strftime("%Y-%m-%d %H:%M:%S") + " " + ean + " 本店铺[" + str(infos[self.shop_name][0]) + "]\t" + \
+              "购物车[" + str(infos[gold_shop][0]) + "][" + gold_shop + "]"
+        self.spiderRecord(ean, infos[gold_shop][0] ,gold_shop)
+        if gold_shop in attr["my_shop"]:  # 黄金购物车是自家店铺
+            out = "情况A " + out + "\t不修改"
+        else:
+            if infos[self.shop_name][2] == True:  # 是FBN产品
+                diff1 = abs(infos[gold_shop][0] - infos[self.shop_name][0]) / infos[self.shop_name][0]
+                if infos[gold_shop][2]:  # 黄金购物车是FBN
+                    if diff1 > attr["percent"]:
+                        out = "情况B " + out + "\t不修改"
+                    else:
+                        price = round(min(infos[gold_shop][0], infos[self.shop_name][0]) - attr["lowwer"], 2)
+                        if price < attr["self_least_price"]:
+                            out = "情况C " + out + "\t不修改"
+                        else:
+                            self.needToChangePrice(ean, price, gold_shop)
+                            out = "情况C " + out + "\t差价比[" + str(round(diff1 * 100, 2)) + "%]\t改价为[" + str(price) + "]"
+                else:
+                    price = round(infos[self.shop_name][0] - attr["lowwer"], 2)
+                    if price < min(infos[gold_shop][0], attr["self_least_price"]):
+                        out = "情况D " + out + "\t不修改"
+                    else:
+                        self.needToChangePrice(ean, price, gold_shop)
+                        out = "情况D " + out + "\t改价为[" + str(price) + "]"
+
+            else:
+                least_price = 99999
+                for info in infos.values():
+                    if least_price > info[0]:
+                        least_price = info[0]
+                diff2 = abs(min(infos[gold_shop][0], least_price) - infos[self.shop_name][0]) / infos[self.shop_name][0]
+                if diff2 > attr["percent"]:
+                    out = "情况E " + out + "\t最低价[" + str(least_price) + "]\t" + "差价比[" + \
+                          str(round(diff2 * 100, 2)) + "%]" + "不修改"
+                else:
+                    price = round(min(infos[gold_shop][0], least_price) - attr["lowwer"], 2)
+                    if price < attr["self_least_price"]:
+                        out = "情况F " + out + "\t最低价[" + str(least_price) + "]\t" + "不修改"
+                    else:
+                        self.needToChangePrice(ean, price, gold_shop)
+                        out = "情况F " + out + "\t最低价[" + str(least_price) + "]\t" + "差价比[" + \
+                              str(round(diff2 * 100, 2)) + "%]\t改价为[" + str(price) + "]"
+        out = "前台：" + out
+        print(out)
+
+    '''
     def prase2(self, response):
-        gold_shop = response.meta["gold_shop"]  # 黄金购物车店铺名
-        ean = response.meta["ean"]  # EAN
-        self_least_price = self.refreshAttr(ean)  # 获取改价参数，并返回此ean限制的最低价
-        infos = self.getAllPirce(response)  # 获取所有的价格并以此形式返回{shop_name:[price, rating, fullfilled], ...}
+        # 黄金购物车店铺名
+        infos, gold_shop = self.getAllPirce(response)  # 获取所有的价格并以此形式返回{shop_name:[price, rating, fullfilled], ...}
+        if gold_shop == "$Rt%6y":
+            gold_shop = self.shop_name
+        ean = response._get_url().split("/")[-2]  # EAN
+        self_least_price = self.getAttr(ean)  # 获取改价参数，并返回此ean限制的最低价
         gold_price = infos[gold_shop][0]  # 黄金购物车价格
         self_price = infos[self.shop_name][0]  # 本店铺的price
         percent = round(((self_price - gold_price + self.lowwer) / self_price), 2)  # 差价比
@@ -156,78 +265,6 @@ class QuotesSpider(scrapy.Spider):
         self.solution(gold_shop, ean, self_least_price, infos, gold_price, self_price, percent,
                       first_min_price, second_min_price, first_min_shop, second_min_shop, fbs_shop, fbs_price)
 
-    def refreshAttr(self, ean):
-        self_least_price = 0
-        self.lock.acquire()
-        conn = sqlite3.connect("../../../DataBase.db")
-        # 本店铺本产品限制的最低价
-        try:
-            ret = conn.execute("select least_price from 'CPConplexAttr' where ean=? and shop=?;",
-                               (ean, self.name)).fetchall()
-            if len(ret) > 0:
-                self_least_price = ret[0][0]
-        except:
-            self_least_price = 0
-
-        # 实时改价参数
-        try:
-            ret = conn.execute("select minute,max_times,max_percent,percent,lowwer,control,my_shop from 'CPAttr' where shop=?;",
-                               (self.name,)).fetchall()
-            if len(ret) > 0:
-                self.control = ret[0][5]
-                self.firstInitAttr = True
-                if self.minute != ret[0][0] or self.max_times != ret[0][1] or self.max_percent != ret[0][2] or \
-                        self.percent != ret[0][3] or self.lowwer != ret[0][4]:
-                    self.minute = ret[0][0]
-                    self.max_times = ret[0][1]
-                    self.max_percent = ret[0][2]
-                    self.percent = ret[0][3]
-                    self.lowwer = ret[0][4]
-                    self.my_shop = ret[0][6].lower().strip().split(",")
-                    out_str = "改价参数：降价[" + str(self.lowwer) + "]\t降价比[" + str(self.percent * 100) + "%]\t降价次数[" \
-                              + str(self.max_times) + "]\t最大降价比[" + str(self.max_percent * 100) + "%]\t自己的店铺[" + str(ret[0][6]) + "]"
-                    print(out_str)
-
-
-        except:
-            if not self.firstInitAttr:
-                self.firstInitAttr = True
-                self.control = 0
-                if self.minute != 0 or self.max_times != 5 or self.max_percent != 0.2 or self.percent != 0.1 or self.lowwer != 0:
-                    self.minute = 0
-                    self.max_times = 5
-                    self.max_percent = 0.2
-                    self.percent = 0.1
-                    self.lowwer = 0
-                    self.my_shop = []
-                    out_str = "改价参数：降价[" + str(self.lowwer) + "]\t降价比[" + str(self.percent * 100) + "%]\t降价次数[" \
-                          + str(self.max_times) + "]\t最大降价比[" + str(self.max_percent * 100) + "%]\t自己的店铺[]"
-                    print(out_str)
-        conn.close()
-        self.lock.release()
-        return self_least_price
-
-    def getAllPirce(self, response):
-        infos = {}
-        rows = response.xpath(".//div[@id='condition-all']/div[@class='row']")
-        for row in rows:
-            price = row.xpath(".//div[@class='field price-field']//text()").extract()[0]
-            price = round(float(price.strip().split('\n')[-1].split("AED")[0]), 2)
-            shop_name = row.xpath(".//div[@class='field seller-name']//a//text()").extract()[0].lower()
-            ret = row.xpath(".//div[@class='field clearfix labels']//div[@class='fullfilled']")
-            fullfilled = False
-            rating = 100
-            if ret:
-                fullfilled = True
-            else:
-                rating = row.xpath(".//div[@class='field seller-rating']//a//text()").extract()
-                if rating:
-                    rating = round(float(rating[0].split('%')[0].split("(")[-1]), 2)
-                else:
-                    rating = 0  # no rating yet
-            infos[shop_name] = [price, rating, fullfilled]
-        return infos
-
     # 不修改情况：
     #       1、改价店铺是黄金购物车 and 【改价店铺的价格】不是最低价 （有买家提议可以适当考虑提价）
     #       2、自己的其他店铺（不包括改价店铺）是黄金购物车 and 【改价店铺的价格】不比【黄金购物车的价格】低
@@ -240,9 +277,13 @@ class QuotesSpider(scrapy.Spider):
     # 考虑降低价格
     # ##要满足的条件##  【改价次数】不超过【改价次数上限】 and 【总降价比】不超过【总降价比上限】
     #       8、其他店铺是黄金购物车 and 【黄金购物车的价格】比【改价店铺的价格】低 and 【差价比】不超过【降价幅度】--> 改价为【黄金购物车的价格 - 降价】
+
+    #
+
     def solution(self, gold_shop, ean, self_least_price, infos, gold_price, self_price, percent,
                  first_min_price, second_min_price, first_min_shop, second_min_shop, fbs_shop, fbs_price):
         percent = round(percent, 2)
+
         # 1
         if gold_shop == self.shop_name and self_price == gold_price and self_price > first_min_price:
             self.handler1(ean, self_price, first_min_price, gold_shop)
@@ -278,7 +319,7 @@ class QuotesSpider(scrapy.Spider):
 
     def handler3(self, ean, self_price, gold_price, gold_shop, percent):
         out_str = "#3\t" + ean + ":" + "价格[" + str(self_price) + "]\t购物车[" + str(
-            gold_price) + "]\t其他店铺[" + gold_shop + "]\t差价比[" + str(percent*100) + "%]"
+            gold_price) + "]\t其他店铺[" + gold_shop + "]\t差价比[" + str(round(percent*100, 2)) + "%]"
         print(out_str)
 
     def handler5(self, ean, self_price, gold_shop, infos, first_min_price, second_min_price,
@@ -294,7 +335,7 @@ class QuotesSpider(scrapy.Spider):
                         to_price = infos[value][0]
                         break
                 memo = "改价店铺（FBS）是黄金购物车,且只有改价店铺一家是最低价(" + str(first_min_price) + ")," + \
-                       "第二低价格(" + second_min_price + ")中"
+                       "第二低价格(" + str(second_min_price) + ")中"
                 if to_price == 0:
                     memo += "没有FBS店铺"
                     if fbs_price < 999999:
@@ -359,8 +400,8 @@ class QuotesSpider(scrapy.Spider):
         print(out_str)
 
     def handler6(self, ean, self_price, gold_price, gold_shop):
-        out_str = "#6\t" + ean + ":" + "价格[" + str(self_price) + "]\t购物车[" + str(
-            gold_price) + "]\t自家店铺[" + gold_shop + "]\t修改"
+        out_str = "#6\t" + ean + ":" + "价格[" + str(self_price) + "]\t购物车[" + str(gold_price) + \
+                  "]\t自家店铺[" + gold_shop + "]\t修改"
         print(out_str)
         self.needToChangePrice(ean, gold_price, gold_shop)
 
@@ -376,20 +417,30 @@ class QuotesSpider(scrapy.Spider):
             if to_price < self_least_price:
                 out_str += "改价[" + str(to_price) + "]" + "低于此EAN最低价限制[" + self_least_price + "]"
             else:
-                out_str += "改价为[" + to_price + "]"
+                out_str += "改价为[" + str(to_price) + "]"
                 self.needToChangePrice(ean, to_price, gold_shop)
         print(out_str)
 
     def handler8(self, ean, self_price, gold_price, gold_shop, percent, self_least_price):
         out_str = "#8\t" + ean + ":" + "价格[" + str(self_price) + "]\t购物车[" + str(
-            gold_price) + "]\t其他店铺[" + gold_shop + "]\t差价比[" + str(percent*100) + "%]\t"
-        to_price = self_price - self.lowwer
+            gold_price) + "]\t其他店铺[" + gold_shop + "]\t差价比[" + str(round(percent*100, 2)) + "%]\t"
+        to_price = gold_price - self.lowwer
         if to_price < self_least_price:
             out_str += "改价[" + str(to_price) + "]" + "低于此EAN最低价限制[" + self_least_price + "]"
         else:
-            out_str += "改价为[" + to_price + "]"
+            out_str += "改价为[" + str(to_price) + "]"
             self.needToChangePrice(ean, to_price, gold_shop)
         print(out_str)
+    '''
+
+    def spiderRecord(self, ean, price, gold_shop):
+        # 将需要修改的添加到item表中
+        self.lock.acquire()
+        conn = sqlite3.connect(self.sql_name)
+        conn.execute("REPLACE INTO 'record'(ean, price, shop) VALUES (?, ?, ?);", (ean, price, gold_shop))
+        conn.commit()
+        conn.close()
+        self.lock.release()
 
     def needToChangePrice(self, ean, price, gold_shop):
         # 将需要修改的添加到item表中
@@ -415,19 +466,20 @@ class SpiderProcess(multiprocessing.Process):
         self.name = name
 
     def run(self):  # 固定用run方法，启动进程自动调用run方法
-        print("start SpiderProcess")
+        print("启动前台抓取任务")
         process = CrawlerProcess(get_project_settings())
         process.crawl(QuotesSpider, shop_name=self.name)
         process.start()
         process.join()
-        print("抓取数据一轮完成")
-        time.sleep(2)
+        print("前台抓取数据一轮完成")
+        time.sleep(random.randint(30, 70))
 
 
 class OperateProcess(multiprocessing.Process):
     def __init__(self, name):
         multiprocessing.Process.__init__(self)  # 重构了Process类里面的构造函数
-        conn = sqlite3.connect("../../../DataBase.db")
+        conn = sqlite3.connect("DataBase.db")
+        self.name = name
         ret = conn.execute("select account, password from 'shopInfo' where shop=?;", (name,)).fetchall()
         self.account = ""
         self.password = ""
@@ -438,16 +490,21 @@ class OperateProcess(multiprocessing.Process):
         self.sql_name = name + ".db"
 
     def run(self):  # 固定用run方法，启动进程自动调用run方法
-        print("start OperateProcess")
+        print("启动后台改价任务")
         while 1:
+            user_dir = "./" + self.name
+            if not os.path.exists(user_dir):
+                os.mkdir(user_dir)
             option = webdriver.ChromeOptions()
-            # option.add_argument("headless")
+            option.add_argument("headless")
+            # option.add_argument("user-data-dir=" + os.path.abspath(user_dir))
             option.add_argument('--ignore-certificate-errors')
             option.add_argument('log-level=3')
             option.add_argument('lang=zh_CN.UTF-8')
             prefs = {
                 'profile.default_content_setting_values': {
                     'images': 2,
+                    'stylesheet': 2,
                 }
             }
             option.add_experimental_option('prefs', prefs)
@@ -462,33 +519,25 @@ class OperateProcess(multiprocessing.Process):
                 continue
 
     def LoginAccount(self):
-        print("登录账户")
-        self.chrome.get('https://uae.souq.com/ae-en/login.php')
-        elemNewAccount = self.chrome.find_element_by_id("email")
-        elemNewLoginBtn = self.chrome.find_element_by_id("siteLogin")
-        elemNewAccount.send_keys(self.account)
-        elemNewLoginBtn.click()
+        print("后台：登录账户")
+        self.chrome.get('https://login.noon.partners/en/')
         try:
-            cssSelectText = "#continue"
-            WebDriverWait(self.chrome, 10, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssSelectText)))
-            elemContinue = self.chrome.find_element_by_id("continue")
-            elemContinue.click()
-            cssSelectText = "#ap_password"
-            WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssSelectText)))
-            elemPassword = self.chrome.find_element_by_id("ap_password")
-            elemLoginBtn = self.chrome.find_element_by_id("signInSubmit")
-            elemPassword.send_keys(self.password)
-            elemLoginBtn.click()
+            xpath = ".//div[@class='jsx-1240009043 group']"
+            WebDriverWait(self.chrome, 30, 0.5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            elemLogin = self.chrome.find_elements_by_xpath(".//div[@class='jsx-1240009043 group']/input")
+            elemNewLoginBtn = self.chrome.find_element_by_xpath(
+                ".//button[@class='jsx-1789715842 base ripple primary uppercase fullWidth']")
+            elemLogin[0].send_keys(self.account)
+            elemLogin[1].send_keys(self.password)
+            elemNewLoginBtn.click()
         except:
-            cssSelectText = "#password"
-            WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssSelectText)))
-            elemPassword = self.chrome.find_element_by_id("password")
-            elemLoginBtn = self.chrome.find_element_by_id("siteLogin")
-            elemPassword.send_keys(self.password)
-            elemLoginBtn.click()
-
-        cssSelectText = "#search_box"
-        WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssSelectText)))
+            print("后台：方式1登录失败，尝试方式2")
+        i = 0
+        while self.chrome.current_url != "https://core.noon.partners/en-sa/":
+            time.sleep(1)
+            i = i + 1
+            if i > 150:
+                raise TimeoutError
         while 1:
             try:
                 self.NewInventory()
@@ -497,7 +546,7 @@ class OperateProcess(multiprocessing.Process):
                 continue
 
     def NewInventory(self):
-        print("打开改价页面")
+        print("后台：打开改价页面")
         self.loginHandler = self.chrome.current_window_handle
         handlers = self.chrome.window_handles
         self.unknownHandler = ""
@@ -505,7 +554,7 @@ class OperateProcess(multiprocessing.Process):
             if handler != self.loginHandler:
                 self.unknownHandler = handler
                 break
-        js = 'window.open("https://sell.souq.com/inventory/inventory-management?tab=live")'
+        js = 'window.open("https://catalog.noon.partners/en-sa/catalog")'
         self.chrome.execute_script(js)
         handlers = self.chrome.window_handles
         for handler in handlers:
@@ -514,64 +563,197 @@ class OperateProcess(multiprocessing.Process):
                 break
         while 1:
             try:
-                self.chrome.switch_to.window(self.inventoryHandler)
-                self.chrome.refresh()
-                # 循环处理每一页
-                self.OperateProduct()
+                self.OperateProductRequests()
             except:
                 raise
-                # time.sleep(minute * 60)
+                self.chrome.refresh()
+                time.sleep(minute * 60)
                 continue
 
-    def OperateProduct(self):
-        # 从数据库中获取
-        time.sleep(10)
+    def prepareJSON(self, ret_json, partner_sku, price):
+        global is_active, json_sale_end, json_sale_start
+        json_price = ""
+        json_sale_price = ""
+        for part in ret_json["psku"]["available_psku"]:
+            if part["psku_canonical"] == partner_sku:
+                is_active = part["is_active"]
+                json_price = str(round(price, 2))
+                if "sale_price_sa" not in part and part["sale_price_sa"] is not None:
+                    json_sale_price = str(round(price, 2))
+                    json_price = str(part["price_sa"])
+                    json_sale_end = part["sale_end_sa"]
+                    json_sale_start = part["sale_start_sa"]
+        json_stock = []
+        for stock in ret_json["psku"]["stock"][0]["stock_group"]:
+            json_stock.append({
+                "id_warehouse": stock["id_warehouse"],
+                "quantity": "0",
+                "stock_gross": stock["stock_gross"],
+                "stock_transferred": stock["stock_transferred"],
+                "stock_reserved": stock["stock_reserved"],
+                "stock_net": stock["stock_net"],
+                "processing_time": str(stock["processing_time"]),
+                "stock_updated": False,
+                "country_code": stock["country_code"],
+                "max_processing_time": stock["max_processing_time"]
+            })
+        ret_json = {
+            "pskus": [{
+                "id_warranty": "0",
+                "partner_sku": ret_json["psku"]["partner_sku"],
+                "sku": ret_json["psku"]["sku"],
+                "psku_canonical": ret_json["psku"]["psku_canonical"],
+                "is_active": is_active,
+                "stocks": json_stock,
+                "price": json_price
+            }]
+        }
+        if len(json_sale_price) > 0:
+            ret_json["pskus"][0]["sale_price"] = json_sale_price
+            ret_json["pskus"][0]["sale_end"] = json_sale_end
+            ret_json["pskus"][0]["sale_start"] = json_sale_start
+
+        return json.dumps(ret_json)
+
+    def OperateProductRequests(self):
+        print("后台：开始改价")
+        selenium_cookies = self.chrome.get_cookies()
+        selenium_headers = self.chrome.execute_script("return navigator.userAgent")
+        selenium_headers = {
+            'User-Agent': selenium_headers,
+            "origin": "https://catalog.noon.partners",
+            "Content-Type": "application/json",
+            "x-locale": "en-sa"
+        }
+        s = requests.session()
+        s.headers.update(selenium_headers)
+        for cookie in selenium_cookies:
+            short_cookie = {cookie["name"]: cookie["value"]}
+            requests.utils.add_dict_to_cookiejar(s.cookies, short_cookie)
+        s.verify = "./noon.cer"
         while True:
+            time.sleep(random.randint(0, 2))
             conn = sqlite3.connect(self.sql_name)
             ret = conn.execute("SELECT * FROM 'item' LIMIT 1;").fetchall()
             if len(ret) <= 0:
                 conn.close()
-                time.sleep(1)
                 continue
             ean = ret[0][0]
             price = ret[0][1]
-            string = ean + str(price)
-            print(string)
-            try:
-                xpathText = '//*[@id="main"]/section/div[1]/div[1]/div[3]/div[1]/div[1]/div/form/fieldset/div/div[1]/ul/li[2]/input'
-                WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.XPATH, xpathText)))
-                elemSearch = self.chrome.find_element_by_xpath(xpathText)
-                elemSearch.clear()
-                elemSearch.send_keys(ean)
-                xpathText = ".//a[@class='button postfix']"
-                WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.XPATH, xpathText)))
-                elemClick = self.chrome.find_element_by_xpath(xpathText)
-                self.chrome.execute_script("arguments[0].click()", elemClick)
-            except:
-                conn.close()
-                raise
+            out = "后台：" + time.strftime("%Y-%m-%d %H:%M:%S") + " " + ean + " " + str(round(price, 2))
+            url = "https://catalog.noon.partners/_svc/clapi-v1/catalog/items?limits=20&page=1&search=" + ean
+            r = s.get(url)
+            if r.status_code == 200:
+                ret_json = json.loads(r.text)
+                if ret_json is not None and "items" in ret_json:
+                    if len(ret_json["items"]) == 1 and "partner_sku" in ret_json["items"][0]:
+                        partner_sku = ret_json["items"][0]["partner_sku"]
+                        partner_sku = partner_sku.replace('.', '').replace('-', '')
+                        if len(partner_sku) > 0:
+                            url = "https://catalog.noon.partners/_svc/clapi-v1/catalog/item/details?psku_canonical=" + partner_sku
+                            r = s.get(url)
+                            if r.status_code == 200:
+                                ret_json = json.loads(r.text)
+                                try:
+                                    ret_json = self.prepareJSON(ret_json, partner_sku, price)
+                                    url = "https://catalog.noon.partners/_svc/clapi-v1/psku"
+                                    r = s.post(url, data=ret_json, headers={"Referer": "https://catalog.noon.partners/en-sa/catalog/" + partner_sku})
+                                    if r.status_code == 200:
+                                        print(out + "\t改价成功")
+                                    else:
+                                        print(out + "\t改价失败\t[6]")
+                                except:
+                                    print(out + "\t改价失败\t[5]")
+                                    raise
+                            else:
+                                print(out + "\t改价失败\t[4]")
+                        else:
+                            print(out + "\t改价失败\t[3]")
+                    else:
+                        print(out + "\t改价失败\t[2]")
+                else:
+                    print(out + "\t改价失败\t[1]")
+            else:
+                print(out + "\t改价失败\t[0]")
 
-            try:
-                WebDriverWait(self.chrome, 20, 0.5).until(self.checkPage)
-                cssText = "#table-inventory>tbody>tr>td:nth-child(4)"
-                WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.CSS_SELECTOR, cssText)))
-                elemPrice = self.chrome.find_element_by_css_selector(cssText)
-                self.chrome.execute_script("arguments[0].click()", elemPrice)
-                elemInput = elemPrice.find_element_by_css_selector("form:first-child sc-dynamic-input input")
-                elemBtn = elemPrice.find_element_by_css_selector("form:first-child sc-dynamic-input+a")
-                elemInput.clear()
-                elemInput.send_keys(str(price))
-                self.chrome.execute_script("arguments[0].click()", elemBtn)
-            except:
-                print("修改失败")
-                conn.close()
-                time.sleep(1)
-                continue
             conn.execute("DELETE from 'item' where ean=? and price=?;", (ean, price))
             conn.commit()
             conn.close()
-            print("修改成功")
+            self.chrome.back()
+
+    def OperateProductSelenium(self):
+        print("后台：开始改价")
+        url_bak = ""
+        while True:
             time.sleep(1)
+            conn = sqlite3.connect(self.sql_name)
+            ret = conn.execute("SELECT * FROM 'item' LIMIT 1;").fetchall()
+            if len(ret) <= 0:
+                conn.close()
+                continue
+            ean = ret[0][0]
+            price = ret[0][1]
+            out = time.strftime("%Y-%m-%d %H:%M:%S") + " " + ean + " " + str(round(price, 2))
+            self.chrome.switch_to.window(self.inventoryHandler)
+            try:
+                xpath = './/div[@class="jsx-3807287210 searchWrapper"]'
+                WebDriverWait(self.chrome, 60, 0.5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+                elemSearch = self.chrome.find_element_by_xpath('.//div[@class="jsx-3807287210 searchWrapper"]//input')
+                elemSearch.clear()
+                elemSearch.send_keys(ean)
+                while 1:
+                    time.sleep(1)
+                    elemProduct = self.chrome.find_elements_by_xpath(
+                        ".//div['jsx-448933760 ctr']/table/tbody/tr[1]/td[1]//a")
+                    if len(elemProduct) == 1:
+                        product_url = str(elemProduct[0].get_attribute("href"))
+                        if product_url != url_bak:
+                            url_bak = product_url
+                            break
+                    elemProduct = self.chrome.find_elements_by_xpath(
+                        ".//table[@class='jsx-3498568516 table']//td[@class='jsx-3498568516 td']"
+                        "//div[@class='jsx-3793681198 text']")
+                    if len(elemProduct) == 1:
+                        product_url = ""
+                        url_bak = ""
+                        break
+            except:
+                conn.close()
+                raise
+            if product_url == "":
+                print("后台：" + out + "\t没找到这个产品")
+                conn.close()
+                continue
+            if len(elemProduct) != 1:
+                print("后台：" + out + "\t没找到这个产品")
+                conn.close()
+                continue
+            self.chrome.execute_script("arguments[0].click()", elemProduct[0])
+            # self.chrome.switch_to.window(self.loginHandler)
+            # js = 'window.location.replace("' + product_url + '")'
+            # self.chrome.execute_script(js)
+            try:
+                xpath = ".//div[@class='jsx-509839755 priceInputWrapper']//input[@name='sale_price_sa']"
+                WebDriverWait(self.chrome, 40, 0.5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+                elemInput = self.chrome.find_element_by_xpath(xpath)
+                value = elemInput.get_attribute("value")
+                if value is None or value == "value" or len(value) == 0:
+                    xpath = ".//div[@class='jsx-509839755 priceInputWrapper']//input[@name='price_sa']"
+                    elemInput = self.chrome.find_element_by_xpath(xpath)
+                elemInput.clear()
+                elemInput.send_keys(str(price))
+                xpath = ".//div[@class='jsx-509839755 fixedBottom']/button"
+                WebDriverWait(self.chrome, 20, 0.5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+                elemBtn = self.chrome.find_element_by_xpath(xpath)
+                self.chrome.execute_script("arguments[0].click()", elemBtn)
+                print("后台：" + out + "\t改价成功")
+                # time.sleep(10)
+            except:
+                print("后台：" + out + "\t改价失败")
+            conn.execute("DELETE from 'item' where ean=? and price=?;", (ean, price))
+            conn.commit()
+            conn.close()
+            self.chrome.back()
 
     def checkPage(self, driver):
         checkPageFinishScript = "try {if (document.readyState !== 'complete') {return false;} if (window.jQuery) { if (" \
@@ -600,6 +782,11 @@ def pre_test(name):
     c.execute('''CREATE TABLE 'notice'
                                (ean    TEXT    PRIMARY KEY   NOT NULL,
                                 memo   TEXT);''')
+    c.execute("DROP TABLE IF EXISTS 'record';")
+    c.execute('''CREATE TABLE 'record'
+                           (ean       TEXT    PRIMARY KEY   NOT NULL,
+                            price     DOUBLE  NOT NULL,
+                            shop      TEXT    NOT NULL);''')
     conn.commit()
     conn.close()
 
@@ -610,16 +797,16 @@ def skr(name):
         freeze_support()
         os.chdir(os.path.split(os.path.realpath(__file__))[0])
         pre_test(name)
-        p1 = OperateProcess(name)
-        p1.start()
+        # p1 = OperateProcess(name)
+        # p1.start()
         while True:
             p = SpiderProcess(name=name)
             p.start()
             p.join()
-            time.sleep(2)
-        
+            return
 
-skr("readygo")
+
+skr("BuyMore")
 # 'untreated' ean reason
 # 'CPComplexAttr' shop ean least_price max_times
 # 'CPAttr' shop minute max_times max_percent percent lowwer control
