@@ -186,7 +186,7 @@ class QuotesSpider(scrapy.Spider):
         attr = self.getAttr(ean)
         out = time.strftime("%Y-%m-%d %H:%M:%S") + " " + ean + " 本店铺[" + str(infos[self.shop_name][0]) + "]\t" + \
               "购物车[" + str(infos[gold_shop][0]) + "][" + gold_shop + "]"
-        self.spiderRecord(ean, infos[gold_shop][0] ,gold_shop)
+        self.spiderRecord(ean, infos[gold_shop][0], gold_shop)
         if gold_shop in attr["my_shop"]:  # 黄金购物车是自家店铺
             out = "情况A " + out + "\t不修改"
         else:
@@ -563,11 +563,10 @@ class OperateProcess(multiprocessing.Process):
                 break
         while 1:
             try:
-                self.OperateProductRequests()
+                self.OperateProductSelenium()
             except:
                 raise
                 self.chrome.refresh()
-                time.sleep(minute * 60)
                 continue
 
     def prepareJSON(self, ret_json, partner_sku, price):
@@ -797,8 +796,8 @@ def skr(name):
         freeze_support()
         os.chdir(os.path.split(os.path.realpath(__file__))[0])
         pre_test(name)
-        # p1 = OperateProcess(name)
-        # p1.start()
+        p1 = OperateProcess(name)
+        p1.start()
         while True:
             p = SpiderProcess(name=name)
             p.start()
