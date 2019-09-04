@@ -17,6 +17,7 @@ public:
 	~Lemon01();
 
 private slots:
+	void SlotAddTime();
 	void SlotAutoPlay();
 	void SlotAutoStop();
 	void SlotAutoPause();
@@ -26,7 +27,6 @@ private slots:
 	void SlotAutoFailed(std::string);
 	void SlotListContextRequested(const QPoint&);
 	void SlotTableContextRequested(const QPoint&);
-	void SlotTableViewContextRequest(const QPoint&);
 	void SlotDelAct(bool);
 	void SlotCloseAct(bool);
 	void SlotAddAct(bool);
@@ -45,10 +45,11 @@ private:
 	void DisplayAttr(AutoMachine*);
 	bool IsEanInTable(std::string);
 	int aaaab(); 
+	int aaaab_addtime();
 	void testRegister();
 	void QuitThisSystem();
 	void setEmpty(CPAttr* attr = nullptr);
-	void setShopState(int control);
+	void setShopState(int control, std::string name = "");
 	void initList();
 	void InsertItemInList(std::string);
 	void RemoveItemInList(std::string);

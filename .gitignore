@@ -6,6 +6,7 @@ Lemon01/Debug
 Lemon01/Release
 Lemon01/x64
 x64/Debug
+x64/Release
 ipch
 *.suo
 *.user

@@ -1,7 +1,0 @@
-1	1	49.0	48.0	1.0	2.04%	Grey Arm Warmers For Unisex
-1	5	41.89	41.88	0.01	0.02%	Mens Titanium Bangle Bracelet
-6	8	29.99	29.98	0.01	0.03%	Brown Wool Visor Hat For Kids
-6	9	32.78	32.77	0.01	0.03%	Pockets Credit Card Holder Dull Clutch Bifold Mens Coin Purse Wallet
-6	10	31.99	31.9	0.09	0.28%	MineCraft Baby Sheep Stuffed Plush Toy 7inch
-6	12	32.97	32.96	0.01	0.03%	Mens Coin Purse Pockets Credit Card Holder Dull Clutch Bifold Wallet
-23	8	65.0	64.98	0.02	0.03%	Mermaid Pillow Case, Play Tailor Magic Reversible Sequins Pillow Cover Throw Cushion Case 39x39CM - Red and champagne

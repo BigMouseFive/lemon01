@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Edit Shop Ean Attribute</string>
+   <string>Edit Shop SKU Attribute</string>
   </property>
   <property name="windowIcon">
    <iconset resource="lemon01.qrc">
@@ -23,7 +23,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="labelEan">
        <property name="text">
-        <string>EAN</string>
+        <string>SKU</string>
        </property>
       </widget>
      </item>
@@ -40,7 +40,7 @@
      <item row="1" column="1">
       <widget class="QDoubleSpinBox" name="leastPrice">
        <property name="suffix">
-        <string>AED</string>
+        <string>SAR</string>
        </property>
       </widget>
      </item>

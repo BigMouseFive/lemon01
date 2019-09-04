@@ -11,7 +11,8 @@
 					shop text primary key,	\
 					account	text not null, \
 					password text not null, \
-					type int not null);"
+					type int not null,\
+					shop_id text not null);"
 #define CREATE_CPATTR "create table if not exists CPAttr (\
 					shop text primary key,	\
 					minute int not null, \
@@ -21,6 +22,7 @@
 					lowwer double not null,\
 					control int not null,\
 					my_shop text,\
+					white_list_enable int not null default 0,\
 					foreign key(shop) references shopInfo(shop) ON UPDATE CASCADE ON DELETE CASCADE);"
 #define CREATE_CPCOMPLEXATTR "create table if not exists CPComplexAttr (\
 							shop text not null, \
@@ -132,12 +134,13 @@ int DataManager::AddShop(ShopInfo& shopInfo){
 	}
 
 	if (sql_query.next()) 
-		sql_query2.prepare("update shopInfo set account=?,password=?,type=? where shop=?");
+		sql_query2.prepare("update shopInfo set account=?,password=?,type=?,shop_id=? where shop=?");
 	else
-		sql_query2.prepare("insert into shopInfo(account,password,type,shop) values(?,?,?,?)");
+		sql_query2.prepare("insert into shopInfo(account,password,type,shop_id,shop) values(?,?,?,?,?)");
 	sql_query2.addBindValue(shopInfo.account.c_str());
 	sql_query2.addBindValue(shopInfo.password.c_str());
 	sql_query2.addBindValue(shopInfo.type);
+	sql_query2.addBindValue(shopInfo.shop_id.c_str());
 	sql_query2.addBindValue(shopInfo.name.c_str());
 	if (!sql_query2.exec()) {
 		auto a = sql_query2.lastError().text();
@@ -164,7 +167,7 @@ int DataManager::DelShop(std::string shopName){
 int DataManager::GetShops(std::vector<ShopInfo>& vec, ShopInfo& cond){
 	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
 	QSqlQuery sql_query(dataBase);
-	QString str = "select shop,account,password,type from shopInfo";
+	QString str = "select shop,account,password,type,shop_id from shopInfo";
 	sql_query.prepare(str);
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
@@ -176,6 +179,7 @@ int DataManager::GetShops(std::vector<ShopInfo>& vec, ShopInfo& cond){
 		info.account = sql_query.value(1).toString().toStdString();
 		info.password = sql_query.value(2).toString().toStdString();
 		info.type = sql_query.value(3).toInt();
+		info.shop_id = sql_query.value(4).toString().toStdString();
 		vec.push_back(info);
 	}
 	dataBase.close();
@@ -194,9 +198,9 @@ int DataManager::AddCPAttr(CPAttr& cpAttr){
 		return SQL_EXEC_ERROR;
 	}
 	if (sql_query.next())
-		sql_query2.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,lowwer=?,control=?,my_shop=? where shop=?");
+		sql_query2.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,lowwer=?,control=?,my_shop=?,white_list_enable=? where shop=?");
 	else
-		sql_query2.prepare("insert into CPAttr(minute,max_times,max_percent,percent,lowwer,control,my_shop,shop) values(?,?,?,?,?,?,?,?)");
+		sql_query2.prepare("insert into CPAttr(minute,max_times,max_percent,percent,lowwer,control,my_shop,white_list_enable,shop) values(?,?,?,?,?,?,?,?,?)");
 	sql_query2.addBindValue(cpAttr.minute);
 	sql_query2.addBindValue(cpAttr.max_times);
 	sql_query2.addBindValue(cpAttr.max_percent);
@@ -204,6 +208,7 @@ int DataManager::AddCPAttr(CPAttr& cpAttr){
 	sql_query2.addBindValue(cpAttr.lowwer);
 	sql_query2.addBindValue(cpAttr.control);
 	sql_query2.addBindValue(cpAttr.my_shop.c_str());
+	sql_query2.addBindValue(cpAttr.white_list_enable);
 	sql_query2.addBindValue(cpAttr.shop.c_str());
 	if (!sql_query2.exec()) {
 		auto a = sql_query2.lastError().text();
@@ -229,7 +234,7 @@ int DataManager::DelCPAttr(std::string shopName){
 int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
 	QSqlQuery sql_query(dataBase);
-	QString str = "select shop,minute,max_times,max_percent,percent,lowwer,control,my_shop from CPAttr where shop=?";
+	QString str = "select shop,minute,max_times,max_percent,percent,lowwer,control,my_shop,white_list_enable from CPAttr where shop=?";
 	sql_query.prepare(str);
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
@@ -245,6 +250,7 @@ int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 		info.lowwer = sql_query.value(5).toDouble();
 		info.control = sql_query.value(6).toInt();
 		info.my_shop = sql_query.value(7).toString().toStdString();
+		info.white_list_enable = sql_query.value(8).toInt();
 	}
 	dataBase.close();
 	return SQL_OK;

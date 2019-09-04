@@ -87,12 +87,6 @@ AutoMachine::AutoMachine(std::string name, QObject* parent)
 	pinfo.dwThreadId = 0;
 	pinfo.dwProcessId = 0;
 
-	QStringList headers;
-	headers << "EAN" << QStringLiteral("通知");
-	model = new QStandardItemModel(this);
-	model->setHorizontalHeaderLabels(headers);
-	model->setColumnCount(2);
-	
 	_cmdline = CMD_LINE;
 	memset(_execPath, 0, sizeof(_execPath));
 	GetModuleFileNameA(NULL, _execPath, 200);
@@ -112,23 +106,10 @@ AutoMachine::AutoMachine(std::string name, QObject* parent)
 	timer->start(2000);
 }
 AutoMachine::~AutoMachine(){
-	killProcess();
+	Stop();
 }
 
 void AutoMachine::onTimer(){
-	std::vector<ShopNotice> vec;
-	DataManager::GetInstance()->GetNotice(_name, timeStamp, vec);
-	if (vec.size() > 0){
-		int row = model->rowCount() - 1;
-		for (auto iter = vec.begin(); iter != vec.end(); ++iter, ++row){
-			timeStamp = iter->timeStamp;
-			QStandardItem *item0 = new QStandardItem(QString::fromStdString(iter->ean));
-			QStandardItem *item1 = new QStandardItem(QString::fromStdString(iter->notice));
-			model->setItem(row, 0, item0);
-			model->setItem(row, 1, item1);
-		}
-		//TODO::刷新tableview
-	}
 }
 
 void AutoMachine::run(){
@@ -174,27 +155,27 @@ void AutoMachine::run(){
 
 void AutoMachine::killProcess(){
 	if (pinfo.dwProcessId > 0){
-		//char buffer[100];
-		//sprintf(buffer, "taskkill.exe /PID %d /T /F", pinfo.dwProcessId);
+		/*char buffer[100];
+		sprintf(buffer, "taskkill.exe /PID %d /T /F", pinfo.dwProcessId);
+		system(buffer);*/
+		
+		//wchar_t szBuf[200];
+		//wsprintf(szBuf, L"/C taskkill.exe /PID %d /T /F", pinfo.dwProcessId);
 
-		/*
-		wchar_t szBuf[200];
-		wsprintf(szBuf, L"/C taskkill.exe /PID %d /T /F", pinfo.dwProcessId);
-
-		//通过ShellExecuteEx() 来杀死对应开启的改价程序
-		//替代了之前的system()的方式，目的是为了不会有一个窗口闪一下
-		SHELLEXECUTEINFO ShExecInfo = { 0 };
-		ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-		ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-		ShExecInfo.hwnd = NULL;
-		ShExecInfo.lpVerb = NULL;
-		ShExecInfo.lpFile = L"cmd.exe";//调用的程序名
-		ShExecInfo.lpParameters = szBuf;//调用程序的命令行参数
-		ShExecInfo.lpDirectory = NULL;
-		ShExecInfo.nShow = SW_HIDE;//窗口状态为隐藏
-		ShExecInfo.hInstApp = NULL;
-		ShellExecuteEx(&ShExecInfo);
-		WaitForSingleObject(ShExecInfo.hProcess, INFINITE);*/
+		////通过ShellExecuteEx() 来杀死对应开启的改价程序
+		////替代了之前的system()的方式，目的是为了不会有一个窗口闪一下
+		//SHELLEXECUTEINFO ShExecInfo = { 0 };
+		//ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+		//ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+		//ShExecInfo.hwnd = NULL;
+		//ShExecInfo.lpVerb = NULL;
+		//ShExecInfo.lpFile = L"cmd.exe";//调用的程序名
+		//ShExecInfo.lpParameters = szBuf;//调用程序的命令行参数
+		//ShExecInfo.lpDirectory = NULL;
+		//ShExecInfo.nShow = SW_HIDE;//窗口状态为隐藏
+		//ShExecInfo.hInstApp = NULL;
+		//ShellExecuteEx(&ShExecInfo);
+		//WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
 	}
 }
 

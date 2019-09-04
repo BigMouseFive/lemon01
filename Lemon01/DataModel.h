@@ -9,11 +9,13 @@ typedef struct _ShopInfo{
 	std::string account;
 	std::string password;
 	int type;
-	_ShopInfo(std::string Tname = "", std::string Taccount = "", std::string Tpassword = "", int Ttype = 0){
+	std::string shop_id;
+	_ShopInfo(std::string Tname = "", std::string Taccount = "", std::string Tpassword = "", int Ttype = 0, std::string Tshop_id = ""){
 		name = Tname;
 		account = Taccount;
 		password = Tpassword;
 		type = Ttype;
+		shop_id = Tshop_id;
 	}
 }ShopInfo;
 typedef struct _CPAttr{
@@ -25,6 +27,7 @@ typedef struct _CPAttr{
 	double lowwer;
 	int control;
 	std::string my_shop;
+	int white_list_enable;
 	void Copy(_CPAttr& attr){
 		minute = attr.minute;
 		max_times = attr.max_times;
@@ -32,6 +35,7 @@ typedef struct _CPAttr{
 		percent = attr.percent;
 		lowwer = attr.lowwer;
 		my_shop = attr.my_shop;
+		white_list_enable = attr.white_list_enable;
 	}
 }CPAttr;
 
@@ -49,6 +53,7 @@ typedef struct _CPComplexAttr{
 
 typedef struct _ShopNotice{
 	std::string ean;
+	std::string variant_name;
 	std::string notice;
 	int timeStamp;
 }ShopNotice;

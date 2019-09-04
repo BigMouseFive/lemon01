@@ -23,7 +23,7 @@ void AddEanAttr::GetEanAttr(CPComplexAttr& attr){
 void AddEanAttr::on_ok_clicked()
 {
 	if (ui.ean->text().isEmpty()){
-		QMessageBox box(QMessageBox::Information, "Add EAN Attr Error", QStringLiteral("EAN不能为空"), QMessageBox::NoButton, this);
+		QMessageBox box(QMessageBox::Information, "Add SKU Attr Error", QStringLiteral("SKU不能为空"), QMessageBox::NoButton, this);
 		box.setStandardButtons(QMessageBox::Ok);
 		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
 		box.exec();
