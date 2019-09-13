@@ -804,7 +804,7 @@ p, li { white-space: pre-wrap; }
           </font>
          </property>
          <property name="text">
-          <string>空缺</string>
+          <string>改价信息</string>
          </property>
          <property name="icon">
           <iconset resource="lemon01.qrc">

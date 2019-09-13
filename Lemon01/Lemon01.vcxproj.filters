@@ -184,4 +184,9 @@
   <ItemGroup>
     <Image Include="lemon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\style\black.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

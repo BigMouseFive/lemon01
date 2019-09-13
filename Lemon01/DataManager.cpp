@@ -31,7 +31,12 @@
 							max_times int not null,\
 							primary key(shop,ean),\
 							foreign key(shop) references shopInfo(shop) ON UPDATE CASCADE ON DELETE CASCADE);"
-
+#define CREATE_WHITELIST "create table if not exists whiteList (\
+							shop text not null, \
+							ean	text not null, \
+							variant_name text not null default '', \
+							primary key(shop,ean), \
+							foreign key(shop) references shopInfo(shop) ON UPDATE CASCADE ON DELETE CASCADE);"
 
 DataManager* DataManager::GetInstance(){
 	static DataManager* instance;
@@ -94,12 +99,14 @@ int DataManager::InitDataBase(){
 	sql_query.prepare("PRAGMA foreign_keys = ON;");
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	//sql_query.clear();
 	sql_query.prepare(CREATE_SHOP);
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 
@@ -107,6 +114,7 @@ int DataManager::InitDataBase(){
 	sql_query.prepare(CREATE_CPATTR);
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 
@@ -114,6 +122,15 @@ int DataManager::InitDataBase(){
 	sql_query.prepare(CREATE_CPCOMPLEXATTR);
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	
+	//sql_query.clear();
+	sql_query.prepare(CREATE_WHITELIST);
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	
@@ -130,6 +147,7 @@ int DataManager::AddShop(ShopInfo& shopInfo){
 	sql_query.addBindValue(shopInfo.name.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 
@@ -144,6 +162,7 @@ int DataManager::AddShop(ShopInfo& shopInfo){
 	sql_query2.addBindValue(shopInfo.name.c_str());
 	if (!sql_query2.exec()) {
 		auto a = sql_query2.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 
@@ -195,6 +214,7 @@ int DataManager::AddCPAttr(CPAttr& cpAttr){
 	sql_query.addBindValue(cpAttr.shop.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	if (sql_query.next())
@@ -212,6 +232,7 @@ int DataManager::AddCPAttr(CPAttr& cpAttr){
 	sql_query2.addBindValue(cpAttr.shop.c_str());
 	if (!sql_query2.exec()) {
 		auto a = sql_query2.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	dataBase.close();
@@ -226,6 +247,7 @@ int DataManager::DelCPAttr(std::string shopName){
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	dataBase.close();
@@ -239,6 +261,7 @@ int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	if (sql_query.next()){
@@ -265,6 +288,42 @@ int DataManager::UpdateControl(int control, std::string shopName){
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	dataBase.close();
+	return SQL_OK;
+}
+int DataManager::UpdateMyShop(std::string my_shop, std::string shopName){
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase);
+
+	sql_query.prepare("update CPAttr set my_shop=? where shop=?");
+	sql_query.addBindValue(my_shop.c_str());
+	sql_query.addBindValue(shopName.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	dataBase.close();
+	return SQL_OK;
+}
+
+int DataManager::UpdateCPAttr(CPAttr& info, std::string shopName){
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase);
+
+	sql_query.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,lowwer=? where shop=?");
+	sql_query.addBindValue(info.minute);
+	sql_query.addBindValue(info.max_times);
+	sql_query.addBindValue(info.max_percent);
+	sql_query.addBindValue(info.percent);
+	sql_query.addBindValue(info.lowwer);
+	sql_query.addBindValue(shopName.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	dataBase.close();
@@ -282,6 +341,7 @@ int DataManager::AddCPComplexAttr(CPComplexAttr& cpCAttr, std::string shopName){
 	sql_query.addBindValue(cpCAttr.ean.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	if (sql_query.next())
@@ -294,6 +354,7 @@ int DataManager::AddCPComplexAttr(CPComplexAttr& cpCAttr, std::string shopName){
 	sql_query2.addBindValue(cpCAttr.ean.c_str());
 	if (!sql_query2.exec()) {
 		auto a = sql_query2.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	dataBase.close();
@@ -309,6 +370,22 @@ int DataManager::DelCPComplexAttr(std::string ean, std::string shopName){
 	sql_query.addBindValue(ean.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	dataBase.close();
+	return SQL_OK;
+}
+int DataManager::DelAllCPComplexAttr(std::string shopName){
+	if (shopName.empty()) return SQL_ATTR_ERROR;
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase);
+
+	sql_query.prepare("delete from CPComplexAttr where shop=?");
+	sql_query.addBindValue(shopName.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
 	dataBase.close();
@@ -322,8 +399,10 @@ int DataManager::GetCPComplexAttr(std::map<std::string, CPComplexAttr>& vec, std
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
+		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
+	vec.clear();
 	while (sql_query.next()){
 		CPComplexAttr info;
 		info.ean = sql_query.value(0).toString().toStdString();
@@ -335,6 +414,83 @@ int DataManager::GetCPComplexAttr(std::map<std::string, CPComplexAttr>& vec, std
 	return SQL_OK;
 }
 
+//table whiteList
+int DataManager::AddWhiteList(std::string ean, std::string shopName, std::string variant_name){
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase), sql_query2(dataBase);
+
+	sql_query.prepare("select * from whiteList where shop=? and ean=?");
+	sql_query.addBindValue(shopName.c_str());
+	sql_query.addBindValue(ean.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	if (sql_query.next())
+		sql_query2.prepare("update whiteList set variant_name=? where shop=? and ean=?");
+	else
+		sql_query2.prepare("insert into whiteList(variant_name,shop,ean) values(?,?,?)");
+	sql_query2.addBindValue(variant_name.c_str());
+	sql_query2.addBindValue(shopName.c_str());
+	sql_query2.addBindValue(ean.c_str());
+	if (!sql_query2.exec()) {
+		auto a = sql_query2.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	dataBase.close();
+	return SQL_OK;
+}
+int DataManager::DelWhiteList(std::string ean, std::string shopName){
+	if (shopName.empty() || ean.empty()) return SQL_ATTR_ERROR;
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase);
+
+	sql_query.prepare("delete from whiteList where shop=? and ean=?");
+	sql_query.addBindValue(shopName.c_str());
+	sql_query.addBindValue(ean.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	dataBase.close();
+	return SQL_OK;
+}
+int DataManager::DelAllWhiteList(std::string shopName){
+	if (shopName.empty()) return SQL_ATTR_ERROR;
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase);
+
+	sql_query.prepare("delete from whiteList where shop=?");
+	sql_query.addBindValue(shopName.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	dataBase.close();
+	return SQL_OK;
+}
+int DataManager::GetWhiteList(std::vector<std::string>& vec, std::string shopName){
+	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
+	QSqlQuery sql_query(dataBase);
+	QString str = "select ean from whiteList where shop=?";
+	sql_query.prepare(str);
+	sql_query.addBindValue(shopName.c_str());
+	if (!sql_query.exec()) {
+		auto a = sql_query.lastError().text();
+		dataBase.close();
+		return SQL_EXEC_ERROR;
+	}
+	vec.clear();
+	while (sql_query.next()){
+		vec.push_back(sql_query.value(0).toString().toStdString());
+	}
+	dataBase.close();
+	return SQL_OK;
+}
 
 int DataManager::GetNotice(std::string shopName, int timeStamp, std::vector<ShopNotice>& vec){
 	if (ConnectDataBase(shopName) != SQL_OK) return SQL_OPEN_ERROR;

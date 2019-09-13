@@ -1,9 +1,16 @@
 #pragma once
 #include <string>
 #include <vector>
+
 #define MACHINE_STOP 0
 #define MACHINE_PLAY 1
 #define MACHINE_PAUSE 2
+
+#define HELPER_GOLDCAR		0
+#define HELPER_WHITESHOP	1
+#define HELPER_WHITELIST	2
+#define HELPER_PRODUCTATTR	3
+
 typedef struct _ShopInfo{
 	std::string name;
 	std::string account;
@@ -28,6 +35,17 @@ typedef struct _CPAttr{
 	int control;
 	std::string my_shop;
 	int white_list_enable;
+	_CPAttr(){
+		shop = "";
+		minute = -1;
+		max_times = -1;
+		max_percent = -1;
+		percent = -1;
+		lowwer = -1;
+		control = -1;
+		my_shop = "";
+		white_list_enable = -1;
+	}
 	void Copy(_CPAttr& attr){
 		minute = attr.minute;
 		max_times = attr.max_times;

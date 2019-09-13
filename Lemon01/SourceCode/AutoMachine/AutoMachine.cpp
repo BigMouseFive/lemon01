@@ -5,7 +5,7 @@
 #include <qtimer.h>
 #include <qdebug.h>
 
-#define CMD_LINE "DNCAT\\dist\\deprecated\\deprecated.exe"
+#define CMD_LINE "deprecated\\deprecated.exe"
 typedef struct EnumHWndsArg
 {
 	std::vector<HWND> *vecHWnds;
@@ -65,6 +65,45 @@ typedef struct EnumHWndsArg
 //	EnumWindows(lpEnumFunc, (LPARAM)&wi);
 //}
 
+// 这是隐藏console窗口的一种方法：创建虚拟桌面，并在虚拟桌面中创建进程。
+// 这个方法有要求：
+//		1. 要使用SetThreadDesktop指定当前的线程是处在虚拟桌面的
+//		2. 执行SetThreadDesktop的线程必须是一个不包含hook和handler以及UI对象的线程，所以我创建了一个新的线程来执行。
+//DWORD WINAPI KillAutomachineWithHideConsole(LPVOID process_id){
+//	char buffer[100];
+//	sprintf(buffer, "taskkill.exe /PID %d /T /F", *((int *)process_id));
+//
+//	HDESK hDesk = CreateDesktop(_T("EchizenDestop"), NULL, NULL, 0, GENERIC_ALL, NULL);
+//	SetThreadDesktop(hDesk);
+//	STARTUPINFO StartInfo;
+//	GetStartupInfo(&StartInfo);
+//	StartInfo.lpDesktop = _T("EchizenDestop");
+//	StartInfo.dwFlags = STARTF_USESHOWWINDOW;
+//	StartInfo.wShowWindow = SW_HIDE;
+//	StartInfo.cb = sizeof(STARTUPINFO);//设定结构的大小 
+//
+//	PROCESS_INFORMATION pkill_info;
+//	BOOL ret = CreateProcess(
+//		NULL, //启动程序路径名 
+//		ATL::CA2T(buffer), //参数（当exeName为NULL时，可将命令放入参数前） 
+//		NULL, //使用默认进程安全属性 
+//		NULL, //使用默认线程安全属性 
+//		FALSE,//句柄不继承 
+//		CREATE_NO_WINDOW, //使用正常优先级 CREATE_NO_WINDOW(不显示窗口：方法二)
+//		NULL, //使用父进程的环境变量 
+//		NULL, //指定工作目录 
+//		&StartInfo, //子进程主窗口如何显示 
+//		&pkill_info); //用于存放新进程的返回信息
+//	if (ret){
+//		WaitForSingleObject(pkill_info.hProcess, INFINITE);
+//		CloseHandle(pkill_info.hThread);
+//		CloseHandle(pkill_info.hProcess);
+//		return 0;
+//	}
+//	else{
+//		return -1;
+//	}
+//}
 
 AutoMachine::AutoMachine(std::string name, QObject* parent)
 	: QThread(parent)
@@ -100,7 +139,7 @@ AutoMachine::AutoMachine(std::string name, QObject* parent)
 		i++;
 	}
 	_execPath[j] = '\0';
-	strncat(_execPath, "/DNCAT/dist/deprecated/", 23);
+	strncat(_execPath, "/deprecated/", 12);
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(onTimer()));
 	timer->start(2000);
@@ -135,9 +174,11 @@ void AutoMachine::run(){
 		ATL::CA2T(_execPath), //指定工作目录 
 		&StartInfo, //子进程主窗口如何显示 
 		&pinfo); //用于存放新进程的返回信息
-	if (ret){
+	if (ret){//6384 2440
 		cpAttr.control = MACHINE_PLAY;
 		WaitForSingleObject(pinfo.hProcess, INFINITE);
+		CloseHandle(pinfo.hThread);
+		CloseHandle(pinfo.hProcess);
 		pinfo.hProcess = nullptr;
 		pinfo.hThread = nullptr;
 		pinfo.dwThreadId = 0;
@@ -155,27 +196,36 @@ void AutoMachine::run(){
 
 void AutoMachine::killProcess(){
 	if (pinfo.dwProcessId > 0){
-		/*char buffer[100];
+		//auto threadHandler = CreateThread(NULL, 0, KillAutomachineWithHideConsole, LPVOID(&(pinfo.dwProcessId)), 0, NULL);
+		//WaitForSingleObject(threadHandler, INFINITE);
+		char buffer[100];
 		sprintf(buffer, "taskkill.exe /PID %d /T /F", pinfo.dwProcessId);
-		system(buffer);*/
-		
-		//wchar_t szBuf[200];
-		//wsprintf(szBuf, L"/C taskkill.exe /PID %d /T /F", pinfo.dwProcessId);
 
-		////通过ShellExecuteEx() 来杀死对应开启的改价程序
-		////替代了之前的system()的方式，目的是为了不会有一个窗口闪一下
-		//SHELLEXECUTEINFO ShExecInfo = { 0 };
-		//ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-		//ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-		//ShExecInfo.hwnd = NULL;
-		//ShExecInfo.lpVerb = NULL;
-		//ShExecInfo.lpFile = L"cmd.exe";//调用的程序名
-		//ShExecInfo.lpParameters = szBuf;//调用程序的命令行参数
-		//ShExecInfo.lpDirectory = NULL;
-		//ShExecInfo.nShow = SW_HIDE;//窗口状态为隐藏
-		//ShExecInfo.hInstApp = NULL;
-		//ShellExecuteEx(&ShExecInfo);
-		//WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+		STARTUPINFO StartInfo;
+		GetStartupInfo(&StartInfo);
+		StartInfo.dwFlags = STARTF_USESHOWWINDOW;
+		StartInfo.wShowWindow = SW_HIDE;
+		StartInfo.cb = sizeof(STARTUPINFO);//设定结构的大小 
+
+		PROCESS_INFORMATION pkill_info;
+		BOOL ret = CreateProcess(
+			NULL, //启动程序路径名 
+			ATL::CA2T(buffer), //参数（当exeName为NULL时，可将命令放入参数前） 
+			NULL, //使用默认进程安全属性 
+			NULL, //使用默认线程安全属性 
+			FALSE,//句柄不继承 
+			CREATE_NO_WINDOW, //使用正常优先级 CREATE_NO_WINDOW(不显示窗口：方法二)
+			NULL, //使用父进程的环境变量 
+			NULL, //指定工作目录 
+			&StartInfo, //子进程主窗口如何显示 
+			&pkill_info); //用于存放新进程的返回信息
+		if (ret){
+			WaitForSingleObject(pkill_info.hProcess, INFINITE);
+			CloseHandle(pkill_info.hThread);
+			CloseHandle(pkill_info.hProcess);
+		}
+		else{
+		}
 	}
 }
 
@@ -235,6 +285,8 @@ void AutoMachine::ReadAttr(){
 	}
 	if (DataManager::GetInstance()->GetCPComplexAttr(cpComplexAttr, _name) != SQL_OK){
 	}
+	if (DataManager::GetInstance()->GetWhiteList(whiteEans, _name) != SQL_OK){
+	}
 }
 CPAttr* AutoMachine::GetCPAttr(){
 	return &cpAttr;
@@ -242,6 +294,10 @@ CPAttr* AutoMachine::GetCPAttr(){
 std::map<std::string, CPComplexAttr>* AutoMachine::GetCPComplexAttr(){
 	return &cpComplexAttr;
 }
+std::vector<std::string>* AutoMachine::GetWhiteEans(){
+	return &whiteEans;
+}
+
 int AutoMachine::GetState(){
 	return cpAttr.control;
 }
