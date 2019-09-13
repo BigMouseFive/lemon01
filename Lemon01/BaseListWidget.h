@@ -10,6 +10,8 @@ class BaseListWidget : public QListWidget{
 public:
 	BaseListWidget(QWidget* parent = nullptr);
 	~BaseListWidget();
+	int addItemDR(QString name);
+	std::string getMyShop();
 
 protected:
 	void mousePressEvent(QMouseEvent *event);

@@ -30,10 +30,20 @@ public:
 	int DelCPAttr(std::string shopName);
 	int GetCPAttr(CPAttr&, std::string shopName);
 	int UpdateControl(int, std::string shopName);
+	int UpdateCPAttr(CPAttr&, std::string shopName);
+	int UpdateMyShop(std::string my_shop, std::string shopName);
+
 	//table CPComplexAttr
 	int AddCPComplexAttr(CPComplexAttr&, std::string shopName);
 	int DelCPComplexAttr(std::string, std::string shopName);
+	int DelAllCPComplexAttr(std::string shopName);
 	int GetCPComplexAttr(std::map<std::string, CPComplexAttr>&, std::string shopName);
+
+	//table whiteList
+	int AddWhiteList(std::string ean, std::string shopName, std::string variant_name = "");
+	int DelWhiteList(std::string ean, std::string shopName);
+	int DelAllWhiteList(std::string shopName);
+	int GetWhiteList(std::vector<std::string>&, std::string shopName);
 
 	//table notice
 	int GetNotice(std::string shopName, int timeStamp, std::vector<ShopNotice>& vec);

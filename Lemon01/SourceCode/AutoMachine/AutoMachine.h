@@ -24,6 +24,7 @@ public:
 	CPAttr* GetCPAttr();
 	int GetState();
 	std::map<std::string, CPComplexAttr>* GetCPComplexAttr();
+	std::vector<std::string>* GetWhiteEans();
 
 signals:
 	void SigSuccess(std::string);
@@ -42,6 +43,7 @@ public:
 	CPAttr cpAttr;
 	int timeStamp;
 	std::map<std::string, CPComplexAttr> cpComplexAttr;
-	QStandardItemModel* model;
+	std::vector<std::string> whiteEans;
+ 	QStandardItemModel* model;
 	PROCESS_INFORMATION pinfo;
 };

@@ -42,20 +42,36 @@ void BaseListWidget::dragMoveEvent(QDragMoveEvent *event){
 		event->accept();
 	}
 }
+std::string BaseListWidget::getMyShop(){
+	std::string my_shop = "";
+	for (int i = 0; i < count(); i++){
+		my_shop += item(i)->text().toStdString() + ",";
+	}
+
+	if (!my_shop.empty()) my_shop.pop_back();
+	return my_shop;
+}
+
+int BaseListWidget::addItemDR(QString name){
+	int is_new = 1;
+	auto items = findItems(name, Qt::MatchFixedString);
+	QListWidgetItem* item = nullptr;
+	if (items.empty()){
+		addItem(name);
+		item = this->item(this->count());
+	}
+	else{
+		item = items.at(0);
+		is_new = 0;
+	}
+	setCurrentItem(item);
+	return is_new;
+}
+
 void BaseListWidget::dropEvent(QDropEvent *event){
 	BaseListWidget *source = qobject_cast<BaseListWidget *>(event->source());
 	if (source && source != this) {
-		QString name = event->mimeData()->text();
-		auto items = findItems(name, Qt::MatchFixedString);
-		QListWidgetItem* item = nullptr;
-		if (items.empty()){
-			addItem(name);
-			item = this->item(this->count());
-		}
-		else{
-			item = items.at(0);
-		}
-		setCurrentItem(item);
+		addItemDR(event->mimeData()->text());
 		//我们取出 QDrag 中的 mimeData 数据，调用 addItem() 添加到当前的列表中
 		event->setDropAction(Qt::MoveAction);
 		event->accept();

@@ -15,6 +15,7 @@
 #include <QInputDialog>
 #include <QDialogButtonBox>
 #include <QTimer>
+#include <QFileDialog>
 #include <qmessagebox.h>
 #include "SourceCode\AutoMachine\NoticeDialog.h"
 
@@ -33,62 +34,110 @@ Lemon01::Lemon01(QWidget *parent)
 	: QWidget(parent)
 	, lastret(999)
 {
+	testRegister();
 	ui.setupUi(this);
 	readXml();
 	initList();
-	ui.label_3->setHidden(true);
-	ui.label->setHidden(true);
-	ui.upload->setHidden(true);
-	ui.times->setHidden(true);
+
+	progress = new QProgressDialog(QStringLiteral(""), QStringLiteral(""), 0, 100, this);
+	progress->setFixedWidth(300);
+	progress->setWindowTitle(QStringLiteral("加载店铺参数"));
+	progress->setCancelButton(0);
+	progress->setWindowModality(Qt::WindowModal);
+	progress->setValue(100);
+
+	ui.label_3->setHidden(1);
+	ui.label->setHidden(1);
+	ui.upload->setHidden(1);
+	ui.times->setHidden(1);
 
 	delAct = new QAction(QStringLiteral("删除店铺"), this);
 	closeAct = new QAction(QStringLiteral("关闭店铺"), this);
 	addAct = new QAction(QStringLiteral("添加店铺"), this);
 	updateAct = new QAction(QStringLiteral("修改店铺"), this);
 	delEanAct = new QAction(QStringLiteral("删除记录"), this);
+	delAllEanAct = new QAction(QStringLiteral("删除全部记录"), this);
 	addEanAct = new QAction(QStringLiteral("添加记录"), this);
 	updateEanAct = new QAction(QStringLiteral("修改记录"), this);
+	importProductAttrAct = new QAction(QStringLiteral("导入定制化参数"), this);
+
 	setPriceAct = new QAction(QStringLiteral("设置价格"), this);
 	ignoreAct = new QAction(QStringLiteral("忽略"), this);
+	
+	addWhiteShopAct = new QAction(QStringLiteral("添加白名单店铺"), this);
+	delAllWhiteShopAct = new QAction(QStringLiteral("全部删除"), this);
+	importWhiteShopAct = new QAction(QStringLiteral("导入白名单店铺"), this);
+	addWhiteEanAct = new QAction(QStringLiteral("添加白名单产品"), this);
+	delAllWhiteEanAct = new QAction(QStringLiteral("全部删除"), this);
+	importWhiteEanAct = new QAction(QStringLiteral("导入白名单产品"), this);
 	{
 		ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-		ui.myShopList->setAcceptDrops(true);
+		ui.myShopList->setContextMenuPolicy(Qt::CustomContextMenu);
+		ui.whitelist->setContextMenuPolicy(Qt::CustomContextMenu);
+		
+		ui.listWidget->setItemDelegate(new NoFocusDelegate());
+		ui.myShopList->setItemDelegate(new NoFocusDelegate());
+		ui.whitelist->setItemDelegate(new NoFocusDelegate());
 
 		ui.tableWidget->setColumnCount(3);
 		ui.tableWidget->setColumnWidth(0, 200);
+		ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+		ui.tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+		ui.tableWidget->setItemDelegate(new NoFocusDelegate()); //设置无虚线
+		ui.tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 		ui.tableWidget->horizontalHeader()->setStretchLastSection(true);
 		ui.tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 		ui.tableWidget->verticalHeader()->setVisible(false);
 	}
-
 	{
+		connect(addWhiteShopAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddWhiteShopAct(bool)));
+		connect(delAllWhiteShopAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAllWhiteShopAct(bool)));
+		connect(importWhiteShopAct, SIGNAL(triggered(bool)), this, SLOT(SlotImportWhiteShopAct(bool)));
+		connect(addWhiteEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddWhiteEanAct(bool)));
+		connect(delAllWhiteEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAllWhiteEanAct(bool)));
+		connect(importWhiteEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotImportWhiteEanAct(bool)));
+
 		connect(delAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAct(bool)));
 		connect(closeAct, SIGNAL(triggered(bool)), this, SLOT(SlotCloseAct(bool)));
 		connect(addAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddAct(bool)));
 		connect(updateAct, SIGNAL(triggered(bool)), this, SLOT(SlotUpdateAct(bool))); 
 		connect(delEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelEanAct(bool)));
+		connect(delAllEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotDelAllEanAct(bool)));
 		connect(addEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddEanAct(bool)));
 		connect(updateEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotUpdateEanAct(bool)));
+		connect(importProductAttrAct, SIGNAL(triggered(bool)), this, SLOT(SlotImportProductAttrAct(bool)));
+
 		connect(setPriceAct, SIGNAL(triggered(bool)), this, SLOT(SlotSetPriceAct(bool)));
 		connect(ignoreAct, SIGNAL(triggered(bool)), this, SLOT(SlotIgnoreAct(bool)));
+
 		connect(ui.btnAddTime, SIGNAL(clicked()), this, SLOT(SlotAddTime()));
 		connect(ui.play, SIGNAL(clicked()), this, SLOT(SlotAutoPlay()));
 		connect(ui.pause, SIGNAL(clicked()), this, SLOT(SlotAutoPause()));
 		connect(ui.stop, SIGNAL(clicked()), this, SLOT(SlotAutoStop()));
 		connect(ui.update, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
-		connect(ui.notice, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
+		//connect(ui.notice, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
 		connect(ui.myShopList, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
 			this, SLOT(SlotDelInMyShop(QListWidgetItem *)));
+		connect(ui.whitelist, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
+			this, SLOT(SlotDelInWhiteList(QListWidgetItem *)));
+		connect(ui.myShopList, SIGNAL(customContextMenuRequested(const QPoint&)),
+			this, SLOT(SlotMyShopContextRequested(const QPoint&)));
+		connect(ui.whitelist, SIGNAL(customContextMenuRequested(const QPoint&)),
+			this, SLOT(SlotWhiteContextRequested(const QPoint&)));
 		connect(ui.tableWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
 			this, SLOT(SlotTableContextRequested(const QPoint&)));
+		connect(ui.lowwerspin, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
+		connect(ui.percentspin, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
+		connect(ui.times, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
+		connect(ui.upload, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
+		connect(ui.time, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
+		connect(ui.listWidget, SIGNAL(itemClicked(QListWidgetItem *)),
+			this, SLOT(SlotListItemClicked(QListWidgetItem *)));
+		connect(ui.listWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+			this, SLOT(SlotListContextRequested(const QPoint&)));
 	}
 	
 	setEmpty();
-	testRegister();
-	char s[100];
-	time_t limit_time = endtime - 2208988800;
-	strftime(s, sizeof(s), "%Y-%m-%d", localtime(&limit_time));
-	ui.limit_time->setText(QStringLiteral("到期时间：") + QString::fromLocal8Bit(s));
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
 	timer->start(1000*60*10);
@@ -104,21 +153,24 @@ void Lemon01::setShopState(int control, std::string name){
 		ui.play->setHidden(0);
 		ui.pause->setHidden(1);
 		ui.stop->setHidden(1);
-		ui.update->setHidden(0);
+		ui.update->setHidden(1);
+		ui.notice->setHidden(0);
 		pix.load(":/Lemon01/shop");
 	}
 	else if (control == MACHINE_PAUSE){
 		ui.play->setHidden(0);
 		ui.pause->setHidden(1);
 		ui.stop->setHidden(0);
-		ui.update->setHidden(0);
+		ui.update->setHidden(1);
+		ui.notice->setHidden(0);
 		pix.load(":/Lemon01/pause_yellow");
 	}
 	else if (control == MACHINE_PLAY){
 		ui.play->setHidden(1);
 		ui.pause->setHidden(0);
 		ui.stop->setHidden(0);
-		ui.update->setHidden(0);
+		ui.update->setHidden(1);
+		ui.notice->setHidden(0);
 		pix.load(":/Lemon01/run");
 	}
 	if (!name.empty()){
@@ -138,10 +190,8 @@ void Lemon01::setEmpty(CPAttr* attr){
 		ui.times->setValue(attr->max_times);
 		ui.upload->setValue(attr->max_percent * 100);
 		ui.time->setValue(attr->minute);
-		if (attr->my_shop.find(',') != std::string::npos){
-			QStringList shops = QString::fromStdString(attr->my_shop).split(",");
-			ui.myShopList->addItems(shops);
-		}
+		QStringList shops = QString::fromStdString(attr->my_shop).split(",");
+		ui.myShopList->addItems(shops);
 		setShopState(attr->control);
 	}
 	else{
@@ -153,10 +203,12 @@ void Lemon01::setEmpty(CPAttr* attr){
 		setShopState(MACHINE_STOP);
 		ui.play->setHidden(1);
 		ui.update->setHidden(1);
+		ui.notice->setHidden(0);
 		currentShop = "";
 		ui.selectShop->setText("");
 		ui.myShopList->clear();
 		ui.tableWidget->clear();
+		ui.whitelist->clear();
 		QStringList headers;
 		headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
 		ui.tableWidget->setHorizontalHeaderLabels(headers);
@@ -165,19 +217,22 @@ void Lemon01::setEmpty(CPAttr* attr){
 
 void Lemon01::initList(){
 	QStringList list;
+	int num = 0;
 	for (auto it = infoMap.begin(); it != infoMap.end(); ++it){
 		list.append(QString::fromStdString(it->second.name));
+		//if (++num >= total) break;
 	}
+	ui.listWidget->clear();
 	ui.listWidget->addItems(list);
 	for (int i = 0; i < ui.listWidget->count(); ++i){
 		QPixmap pix(":/Lemon01/shop");
 		ui.listWidget->item(i)->setIcon(QIcon(pix.scaled(25, 25)));
 	}
-	connect(ui.listWidget, SIGNAL(itemClicked(QListWidgetItem *)),
-		this, SLOT(SlotListItemClicked(QListWidgetItem *)));
-	connect(ui.listWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
-		this, SLOT(SlotListContextRequested(const QPoint&)));
-
+	char s[100];
+	time_t limit_time = endtime - 2208988800;
+	strftime(s, sizeof(s), "%Y-%m-%d", localtime(&limit_time));
+	ui.limit_time->setText(QStringLiteral("到期时间：") + QString::fromLocal8Bit(s));
+	WriteLockFile();
 }
 void Lemon01::QuitThisSystem(){
 	for (auto iter = infoMap.begin(); iter != infoMap.end(); ++iter){
@@ -741,6 +796,99 @@ void Lemon01::SlotCompareTime(){
 	}
 }
 
+void Lemon01::WriteLockFile(){
+	ifstream fin("deprecated\\selenium\\webdriver\\firefox\\amd64\\x_ignore_noiris.so");
+	string s;
+	fin >> s;
+	fin.close();
+	QStringList list;
+	if (s.empty())
+		list.append(QString::fromStdString(std::to_string(total)));
+	else {
+		list = QString::fromStdString(s).split('.');
+		list[0] = QString::fromStdString(std::to_string(total));
+	}
+	s = "";
+	for (auto iter = list.begin(); iter != list.end(); ++iter){
+		if (!(*iter).isEmpty()){
+			s += (*iter).toStdString() + ".";
+		}
+	}
+	ofstream fout("deprecated\\selenium\\webdriver\\firefox\\amd64\\x_ignore_noiris.so");
+	fout << s;
+	fout.close();
+}
+bool Lemon01::CanRunByLockFile(){
+	fstream fin("deprecated\\selenium\\webdriver\\firefox\\amd64\\x_ignore_noiris.so");
+	string s;
+	fin >> s;
+	fin.close();
+	QStringList list = QString::fromStdString(s).split('.');
+	try{
+		if (list.size() < total + 2){
+			return true;
+		}
+		for (auto iter = list.begin(); iter != list.end(); ++iter){
+			if ((*iter).toStdString() == currentShop){
+				return true;
+			}
+		}
+		return false;
+	}
+	catch (...){
+		return false;
+	}
+}
+int Lemon01::HelperHandler(int method, std::string src, std::string dst, std::string shop){
+	char buffer[500];
+	switch (method){
+	case HELPER_GOLDCAR:
+		sprintf(buffer, "\"helper.exe\" GoldCar %s %s", src.c_str(), dst.c_str());
+		break;
+	case HELPER_WHITESHOP:
+		sprintf(buffer, "\"helper.exe\" WhiteShop %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
+		break;
+	case HELPER_WHITELIST:
+		sprintf(buffer, "\"helper.exe\" WhiteList %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
+		break;
+	case HELPER_PRODUCTATTR:
+		sprintf(buffer, "\"helper.exe\" ProductAttr %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
+		break;
+	}
+	//qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+	PROCESS_INFORMATION pinfo;
+	STARTUPINFO StartInfo;
+	//对程序的启动信息不作任何设定，全部清0 
+	memset(&StartInfo, 0, sizeof(STARTUPINFO));
+	StartInfo.cb = sizeof(STARTUPINFO);//设定结构的大小 
+	//不显示窗口：方法一
+	StartInfo.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESHOWWINDOW;
+	StartInfo.wShowWindow = SW_HIDE;
+	BOOL ret = CreateProcess(
+		NULL, //启动程序路径名 
+		ATL::CA2T(buffer), //参数（当exeName为NULL时，可将命令放入参数前） 
+		NULL, //使用默认进程安全属性 
+		NULL, //使用默认线程安全属性 
+		FALSE,//句柄不继承 
+		NORMAL_PRIORITY_CLASS, //使用正常优先级 CREATE_NO_WINDOW(不显示窗口：方法二)
+		NULL, //使用父进程的环境变量 
+		NULL, //指定工作目录 
+		&StartInfo, //子进程主窗口如何显示 
+		&pinfo); //用于存放新进程的返回信息
+	if (ret){
+		WaitForSingleObject(pinfo.hProcess, INFINITE);
+		CloseHandle(pinfo.hThread);
+		CloseHandle(pinfo.hProcess);
+		return 0;
+	}
+	else{
+		return -1;
+	}
+	//pinfo.hProcess = nullptr;
+	//pinfo.hThread = nullptr;
+	//pinfo.dwThreadId = 0;
+	//pinfo.dwProcessId = 0;
+}
 void Lemon01::SlotListContextRequested(const QPoint& point){
 	selectName.clear();
 	auto item = ui.listWidget->itemAt(point);
@@ -779,6 +927,13 @@ void Lemon01::SlotUpdateAct(bool){
 	}
 }
 void Lemon01::SlotAddShop(){
+	if (ui.listWidget->count() >= total){
+		QMessageBox box(QMessageBox::Information, "Add Shop", QStringLiteral("对不起，超过授权上限"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
+		return;
+	}
 	AddShopDialog a(ShopInfo(), this);
 	auto ret = a.exec();
 	if (ret == AddShopDialog::Accepted){
@@ -815,13 +970,42 @@ void Lemon01::SlotTableContextRequested(const QPoint& point){
 		menu.addAction(delEanAct);
 		menu.addAction(updateEanAct);
 	}
+	menu.addAction(delAllEanAct);
+	menu.addAction(importProductAttrAct);
 	menu.exec(ui.tableWidget->mapToGlobal(point) + QPoint(10, 10));
 }
-
+void Lemon01::SlotMyShopContextRequested(const QPoint& point){
+	auto item = ui.myShopList->itemAt(point);
+	QMenu menu;
+	menu.addAction(addWhiteShopAct);
+	menu.addAction(delAllWhiteShopAct);
+	menu.addAction(importWhiteShopAct);
+	menu.exec(ui.myShopList->mapToGlobal(point) + QPoint(10, 10));
+}
+void Lemon01::SlotWhiteContextRequested(const QPoint& point){
+	auto item = ui.whitelist->itemAt(point);
+	QMenu menu;
+	menu.addAction(addWhiteEanAct);
+	menu.addAction(delAllWhiteEanAct);
+	menu.addAction(importWhiteEanAct);
+	menu.exec(ui.whitelist->mapToGlobal(point) + QPoint(10, 10));
+}
 void Lemon01::SlotDelEanAct(bool flag){
+	if (currentShop.empty()) return;
 	if (tableRow >= 0){
+		DataManager::GetInstance()->DelCPComplexAttr(ui.tableWidget->item(tableRow, 0)->text().toStdString(), currentShop);
 		ui.tableWidget->removeRow(tableRow);
 	}
+}
+void Lemon01::SlotDelAllEanAct(bool flag){
+	if (currentShop.empty()) return;
+	if (ui.tableWidget->rowCount() == 0) return;
+	ui.tableWidget->clear();
+	QStringList headers;
+	headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+	ui.tableWidget->setHorizontalHeaderLabels(headers);
+	ui.tableWidget->setRowCount(0);
+	DataManager::GetInstance()->DelAllCPComplexAttr(currentShop);
 }
 void Lemon01::SlotAddEanAct(bool){
 	AddEanAttr a;
@@ -837,6 +1021,7 @@ void Lemon01::SlotAddEanAct(bool){
 			ui.tableWidget->setItem(row, 0, item);
 			ui.tableWidget->setItem(row, 1, new QTableWidgetItem(QString("%1").arg(attr.least_price)));
 			ui.tableWidget->setItem(row, 2, new QTableWidgetItem(QString("%1").arg(attr.max_times)));
+			DataManager::GetInstance()->AddCPComplexAttr(attr, currentShop);
 		}
 	}
 }
@@ -854,8 +1039,40 @@ void Lemon01::SlotUpdateEanAct(bool){
 			ui.tableWidget->item(tableRow, 0)->setText(QString::fromStdString(attr.ean));
 			ui.tableWidget->item(tableRow, 1)->setText(QString("%1").arg(attr.least_price));
 			ui.tableWidget->item(tableRow, 2)->setText(QString("%1").arg(attr.max_times));
+			DataManager::GetInstance()->AddCPComplexAttr(attr, currentShop);
 		}
 	}
+}
+void Lemon01::SlotImportProductAttrAct(bool){
+	if (currentShop.empty()) return;
+	//选择导入的xls表格
+	std::string src = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)")).toStdString();
+	std::string dst = "DataBase.db";
+	if (src.empty()) return;
+	progress->setValue(0);
+	if (HelperHandler(HELPER_PRODUCTATTR, src, dst, currentShop) >= 0){
+		//就更新店铺特定改价参数
+		progress->setValue(45);
+		std::map<std::string, CPComplexAttr> cpComplexAttr;
+		DataManager::GetInstance()->GetCPComplexAttr(cpComplexAttr, currentShop);
+		ui.tableWidget->clear();
+		QStringList headers;
+		headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+		ui.tableWidget->setHorizontalHeaderLabels(headers);
+		ui.tableWidget->setRowCount(cpComplexAttr.size()); 
+		int i = 0;
+		for (auto iter = cpComplexAttr.begin(); iter != cpComplexAttr.end(); ++iter, ++i){
+			auto item = new QTableWidgetItem(QString::fromStdString(iter->second.ean));
+			item->setFlags(item->flags() & (~Qt::ItemIsEditable));
+			ui.tableWidget->setItem(i, 0, item);
+			ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString("%1").arg(iter->second.least_price)));
+			ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
+			progress->setValue(45 + i * 54 / cpComplexAttr.size());
+		}
+	}
+	progress->setValue(99);
+	Sleep(500);
+	progress->setValue(100);
 }
 
 void Lemon01::SlotSetPriceAct(bool){
@@ -869,7 +1086,90 @@ void Lemon01::SlotIgnoreAct(bool){
 		}
 	}
 }
-
+void Lemon01::SlotAddWhiteShopAct(bool){
+	if (currentShop.empty()) return;
+	QInputDialog inputDialog(this);
+	inputDialog.setWindowTitle(QStringLiteral("添加白名单店铺"));
+	inputDialog.setLabelText(QStringLiteral("输入要添加进白名单的店铺名"));
+	inputDialog.setOkButtonText(QStringLiteral("确定"));
+	inputDialog.setCancelButtonText(QStringLiteral("取消"));
+	inputDialog.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
+	inputDialog.setFixedSize(300, 300);
+	QString text;
+	if (inputDialog.exec()) {
+		if (ui.myShopList->addItemDR(inputDialog.textValue()))
+			DataManager::GetInstance()->UpdateMyShop(ui.myShopList->getMyShop(), currentShop);
+	}
+}
+void Lemon01::SlotDelAllWhiteShopAct(bool){
+	if (currentShop.empty()) return;
+	ui.myShopList->clear();
+	DataManager::GetInstance()->UpdateMyShop("", currentShop);
+}
+void Lemon01::SlotImportWhiteShopAct(bool){
+	if (currentShop.empty()) return;
+	//选择导入的xls表格
+	std::string src = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)")).toStdString();
+	std::string dst = "DataBase.db";
+	if (src.empty()) return;
+	progress->setValue(0);
+	if (HelperHandler(HELPER_WHITESHOP, src, dst, currentShop) >= 0){
+		//就更新店铺白名单
+		progress->setValue(45);
+		CPAttr attr;
+		DataManager::GetInstance()->GetCPAttr(attr, currentShop);
+		ui.myShopList->clear();
+		QStringList shops = QString::fromStdString(attr.my_shop).split(",");
+		ui.myShopList->addItems(shops);
+		progress->setValue(77);
+	}
+	progress->setValue(99);
+	Sleep(500);
+	progress->setValue(100);
+}
+void Lemon01::SlotAddWhiteEanAct(bool){
+	if (currentShop.empty()) return;
+	QInputDialog inputDialog(this);
+	inputDialog.setWindowTitle(QStringLiteral("添加白名单产品"));
+	inputDialog.setLabelText(QStringLiteral("输入要添加进白名单的产品SKU"));
+	inputDialog.setOkButtonText(QStringLiteral("确定"));
+	inputDialog.setCancelButtonText(QStringLiteral("取消"));
+	inputDialog.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
+	inputDialog.setFixedSize(300, 300);
+	QString text;
+	if (inputDialog.exec()) {
+		if (ui.whitelist->addItemDR(inputDialog.textValue()))
+			DataManager::GetInstance()->AddWhiteList(inputDialog.textValue().toStdString(), currentShop);
+	}
+}
+void Lemon01::SlotDelAllWhiteEanAct(bool){
+	if (currentShop.empty()) return;
+	ui.whitelist->clear();
+	DataManager::GetInstance()->DelAllWhiteList(currentShop);
+}
+void Lemon01::SlotImportWhiteEanAct(bool){
+	if (currentShop.empty()) return;
+	//选择导入的xls表格
+	std::string src = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)")).toStdString();
+	std::string dst = "DataBase.db";
+	if (src.empty()) return;
+	progress->setValue(0);
+	if (HelperHandler(HELPER_WHITELIST, src, dst, currentShop) >= 0){
+		//就更新产品白名单
+		progress->setValue(45);
+		std::vector<std::string> whiteEans;
+		DataManager::GetInstance()->GetWhiteList(whiteEans, currentShop);
+		ui.whitelist->clear(); 
+		int i = 0;
+		for (auto ean = whiteEans.begin(); ean != whiteEans.end(); ++ean){
+			ui.whitelist->addItem(QString::fromStdString(*ean));
+			i++; progress->setValue(45 + i * 54 / whiteEans.size());
+		}
+	}
+	progress->setValue(99);
+	Sleep(500);
+	progress->setValue(100);
+}
 bool Lemon01::IsEanInTable(std::string ean){
 	for (int i = 0; i < ui.tableWidget->rowCount(); ++i){
 		if (ui.tableWidget->item(i, 0)->text().compare(QString::fromStdString(ean)) == 0){
@@ -885,10 +1185,12 @@ bool Lemon01::IsEanInTable(std::string ean){
 
 void Lemon01::SlotListItemClicked(QListWidgetItem *item){
 	if (item == nullptr) return;
+	if (currentShop == item->text().toStdString()) return;
 	ui.selectShop->setText(item->text());
 	currentShop = item->text().toStdString();
 	AutoMachine* machine = nullptr;
 	auto iter = threadMap.find(currentShop);
+	progress->setValue(4);
 	if (iter == threadMap.end()){
 		//创建
 		machine = new AutoMachine(currentShop);
@@ -896,13 +1198,26 @@ void Lemon01::SlotListItemClicked(QListWidgetItem *item){
 		connect(machine, SIGNAL(SigFailed(std::string)), this, SLOT(SlotAutoFailed(std::string)));
 		connect(machine, SIGNAL(SigStop(std::string)), this, SLOT(SlotAutoFinish(std::string)));
 	}
-	else
+	else{
 		machine = iter->second;
+		machine->ReadAttr();
+	}
+	progress->setValue(15);
 	DisplayAttr(machine);
 }
+void Lemon01::SlotDelInWhiteList(QListWidgetItem *item){
+	if (currentShop.empty()) return;
+	if (item){
+		DataManager::GetInstance()->DelWhiteList(item->text().toStdString(), currentShop);
+		ui.whitelist->takeItem(ui.whitelist->row(item));
+	}
+}
 void Lemon01::SlotDelInMyShop(QListWidgetItem *item){
-	if (item)
+	if (currentShop.empty()) return;
+ 	if (item){
 		ui.myShopList->takeItem(ui.myShopList->row(item));
+		DataManager::GetInstance()->UpdateMyShop(ui.myShopList->getMyShop(), currentShop);
+	}
 }
 void Lemon01::RemoveItemInList(std::string name){
 	auto item = ui.listWidget->findItems(QString::fromStdString(name), Qt::MatchFixedString);
@@ -913,26 +1228,40 @@ void Lemon01::InsertItemInList(std::string name){
 	QPixmap pix(":/Lemon01/shop");
 	new QListWidgetItem(QIcon(pix.scaled(25, 25)), QString::fromStdString(name), ui.listWidget);
 }
-
 void Lemon01::DisplayAttr(AutoMachine* machine){
 	ui.myShopList->clear();
+	ui.whitelist->clear();
 	ui.tableWidget->clear();
-	auto cpAttr = machine->GetCPAttr();
-	auto cpComplexAttr = machine->GetCPComplexAttr();
-	setEmpty(cpAttr);
-
 	QStringList headers;
 	headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
-	ui.tableWidget->setHorizontalHeaderLabels(headers);
-	ui.tableWidget->setRowCount(cpComplexAttr->size());
+	ui.tableWidget->setHorizontalHeaderLabels(headers); 
+	
+	auto cpAttr = machine->GetCPAttr();
+	auto cpComplexAttr = machine->GetCPComplexAttr();
+	auto whiteEans = machine->GetWhiteEans();
+
+	setEmpty(cpAttr);
+	progress->setValue(20);
 	int i = 0;
+	for (auto ean = whiteEans->begin(); ean != whiteEans->end(); ++ean){
+		ui.whitelist->addItem(QString::fromStdString(*ean));
+		i++; progress->setValue(20 + i * 29 / whiteEans->size());
+	}
+	progress->setValue(50);
+	
+	ui.tableWidget->setRowCount(cpComplexAttr->size());
+	i = 0;
 	for (auto iter = cpComplexAttr->begin(); iter != cpComplexAttr->end(); ++iter, ++i){
 		auto item = new QTableWidgetItem(QString::fromStdString(iter->second.ean));
 		item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 		ui.tableWidget->setItem(i, 0, item);
 		ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString("%1").arg(iter->second.least_price)));
 		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
+		progress->setValue(50 + i * 49 / cpComplexAttr->size());
 	}
+	progress->setValue(99);
+	Sleep(500);
+	progress->setValue(100);
 }
 
 void Lemon01::SlotAutoFinish(std::string name){
@@ -962,12 +1291,17 @@ void Lemon01::SlotAutoStop(){
 
 void Lemon01::SlotAddTime(){
 	aaaab_addtime();
-	char s[100];
-	time_t limit_time = endtime - 2208988800;
-	strftime(s, sizeof(s), "%Y-%m-%d", localtime(&limit_time));
-	ui.limit_time->setText(QStringLiteral("到期时间：") + QString::fromLocal8Bit(s));
+	initList();
 }
 void Lemon01::SlotAutoPlay(){
+	if (!CanRunByLockFile()){
+		QMessageBox msg(this);
+		msg.setWindowTitle(QStringLiteral("开启店铺"));
+		msg.setText(QStringLiteral("对不起，您已经超过店铺数量上限"));
+		msg.setIcon(QMessageBox::NoIcon);
+		msg.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
+		msg.addButton(QStringLiteral("确定"), QMessageBox::ActionRole);
+	}
 	auto iter = threadMap.find(currentShop);
 	if (iter != threadMap.end()){
 		if (iter->second){
@@ -1056,4 +1390,14 @@ bool Lemon01::delXml(std::string name)
 		return true;
 	}
 	return false;
+}
+void Lemon01::SlotUpdateCPAttr(const QString& str){
+	if (currentShop.empty()) return;
+	CPAttr attr;
+	attr.lowwer = ui.lowwerspin->value();
+	attr.percent = ui.percentspin->value() / 100.0;
+	attr.max_percent = ui.upload->value() / 100.0;
+	attr.max_times = ui.times->value();
+	attr.minute = ui.time->value();
+	DataManager::GetInstance()->UpdateCPAttr(attr, currentShop);
 }

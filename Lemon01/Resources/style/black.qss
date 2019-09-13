@@ -71,12 +71,11 @@ QHeaderView{ background: rgb(45, 45, 45); min-height: 30px; border-radius: 3px;}
 QHeaderView::section:horizontal {color: white; background: transparent; padding-left: 5px; border: 1px solid rgb(0, 160, 230);}
 
 /**********表格**********/
-QTableView { border: 1px solid rgb(45, 45, 45); background: rgb(17, 18, 20); gridline-color: rgb(60, 60, 60); }
+QTableView { border: 1px solid rgb(45, 45, 45); background: rgb(17, 18, 20);}
 QTableView::item { padding-left: 5px; padding-right: 5px; background: rgb(45, 45, 45); border-right: 1px solid rgb(45, 45, 45); border-bottom: 1px solid rgb(45, 45, 45); }
-QTableView::item::selected {border: 0px; color: white;}
-
+QTableView::item::selected {color: white; background:rgba(0, 160, 230, 100%);}
 /**********列表**********/
-QListView { border: 1px solid rgb(45, 45, 45); background: rgb(17, 18, 20); gridline-color: rgb(60, 60, 60); }
+QListView { border: 1px solid rgb(45, 45, 45); background: rgb(17, 18, 20); }
 
 
 /**********Tab页**********/
@@ -125,4 +124,42 @@ QTabBar#tabBar::tab:hover {
 QTabBar#tabBar::tab:selected {
         color: white;
         background: rgb(17, 18, 20);
+}
+
+/**********右键菜单**********/
+QMenu::item:selected {
+	background-color: #2dabf9;
+}
+
+/**********滚动条**********/
+QScrollBar:vertical
+{
+	width:8px;
+	background:rgba(0, 160, 230, 100%);
+	margin:0px,0px,0px,0px;
+	padding-top:0px;
+	padding-bottom:0px;
+	border-radius:4px;
+}
+QScrollBar::handle:vertical
+{
+	width:8px;
+	background:rgba(255,255,255,65%);
+	border-radius:4px;
+	min-height:20;
+}
+QScrollBar::handle:vertical:hover
+{
+	width:8px;
+	background:rgba(255,255,255,88%);
+	border-radius:4px;
+	min-height:20;
+}
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
+{
+	background:rgba(0,0,0,0%);
+}
+QScrollBar::sub-line:vertical, QScrollBar::add-line:vertical{
+    width: 0;
+    height: 0;
 }
