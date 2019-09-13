@@ -351,7 +351,7 @@ int Lemon01::aaaab_addtime(){
 }
 int Lemon01::aaaab(){
 
-	QMessageBox msg(this);
+	QMessageBox msg;
 	msg.setWindowTitle(QStringLiteral("注册"));
 	msg.setText(QStringLiteral("对不起，您输入的注册码不正确"));
 	msg.setIcon(QMessageBox::NoIcon);
