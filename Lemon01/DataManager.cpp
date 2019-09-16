@@ -264,6 +264,7 @@ int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 		dataBase.close();
 		return SQL_EXEC_ERROR;
 	}
+	int ret = SQL_NOT_FOUND;
 	if (sql_query.next()){
 		info.shop = sql_query.value(0).toString().toStdString();
 		info.minute = sql_query.value(1).toInt();
@@ -274,9 +275,10 @@ int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 		info.control = sql_query.value(6).toInt();
 		info.my_shop = sql_query.value(7).toString().toStdString();
 		info.white_list_enable = sql_query.value(8).toInt();
+		ret = SQL_OK;
 	}
 	dataBase.close();
-	return SQL_OK;
+	return ret;
 }
 
 int DataManager::UpdateControl(int control, std::string shopName){

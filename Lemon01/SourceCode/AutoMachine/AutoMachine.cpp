@@ -281,7 +281,11 @@ void AutoMachine::UpdateAttr(CPAttr& attr, std::vector<CPComplexAttr>& vec){
 	}
 }
 void AutoMachine::ReadAttr(){
-	if (DataManager::GetInstance()->GetCPAttr(cpAttr, _name) != SQL_OK){
+	int ret;
+	if ((ret = DataManager::GetInstance()->GetCPAttr(cpAttr, _name)) != SQL_OK){
+		if (ret == SQL_NOT_FOUND){
+			DataManager::GetInstance()->AddCPAttr(cpAttr);
+		}
 	}
 	if (DataManager::GetInstance()->GetCPComplexAttr(cpComplexAttr, _name) != SQL_OK){
 	}
