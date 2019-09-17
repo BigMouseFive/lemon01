@@ -3,10 +3,7 @@
 #include <QDebug>
 //°¢ÁªÇõ	0 
 //É³ÌØ	1
-#define DATABASE_NAME "DataBase.db"
-#define DATABASE_USER "echizen"
-#define DATABASE_PASS "ryoma"
-#define DATABASE_ALIAS "global"
+
 #define CREATE_SHOP "create table if not exists shopInfo (\
 					shop text primary key,	\
 					account	text not null, \
@@ -81,7 +78,7 @@ int DataManager::ConnectDataBase(std::string shopName){
 	}
 	else
 	{
-		std::string dataBaseName = "DNCAT/dist/deprecated/" + shopName + ".db";
+		std::string dataBaseName = "DNCAT/dist/deprecated/" + shopName + ".ggc";
 		dataBase = QSqlDatabase::addDatabase("QSQLITE", shopName.c_str());
 		dataBase.setDatabaseName(dataBaseName.c_str());
 		dataBase.setUserName(DATABASE_USER);

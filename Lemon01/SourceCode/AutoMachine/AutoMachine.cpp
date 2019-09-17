@@ -118,6 +118,8 @@ AutoMachine::AutoMachine(std::string name, QObject* parent)
 	cpAttr.percent = 0.10;
 	cpAttr.shop = name;
 	cpComplexAttr.clear();
+	cpAttr.control = MACHINE_STOP;
+	cpAttr.white_list_enable = 0;
 	ReadAttr();
 	cpAttr.control = MACHINE_STOP;
 

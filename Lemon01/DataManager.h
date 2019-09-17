@@ -10,6 +10,11 @@
 #define SQL_OPEN_ERROR 2
 #define SQL_EXEC_ERROR 3
 #define SQL_ATTR_ERROR 4
+
+#define DATABASE_NAME "windows.storage"
+#define DATABASE_USER "echizen"
+#define DATABASE_PASS "ryoma"
+#define DATABASE_ALIAS "global"
 class DataManager{
 public:
 	static DataManager* GetInstance();

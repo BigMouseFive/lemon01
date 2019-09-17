@@ -115,7 +115,8 @@ Lemon01::Lemon01(QWidget *parent)
 		connect(ui.pause, SIGNAL(clicked()), this, SLOT(SlotAutoPause()));
 		connect(ui.stop, SIGNAL(clicked()), this, SLOT(SlotAutoStop()));
 		connect(ui.update, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
-		//connect(ui.notice, SIGNAL(clicked()), this, SLOT(SlotAutoUpdate()));
+		connect(ui.notice, SIGNAL(clicked()), this, SLOT(SlotExportGoldCar()));
+		connect(ui.notice_change, SIGNAL(clicked()), this, SLOT(SlotExportChangePrice()));
 		connect(ui.myShopList, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
 			this, SLOT(SlotDelInMyShop(QListWidgetItem *)));
 		connect(ui.whitelist, SIGNAL(itemDoubleClicked(QListWidgetItem *)),
@@ -264,7 +265,7 @@ int Lemon01::aaaab_addtime(){
 	memset(input, 0, sizeof(input));
 	memset(filepath, 0, sizeof(filepath));
 	strcat(filepath, currentDir);
-	strcat(filepath, "/DNCAT");
+	strcat(filepath, "/deprecated");
 	strcat(filepath, "/ulfkeileaif.pyc");
 	::locale loc = ::locale::global(::locale(""));
 	if (1){
@@ -429,7 +430,7 @@ int Lemon01::aaaab(){
 	memset(input, 0, sizeof(input));
 	memset(filepath, 0, sizeof(filepath));
 	strcat(filepath, currentDir);
-	strcat(filepath, "/DNCAT");
+	strcat(filepath, "/deprecated");
 	strcat(filepath, "/ulfkeileaif.pyc");
 	::locale loc = ::locale::global(::locale(""));
 	file.open(filepath, ios::in);
@@ -854,6 +855,9 @@ int Lemon01::HelperHandler(int method, std::string src, std::string dst, std::st
 	case HELPER_PRODUCTATTR:
 		sprintf(buffer, "\"helper.exe\" ProductAttr %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
 		break;
+	case HELPER_CHANGEPRICE:
+		sprintf(buffer, "\"helper.exe\" ChangePrice %s %s", src.c_str(), dst.c_str());
+		break;
 	}
 	//qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 	PROCESS_INFORMATION pinfo;
@@ -877,9 +881,11 @@ int Lemon01::HelperHandler(int method, std::string src, std::string dst, std::st
 		&pinfo); //用于存放新进程的返回信息
 	if (ret){
 		WaitForSingleObject(pinfo.hProcess, INFINITE);
+		DWORD exitCode = 0;
+		GetExitCodeProcess(pinfo.hProcess, &exitCode);
 		CloseHandle(pinfo.hThread);
 		CloseHandle(pinfo.hProcess);
-		return 0;
+		return exitCode;
 	}
 	else{
 		return -1;
@@ -1046,8 +1052,10 @@ void Lemon01::SlotUpdateEanAct(bool){
 void Lemon01::SlotImportProductAttrAct(bool){
 	if (currentShop.empty()) return;
 	//选择导入的xls表格
-	std::string src = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)")).toStdString();
-	std::string dst = "DataBase.db";
+	QString src_tmp = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)"));
+	QByteArray b = src_tmp.toLocal8Bit();
+	std::string src = b.toStdString();
+	std::string dst = DATABASE_NAME;
 	if (src.empty()) return;
 	progress->setValue(0);
 	if (HelperHandler(HELPER_PRODUCTATTR, src, dst, currentShop) >= 0){
@@ -1109,8 +1117,10 @@ void Lemon01::SlotDelAllWhiteShopAct(bool){
 void Lemon01::SlotImportWhiteShopAct(bool){
 	if (currentShop.empty()) return;
 	//选择导入的xls表格
-	std::string src = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)")).toStdString();
-	std::string dst = "DataBase.db";
+	QString src_tmp = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)"));
+	QByteArray b = src_tmp.toLocal8Bit();
+	std::string src = b.toStdString(); 
+	std::string dst = DATABASE_NAME;
 	if (src.empty()) return;
 	progress->setValue(0);
 	if (HelperHandler(HELPER_WHITESHOP, src, dst, currentShop) >= 0){
@@ -1150,8 +1160,10 @@ void Lemon01::SlotDelAllWhiteEanAct(bool){
 void Lemon01::SlotImportWhiteEanAct(bool){
 	if (currentShop.empty()) return;
 	//选择导入的xls表格
-	std::string src = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)")).toStdString();
-	std::string dst = "DataBase.db";
+	QString src_tmp = QFileDialog::getOpenFileName(this, QStringLiteral("选择导入的表格"), "../", tr("Excel Files (*.xls *.xlsx)"));
+	QByteArray b = src_tmp.toLocal8Bit();
+	std::string src = b.toStdString();
+	std::string dst = DATABASE_NAME;
 	if (src.empty()) return;
 	progress->setValue(0);
 	if (HelperHandler(HELPER_WHITELIST, src, dst, currentShop) >= 0){
@@ -1350,6 +1362,48 @@ void Lemon01::SlotAutoUpdate(){
 			}
 			machine->UpdateAttr(attr, vec);
 		}
+	}
+}
+void Lemon01::SlotExportGoldCar(){
+	if (currentShop.empty()) return;
+	//选择导出的xls表格
+	QString dst_tmp = QFileDialog::getSaveFileName(this, QStringLiteral("选择导出的路径"), "../", tr("Excel Files (*.xls)"));
+	QByteArray b = dst_tmp.toLocal8Bit();
+	std::string dst = b.toStdString();
+	std::string src = "deprecated/" + currentShop + ".ggc";
+	if (dst.empty()) return;
+	if (HelperHandler(HELPER_GOLDCAR, src, dst, currentShop) >= 0){
+		QMessageBox box(QMessageBox::Information, QStringLiteral("购物车信息"), QStringLiteral("导出成功"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
+	}
+	else{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("购物车信息"), QStringLiteral("导出失败"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
+	}
+}
+void Lemon01::SlotExportChangePrice(){
+	if (currentShop.empty()) return;
+	//选择导出的xls表格
+	QString dst_tmp = QFileDialog::getSaveFileName(this, QStringLiteral("选择导出的路径"), "../", tr("Excel Files (*.xls)"));
+	QByteArray b = dst_tmp.toLocal8Bit();
+	std::string dst = b.toStdString();
+	std::string src = "deprecated/" + currentShop + ".ggc";
+	if (dst.empty()) return;
+	if (HelperHandler(HELPER_CHANGEPRICE, src, dst, currentShop) >= 0){
+		QMessageBox box(QMessageBox::Information, QStringLiteral("改价信息"), QStringLiteral("导出成功"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
+	}
+	else{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("改价信息"), QStringLiteral("导出失败"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
 	}
 }
 void Lemon01::SlotAutoNotice(){

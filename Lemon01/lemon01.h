@@ -44,6 +44,8 @@ private slots:
 	void SlotAutoStop();
 	void SlotAutoPause();
 	void SlotAutoUpdate();
+	void SlotExportGoldCar();
+	void SlotExportChangePrice();
 	void SlotAutoNotice();
 	void SlotAutoFinish(std::string);
 	void SlotAutoFailed(std::string);

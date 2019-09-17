@@ -10,6 +10,7 @@
 #define HELPER_WHITESHOP	1
 #define HELPER_WHITELIST	2
 #define HELPER_PRODUCTATTR	3
+#define HELPER_CHANGEPRICE	4
 
 typedef struct _ShopInfo{
 	std::string name;
