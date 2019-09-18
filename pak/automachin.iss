@@ -17,6 +17,7 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}  
 DisableProgramGroupPage=yes
+DisableDirPage=yes
 OutputDir=.\
 OutputBaseFilename=自动改价软件Noon版 V1.0
 SetupIconFile=..\Lemon01\lemon.ico
