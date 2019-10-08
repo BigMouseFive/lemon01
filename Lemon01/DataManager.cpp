@@ -405,7 +405,7 @@ int DataManager::GetCPComplexAttr(std::map<std::string, CPComplexAttr>& vec, std
 	while (sql_query.next()){
 		CPComplexAttr info;
 		info.ean = sql_query.value(0).toString().toStdString();
-		info.least_price = sql_query.value(1).toInt();
+		info.least_price = sql_query.value(1).toDouble();
 		info.max_times = sql_query.value(2).toInt();
 		vec[info.ean] = info;
 	}

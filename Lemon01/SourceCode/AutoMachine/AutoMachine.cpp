@@ -155,7 +155,7 @@ void AutoMachine::onTimer(){
 
 void AutoMachine::run(){
 	char buffer[200];
-	sprintf(buffer, "\"%s\" %s",
+	sprintf(buffer, "\"%s\" \"%s\"",
 		_cmdline.c_str(),
 		_name.c_str()
 		);

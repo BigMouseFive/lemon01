@@ -844,19 +844,19 @@ int Lemon01::HelperHandler(int method, std::string src, std::string dst, std::st
 	char buffer[500];
 	switch (method){
 	case HELPER_GOLDCAR:
-		sprintf(buffer, "\"helper.exe\" GoldCar %s %s", src.c_str(), dst.c_str());
+		sprintf(buffer, "\"helper.exe\" GoldCar \"%s\" \"%s\"", src.c_str(), dst.c_str());
 		break;
 	case HELPER_WHITESHOP:
-		sprintf(buffer, "\"helper.exe\" WhiteShop %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
+		sprintf(buffer, "\"helper.exe\" WhiteShop \"%s\" \"%s\" \"%s\"", src.c_str(), dst.c_str(), shop.c_str());
 		break;
 	case HELPER_WHITELIST:
-		sprintf(buffer, "\"helper.exe\" WhiteList %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
+		sprintf(buffer, "\"helper.exe\" WhiteList \"%s\" \"%s\" \"%s\"", src.c_str(), dst.c_str(), shop.c_str());
 		break;
 	case HELPER_PRODUCTATTR:
-		sprintf(buffer, "\"helper.exe\" ProductAttr %s %s %s", src.c_str(), dst.c_str(), shop.c_str());
+		sprintf(buffer, "\"helper.exe\" ProductAttr \"%s\" \"%s\" \"%s\"", src.c_str(), dst.c_str(), shop.c_str());
 		break;
 	case HELPER_CHANGEPRICE:
-		sprintf(buffer, "\"helper.exe\" ChangePrice %s %s", src.c_str(), dst.c_str());
+		sprintf(buffer, "\"helper.exe\" ChangePrice \"%s\" \"%s\"", src.c_str(), dst.c_str());
 		break;
 	}
 	//qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -1025,7 +1025,7 @@ void Lemon01::SlotAddEanAct(bool){
 			auto item = new QTableWidgetItem(QString::fromStdString(attr.ean));
 			item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 			ui.tableWidget->setItem(row, 0, item);
-			ui.tableWidget->setItem(row, 1, new QTableWidgetItem(QString("%1").arg(attr.least_price)));
+			ui.tableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(attr.least_price, 'f', 2)));
 			ui.tableWidget->setItem(row, 2, new QTableWidgetItem(QString("%1").arg(attr.max_times)));
 			DataManager::GetInstance()->AddCPComplexAttr(attr, currentShop);
 		}
@@ -1073,7 +1073,7 @@ void Lemon01::SlotImportProductAttrAct(bool){
 			auto item = new QTableWidgetItem(QString::fromStdString(iter->second.ean));
 			item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 			ui.tableWidget->setItem(i, 0, item);
-			ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString("%1").arg(iter->second.least_price)));
+			ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number(iter->second.least_price, 'f', 2)));
 			ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
 			progress->setValue(45 + i * 54 / cpComplexAttr.size());
 		}
@@ -1267,7 +1267,7 @@ void Lemon01::DisplayAttr(AutoMachine* machine){
 		auto item = new QTableWidgetItem(QString::fromStdString(iter->second.ean));
 		item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 		ui.tableWidget->setItem(i, 0, item);
-		ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString("%1").arg(iter->second.least_price)));
+		ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number(iter->second.least_price, 'f', 2)));
 		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
 		progress->setValue(50 + i * 49 / cpComplexAttr->size());
 	}

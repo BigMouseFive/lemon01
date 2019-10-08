@@ -10,7 +10,7 @@ AddShopDialog::AddShopDialog(ShopInfo info, QWidget *parent) :
 	ui->linePassword->setText(QString::fromStdString(info.password));
 	ui->lineShopId->setText(QString::fromStdString(info.shop_id));
 	
-	if (1){
+	if (0){
 		ui->radio2->setChecked(true);
 		ui->radio1->setDisabled(true);
 	}
@@ -32,10 +32,10 @@ AddShopDialog::~AddShopDialog()
 }
 
 void AddShopDialog::GetShopInfo(ShopInfo& shopInfo){
-	shopInfo.name = ui->lineName->text().remove(QRegExp("\\s")).toStdString();
-	shopInfo.account = ui->lineAccount->text().remove(QRegExp("\\s")).toStdString();
-	shopInfo.password = ui->linePassword->text().remove(QRegExp("\\s")).toStdString();
-	shopInfo.shop_id = ui->lineShopId->text().remove(QRegExp("\\s")).toStdString();
+	shopInfo.name = ui->lineName->text().trimmed().toStdString();
+	shopInfo.account = ui->lineAccount->text().trimmed().toStdString();
+	shopInfo.password = ui->linePassword->text().trimmed().toStdString();
+	shopInfo.shop_id = ui->lineShopId->text().trimmed().toStdString();
 	if (ui->radio1->isChecked()) shopInfo.type = 0;
 	else if (ui->radio2->isChecked()) shopInfo.type = 1;
 }
