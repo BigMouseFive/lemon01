@@ -12,8 +12,9 @@ Q_DECLARE_METATYPE(std::string)
 class AutoMachine : public QThread{
 	Q_OBJECT
 public:
-	AutoMachine(std::string name, QObject* parent = nullptr);
+	AutoMachine(std::string name, int type, QObject* parent = nullptr);
 	~AutoMachine();
+	void SetType(int type);
 	void killProcess();
 	void PLay();
 	void Stop();
@@ -39,6 +40,7 @@ private slots:
 public:
 	std::string _name;
 	std::string _cmdline;
+	int _type;
 	char _execPath[200];
 	CPAttr cpAttr;
 	int timeStamp;

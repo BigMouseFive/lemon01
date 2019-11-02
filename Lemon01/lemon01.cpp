@@ -691,6 +691,7 @@ void Lemon01::testRegister(){
 		i++;
 		if (it >= '0' && it <= '9')	tmp = it - '0';
 		else if (it >= 'A' && it <= 'Z') tmp = it - 'A' + 10;
+		tmp++;
 		switch (i){
 		case 1:  _show[7] = tmp; hide[7] = tmp; break;//A
 		case 2:  _show[14] = tmp; hide[14] = tmp; break;//B
@@ -964,6 +965,15 @@ void Lemon01::SlotUpdateShop(ShopInfo& shopInfo){
 	if (ret == AddShopDialog::Accepted){
 		a.GetShopInfo(shopInfo);
 		writeXml(shopInfo);
+		
+		auto iter = threadMap.find(shopInfo.name);
+		if (iter != threadMap.end()){
+			int type = 0;
+			if (infoMap[currentShop].platform == 0){
+				type = 1 + infoMap[currentShop].type;
+			}
+			iter->second->SetType(type);
+		}
 	}
 }
 void Lemon01::SlotTableContextRequested(const QPoint& point){
@@ -1205,7 +1215,11 @@ void Lemon01::SlotListItemClicked(QListWidgetItem *item){
 	progress->setValue(4);
 	if (iter == threadMap.end()){
 		//´´½¨
-		machine = new AutoMachine(currentShop);
+		int type = 0;
+		if (infoMap[currentShop].platform == 0){
+			type = 1 + infoMap[currentShop].type;
+		}
+		machine = new AutoMachine(currentShop, type);
 		threadMap[currentShop] = machine;
 		connect(machine, SIGNAL(SigFailed(std::string)), this, SLOT(SlotAutoFailed(std::string)));
 		connect(machine, SIGNAL(SigStop(std::string)), this, SLOT(SlotAutoFinish(std::string)));

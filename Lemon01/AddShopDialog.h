@@ -16,6 +16,10 @@ public:
 	void GetShopInfo(ShopInfo& shopInfo);
 private slots:
     void on_pushButton_clicked();
+	void SlotRadio1(bool);
+	void SlotRadio2(bool);
+	void SlotRadio3(bool);
+	void SlotRadio4(bool);
 
 private:
     Ui::AddShopDialog *ui;

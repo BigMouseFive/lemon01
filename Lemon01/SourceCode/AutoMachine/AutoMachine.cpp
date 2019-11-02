@@ -5,7 +5,9 @@
 #include <qtimer.h>
 #include <qdebug.h>
 
-#define CMD_LINE "deprecated\\deprecated.exe"
+#define CMD_LINE_NOON "deprecated\\deprecated.exe"		//noon
+#define CMD_LINE_SOUQ_AE "deprecated\\iswindow.exe"		//souqµœ∞›
+#define CMD_LINE_SOUQ_SA "deprecated\\handledata.exe"	//souq…≥Ãÿ	
 typedef struct EnumHWndsArg
 {
 	std::vector<HWND> *vecHWnds;
@@ -105,7 +107,7 @@ typedef struct EnumHWndsArg
 //	}
 //}
 
-AutoMachine::AutoMachine(std::string name, QObject* parent)
+AutoMachine::AutoMachine(std::string name, int type, QObject* parent)
 	: QThread(parent)
 	, _name(name)
 	, timeStamp(0)
@@ -128,7 +130,13 @@ AutoMachine::AutoMachine(std::string name, QObject* parent)
 	pinfo.dwThreadId = 0;
 	pinfo.dwProcessId = 0;
 
-	_cmdline = CMD_LINE;
+	_type = type;
+	if (_type == 0)
+		_cmdline = CMD_LINE_NOON;
+	else if (_type == 1)
+		_cmdline = CMD_LINE_SOUQ_AE;
+	else if (_type == 2)
+		_cmdline = CMD_LINE_SOUQ_SA;
 	memset(_execPath, 0, sizeof(_execPath));
 	GetModuleFileNameA(NULL, _execPath, 200);
 	int i = 0;
@@ -149,6 +157,17 @@ AutoMachine::AutoMachine(std::string name, QObject* parent)
 AutoMachine::~AutoMachine(){
 	Stop();
 }
+
+void AutoMachine::SetType(int type){
+	_type = type;
+	if (_type == 0)
+		_cmdline = CMD_LINE_NOON;
+	else if (_type == 1)
+		_cmdline = CMD_LINE_SOUQ_AE;
+	else if (_type == 2)
+		_cmdline = CMD_LINE_SOUQ_SA;
+}
+
 
 void AutoMachine::onTimer(){
 }

@@ -9,6 +9,7 @@
 					account	text not null, \
 					password text not null, \
 					type int not null,\
+					platform int not null,\
 					shop_id text not null);"
 #define CREATE_CPATTR "create table if not exists CPAttr (\
 					shop text primary key,	\
@@ -149,13 +150,14 @@ int DataManager::AddShop(ShopInfo& shopInfo){
 	}
 
 	if (sql_query.next()) 
-		sql_query2.prepare("update shopInfo set account=?,password=?,type=?,shop_id=? where shop=?");
+		sql_query2.prepare("update shopInfo set account=?,password=?,type=?,shop_id=?,platform=? where shop=?");
 	else
-		sql_query2.prepare("insert into shopInfo(account,password,type,shop_id,shop) values(?,?,?,?,?)");
+		sql_query2.prepare("insert into shopInfo(account,password,type,shop_id,platform,shop) values(?,?,?,?,?,?)");
 	sql_query2.addBindValue(shopInfo.account.c_str());
 	sql_query2.addBindValue(shopInfo.password.c_str());
 	sql_query2.addBindValue(shopInfo.type);
 	sql_query2.addBindValue(shopInfo.shop_id.c_str());
+	sql_query2.addBindValue(shopInfo.platform);
 	sql_query2.addBindValue(shopInfo.name.c_str());
 	if (!sql_query2.exec()) {
 		auto a = sql_query2.lastError().text();
@@ -183,7 +185,7 @@ int DataManager::DelShop(std::string shopName){
 int DataManager::GetShops(std::vector<ShopInfo>& vec, ShopInfo& cond){
 	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
 	QSqlQuery sql_query(dataBase);
-	QString str = "select shop,account,password,type,shop_id from shopInfo";
+	QString str = "select shop,account,password,type,shop_id,platform from shopInfo";
 	sql_query.prepare(str);
 	if (!sql_query.exec()) {
 		auto a = sql_query.lastError().text();
@@ -196,6 +198,7 @@ int DataManager::GetShops(std::vector<ShopInfo>& vec, ShopInfo& cond){
 		info.password = sql_query.value(2).toString().toStdString();
 		info.type = sql_query.value(3).toInt();
 		info.shop_id = sql_query.value(4).toString().toStdString();
+		info.platform = sql_query.value(5).toInt();
 		vec.push_back(info);
 	}
 	dataBase.close();

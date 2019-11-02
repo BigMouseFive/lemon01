@@ -17,13 +17,15 @@ typedef struct _ShopInfo{
 	std::string account;
 	std::string password;
 	int type;
+	int platform; 
 	std::string shop_id;
-	_ShopInfo(std::string Tname = "", std::string Taccount = "", std::string Tpassword = "", int Ttype = 0, std::string Tshop_id = ""){
+	_ShopInfo(std::string Tname = "", std::string Taccount = "", std::string Tpassword = "", int Ttype = 0, std::string Tshop_id = "", int Tplatform = 0){
 		name = Tname;
 		account = Taccount;
 		password = Tpassword;
 		type = Ttype;
 		shop_id = Tshop_id;
+		platform = Tplatform;
 	}
 }ShopInfo;
 typedef struct _CPAttr{
