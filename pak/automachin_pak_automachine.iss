@@ -40,7 +40,6 @@ ReadyLabel2b=点击“安装”继续。
 
 [Files]
 Source: "..\x64\Release\AutoMachine.exe"; DestDir: "{app}\"; Flags: ignoreversion
-Source: "..\x64\Release\deprecated\*"; DestDir: "{app}\deprecated\"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; 注意: 不要在任何共享系统文件上使用“Flags: ignoreversion”
 
 

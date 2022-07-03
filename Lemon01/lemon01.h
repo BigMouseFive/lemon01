@@ -10,7 +10,7 @@
 #include <map>
 #include <string>
 #include <QStyledItemDelegate>
-
+#include "HttpClient.h"
 class NoFocusDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
@@ -65,7 +65,8 @@ private slots:
 	void SlotAddEanAct(bool);
 	void SlotUpdateEanAct(bool);
 	void SlotImportProductAttrAct(bool);
-
+	void SlotExportProductAttrAct(bool);
+	
 	void SlotSetPriceAct(bool);
 	void SlotIgnoreAct(bool);
 
@@ -80,7 +81,8 @@ private slots:
 	void SlotListItemClicked(QListWidgetItem *item);
 	void SlotDelInMyShop(QListWidgetItem *item);
 	void SlotDelInWhiteList(QListWidgetItem *item);
-	void SlotCompareTime();
+	void SlotCompareTime(int nowtime);
+	void SlotUpdateInfoReply(QString update_path, bool valid, QString err_msg);
 	void SlotAddShop();
 	void SlotUpdateShop(ShopInfo&);
 	void SlotUpdateCPAttr(const QString& str);
@@ -105,6 +107,9 @@ private:
 	bool writeXml(ShopInfo& shopInfo);
 private:
 	Ui::Lemon01Class ui;
+	QTimer* timer;
+	QTimer* timer1;
+	HttpClient* http_client;
 	std::map<std::string, AutoMachine*> threadMap;
 	std::map<std::string, ShopInfo> infoMap;
 
@@ -117,6 +122,7 @@ private:
 	QAction* addEanAct;
 	QAction* updateEanAct;
 	QAction* importProductAttrAct;
+	QAction* exportProductAttrAct;
 	QAction* delAllEanAct;
 
 
@@ -135,12 +141,15 @@ private:
 	QModelIndex noticeIndex;
 	std::string selectName;
 	std::string currentShop;
+	bool is_shop_valid_reply;
+	bool current_shop_valid;
 	int tableRow;
 	int _show[20];
 	int hide[32];
 	int _hide[32];
 	char currentDir[200];
 	char input[200];
+	std::string register_code;
 	char filepath[200];
 	char endTime[20];
 	DWORD endtime;	

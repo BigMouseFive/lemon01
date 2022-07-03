@@ -36,6 +36,9 @@
     <Filter Include="Source Files\AutoMachine">
       <UniqueIdentifier>{a787d3e2-9b12-475b-bdad-09b8cab56268}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\HttpClient">
+      <UniqueIdentifier>{e40d6278-74a4-4075-9694-4cc20cbe208a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -104,6 +107,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_NoticeDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="HttpClient.cpp">
+      <Filter>Source Files\HttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_HttpClient.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_HttpClient.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lemon01.h">
@@ -138,6 +150,9 @@
     </CustomBuild>
     <CustomBuild Include="SourceCode\AutoMachine\NoticeDialog.h">
       <Filter>Source Files\AutoMachine</Filter>
+    </CustomBuild>
+    <CustomBuild Include="HttpClient.h">
+      <Filter>Source Files\HttpClient</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

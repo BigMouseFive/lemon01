@@ -52,14 +52,14 @@ DWORD GetTimeFromSystem(){
 DWORD GetTime(){
 	char a[20][20];
 	DWORD time ;
-	strcpy(a[0], "129.6.15.29");
+	/*strcpy(a[0], "129.6.15.29");
 	strcpy(a[1], "128.138.140.44");
 	strcpy(a[2], "129.6.15.28");
 	strcpy(a[3], "210.72.145.8");
 	for (int i = 3; i >= 0; --i){
 		time = GetTimeFromServer(a[i]);
 		if (time != 0) return time;
-	}
+	}*/
 	time = GetTimeFromSystem();
 	return time;
 }
@@ -96,8 +96,10 @@ SYSTEMTIME FormatServerTime(DWORD serverTime = 0)
 }
 
 bool firstflag = true;
-int CompareTime(DWORD endtime){
-	DWORD nowtime = GetTime();
+int CompareTime(DWORD endtime, int nowtime){
+	if (nowtime == 0){
+		nowtime = ::GetTime();
+	}
 	if (nowtime == 0){
 		return 300;
 	}

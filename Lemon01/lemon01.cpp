@@ -34,6 +34,14 @@ Lemon01::Lemon01(QWidget *parent)
 	: QWidget(parent)
 	, lastret(999)
 {
+	http_client = new HttpClient();
+	connect(http_client, SIGNAL(getNetworkTimeReply(int)), this, SLOT(SlotCompareTime(int)));
+	connect(http_client, SIGNAL(getUpdateInfoReply(QString, bool, QString)), this, SLOT(SlotUpdateInfoReply(QString, bool, QString)));
+	connect(http_client, &HttpClient::isShopValidReply, [=](bool valid){
+		is_shop_valid_reply = true;
+		current_shop_valid = valid;
+	});
+	
 	testRegister();
 	ui.setupUi(this);
 	readXml();
@@ -60,6 +68,7 @@ Lemon01::Lemon01(QWidget *parent)
 	addEanAct = new QAction(QStringLiteral("添加记录"), this);
 	updateEanAct = new QAction(QStringLiteral("修改记录"), this);
 	importProductAttrAct = new QAction(QStringLiteral("导入定制化参数"), this);
+	exportProductAttrAct = new QAction(QStringLiteral("导出定制化参数"), this);
 
 	setPriceAct = new QAction(QStringLiteral("设置价格"), this);
 	ignoreAct = new QAction(QStringLiteral("忽略"), this);
@@ -106,6 +115,7 @@ Lemon01::Lemon01(QWidget *parent)
 		connect(addEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotAddEanAct(bool)));
 		connect(updateEanAct, SIGNAL(triggered(bool)), this, SLOT(SlotUpdateEanAct(bool)));
 		connect(importProductAttrAct, SIGNAL(triggered(bool)), this, SLOT(SlotImportProductAttrAct(bool)));
+		connect(exportProductAttrAct, SIGNAL(triggered(bool)), this, SLOT(SlotExportProductAttrAct(bool)));
 
 		connect(setPriceAct, SIGNAL(triggered(bool)), this, SLOT(SlotSetPriceAct(bool)));
 		connect(ignoreAct, SIGNAL(triggered(bool)), this, SLOT(SlotIgnoreAct(bool)));
@@ -139,9 +149,27 @@ Lemon01::Lemon01(QWidget *parent)
 	}
 	
 	setEmpty();
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(SlotCompareTime()));
-	timer->start(1000*60*10);
+	
+	timer = new QTimer(this);
+	connect(timer, &QTimer::timeout, [=](){
+		http_client->get(QNetworkRequest(QUrl(url_network_time)));
+	});
+	timer->start(60*60*1000);
+
+	timer1 = new QTimer(this);
+	connect(timer1, &QTimer::timeout, [=](){
+		std::vector<std::string> shop_names;
+		for (auto i = 0; i < ui.listWidget->count(); ++i)
+			shop_names.emplace_back(ui.listWidget->item(i)->text().toStdString());
+		
+
+		http_client->getUpdateInfo(register_code, shop_names);
+	});
+	timer1->start(3 * 60 * 1000);
+	std::vector<std::string> shop_names;
+	for (auto i = 0; i < ui.listWidget->count(); ++i)
+		shop_names.emplace_back(ui.listWidget->item(i)->text().toStdString());
+	http_client->getUpdateInfo(register_code, shop_names);
 }
 Lemon01::~Lemon01()
 {
@@ -291,8 +319,8 @@ int Lemon01::aaaab_addtime(){
 		inputDialog->setFixedSize(400, 300);
 		QString text;
 		if (inputDialog->exec()) {
-			text = inputDialog->textValue();
-			strncpy(input, text.toStdString().c_str(), 200);
+			register_code = inputDialog->textValue().toStdString();
+			strncpy(input, register_code.c_str(), 200);
 			inputDialog->deleteLater();
 		}
 		else{
@@ -401,12 +429,12 @@ int Lemon01::aaaab_addtime(){
 		}
 		msg.setText(QStringLiteral("添加时长成功"));
 		msg.exec();
+		http_client->get(QNetworkRequest(QUrl(url_network_time)));
 	}
 	locale::global(loc);
 	return 1;
 }
 int Lemon01::aaaab(){
-
 	QMessageBox msg;
 	msg.setWindowTitle(QStringLiteral("注册"));
 	msg.setText(QStringLiteral("对不起，您输入的注册码不正确"));
@@ -440,8 +468,10 @@ int Lemon01::aaaab(){
 		file.read(input, sizeof(input));
 		string input_tmp(input);
 		auto iter = input_tmp.begin();
+		register_code = input_tmp;
 		for (; iter != input_tmp.end();)
 		{
+			//register_code.push_back(*iter);
 			if (*iter == ' ' || *iter == '-')
 				iter = input_tmp.erase(iter);
 			else{
@@ -530,7 +560,8 @@ int Lemon01::aaaab(){
 			}
 			if (fileExist){
 				file.close();
-				SlotCompareTime();
+				http_client->get(QNetworkRequest(QUrl(url_network_time)));
+				//SlotCompareTime();
 			}
 		}
 		else{
@@ -562,10 +593,9 @@ int Lemon01::aaaab(){
 		inputDialog->setFixedSize(400, 300);
 		QString text;
 		if (inputDialog->exec()) {
-			text = inputDialog->textValue();
-			strncpy(input, text.toStdString().c_str(), 200);
+			register_code = inputDialog->textValue().toStdString();
+			strncpy(input, register_code.c_str(), 200);
 			inputDialog->deleteLater();
-
 		}
 		else{
 			inputDialog->deleteLater();
@@ -665,7 +695,8 @@ int Lemon01::aaaab(){
 					}
 				}
 			}
-			SlotCompareTime();
+			http_client->get(QNetworkRequest(QUrl(url_network_time)));
+			//SlotCompareTime();
 		}
 		file.open(filepath, ios::out | ios::trunc);
 		if (!file)
@@ -760,8 +791,25 @@ void Lemon01::testRegister(){
 	}
 	aaaab();
 }
-void Lemon01::SlotCompareTime(){
-	int ret = ::CompareTime(endtime);
+void Lemon01::SlotUpdateInfoReply(QString update_path, bool valid, QString err_msg){
+	QMessageBox msg;
+	msg.setWindowTitle(QStringLiteral("通知"));
+	msg.setText(QStringLiteral("对不起，权限校验失败") + err_msg);
+	msg.setIcon(QMessageBox::NoIcon);
+	msg.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
+	msg.addButton(QStringLiteral("确定"), QMessageBox::ActionRole);
+	if (!valid){
+		timer1->stop();
+		//权限校验失败
+		msg.exec();
+		::DeleteFile(ATL::CA2T(filepath));
+		QuitThisSystem();
+		exit(0);
+	}
+}
+
+void Lemon01::SlotCompareTime(int nowtime){
+	int ret = ::CompareTime(endtime, nowtime);
 	QMessageBox msg;
 	msg.setWindowTitle(QStringLiteral("通知"));
 	msg.setText(QStringLiteral("对不起，您输入的注册码不正确"));
@@ -769,6 +817,7 @@ void Lemon01::SlotCompareTime(){
 	msg.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
 	msg.addButton(QStringLiteral("确定"), QMessageBox::ActionRole);
 	if (ret == 300){
+		timer1->stop();
 		//没有获取到时间
 		msg.setText(QStringLiteral("对不起，没有成功获取您计算机的时间\n请联系我们技术人员，造成了不便，请多包涵"));
 		msg.exec();
@@ -779,6 +828,7 @@ void Lemon01::SlotCompareTime(){
 		//正常  没有超过使用期
 	}
 	else if (ret == 302){
+		timer1->stop();
 		//超出使用期48小时
 		msg.setText(QStringLiteral("对不起，您已超过使用期限48小时了，无法再使用此软件"));
 		msg.exec();
@@ -858,6 +908,9 @@ int Lemon01::HelperHandler(int method, std::string src, std::string dst, std::st
 		break;
 	case HELPER_CHANGEPRICE:
 		sprintf(buffer, "\"helper.exe\" ChangePrice \"%s\" \"%s\"", src.c_str(), dst.c_str());
+		break;
+	case HELPER_PRODUCTATTR_EXPORT:
+		sprintf(buffer, "\"helper.exe\" ProductAttrExport \"%s\" \"%s\" \"%s\"", src.c_str(), dst.c_str(), shop.c_str());
 		break;
 	}
 	//qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -988,6 +1041,7 @@ void Lemon01::SlotTableContextRequested(const QPoint& point){
 	}
 	menu.addAction(delAllEanAct);
 	menu.addAction(importProductAttrAct);
+	menu.addAction(exportProductAttrAct);
 	menu.exec(ui.tableWidget->mapToGlobal(point) + QPoint(10, 10));
 }
 void Lemon01::SlotMyShopContextRequested(const QPoint& point){
@@ -1091,6 +1145,27 @@ void Lemon01::SlotImportProductAttrAct(bool){
 	progress->setValue(99);
 	Sleep(500);
 	progress->setValue(100);
+}
+void Lemon01::SlotExportProductAttrAct(bool){
+	if (currentShop.empty()) return;
+	//选择导出的xls表格
+	QString dst_tmp = QFileDialog::getSaveFileName(this, QStringLiteral("选择导出的路径"), "../", tr("Excel Files (*.xls)"));
+	QByteArray b = dst_tmp.toLocal8Bit();
+	std::string dst = b.toStdString();
+	std::string src = DATABASE_NAME;
+	if (dst.empty()) return;
+	if (HelperHandler(HELPER_PRODUCTATTR_EXPORT, src, dst, currentShop) >= 0){
+		QMessageBox box(QMessageBox::Information, QStringLiteral("定制化参数"), QStringLiteral("导出成功"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
+	}
+	else{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("定制化参数"), QStringLiteral("导出失败"), QMessageBox::NoButton, this);
+		box.setStandardButtons(QMessageBox::Ok);
+		box.setButtonText(QMessageBox::Ok, QStringLiteral("确 定"));
+		box.exec();
+	}
 }
 
 void Lemon01::SlotSetPriceAct(bool){
@@ -1327,6 +1402,27 @@ void Lemon01::SlotAutoPlay(){
 		msg.setIcon(QMessageBox::NoIcon);
 		msg.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
 		msg.addButton(QStringLiteral("确定"), QMessageBox::ActionRole);
+		msg.exec();
+		return;
+	}
+	is_shop_valid_reply = false;
+	current_shop_valid = true;
+	http_client->isShopValid(currentShop);
+	int count = 0;
+	while (!is_shop_valid_reply && count < 1000){
+		QThread::msleep(100);
+		QCoreApplication::processEvents();
+		count++;
+	}
+	if (!current_shop_valid){
+		QMessageBox msg(this);
+		msg.setWindowTitle(QStringLiteral("开启店铺"));
+		msg.setText(QStringLiteral("对不起，当前店铺未注册"));
+		msg.setIcon(QMessageBox::NoIcon);
+		msg.setWindowIcon(QIcon(":/Lemon01/lemon.png"));
+		msg.addButton(QStringLiteral("确定"), QMessageBox::ActionRole);
+		msg.exec();
+		return;
 	}
 	auto iter = threadMap.find(currentShop);
 	if (iter != threadMap.end()){
