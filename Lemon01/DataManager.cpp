@@ -17,6 +17,7 @@
 					max_times int not null, \
 					max_percent double not null, \
 					percent double not null, \
+					high_percent double not null, \
 					lowwer double not null,\
 					control int not null,\
 					my_shop text,\
@@ -26,6 +27,7 @@
 							shop text not null, \
 							ean	text not null, \
 							least_price	double not null, \
+							highest_price double not null, \
 							max_times int not null,\
 							primary key(shop,ean),\
 							foreign key(shop) references shopInfo(shop) ON UPDATE CASCADE ON DELETE CASCADE);"
@@ -218,13 +220,14 @@ int DataManager::AddCPAttr(CPAttr& cpAttr){
 		return SQL_EXEC_ERROR;
 	}
 	if (sql_query.next())
-		sql_query2.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,lowwer=?,control=?,my_shop=?,white_list_enable=? where shop=?");
+		sql_query2.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,high_percent=?,lowwer=?,control=?,my_shop=?,white_list_enable=? where shop=?");
 	else
-		sql_query2.prepare("insert into CPAttr(minute,max_times,max_percent,percent,lowwer,control,my_shop,white_list_enable,shop) values(?,?,?,?,?,?,?,?,?)");
+		sql_query2.prepare("insert into CPAttr(minute,max_times,max_percent,percent,high_percent,lowwer,control,my_shop,white_list_enable,shop) values(?,?,?,?,?,?,?,?,?,?)");
 	sql_query2.addBindValue(cpAttr.minute);
 	sql_query2.addBindValue(cpAttr.max_times);
 	sql_query2.addBindValue(cpAttr.max_percent);
 	sql_query2.addBindValue(cpAttr.percent);
+	sql_query2.addBindValue(cpAttr.high_percent);
 	sql_query2.addBindValue(cpAttr.lowwer);
 	sql_query2.addBindValue(cpAttr.control);
 	sql_query2.addBindValue(cpAttr.my_shop.c_str());
@@ -256,7 +259,7 @@ int DataManager::DelCPAttr(std::string shopName){
 int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
 	QSqlQuery sql_query(dataBase);
-	QString str = "select shop,minute,max_times,max_percent,percent,lowwer,control,my_shop,white_list_enable from CPAttr where shop=?";
+	QString str = "select shop,minute,max_times,max_percent,percent,high_percent,lowwer,control,my_shop,white_list_enable from CPAttr where shop=?";
 	sql_query.prepare(str);
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
@@ -271,10 +274,11 @@ int DataManager::GetCPAttr(CPAttr& info, std::string shopName){
 		info.max_times = sql_query.value(2).toInt();
 		info.max_percent = sql_query.value(3).toDouble();
 		info.percent = sql_query.value(4).toDouble();
-		info.lowwer = sql_query.value(5).toDouble();
-		info.control = sql_query.value(6).toInt();
-		info.my_shop = sql_query.value(7).toString().toStdString();
-		info.white_list_enable = sql_query.value(8).toInt();
+		info.high_percent = sql_query.value(5).toDouble();
+		info.lowwer = sql_query.value(6).toDouble();
+		info.control = sql_query.value(7).toInt();
+		info.my_shop = sql_query.value(8).toString().toStdString();
+		info.white_list_enable = sql_query.value(9).toInt();
 		ret = SQL_OK;
 	}
 	dataBase.close();
@@ -316,11 +320,12 @@ int DataManager::UpdateCPAttr(CPAttr& info, std::string shopName){
 	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
 	QSqlQuery sql_query(dataBase);
 
-	sql_query.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,lowwer=? where shop=?");
+	sql_query.prepare("update CPAttr set minute=?,max_times=?,max_percent=?,percent=?,high_percent=?,lowwer=? where shop=?");
 	sql_query.addBindValue(info.minute);
 	sql_query.addBindValue(info.max_times);
 	sql_query.addBindValue(info.max_percent);
 	sql_query.addBindValue(info.percent);
+	sql_query.addBindValue(info.high_percent);
 	sql_query.addBindValue(info.lowwer);
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
@@ -347,10 +352,11 @@ int DataManager::AddCPComplexAttr(CPComplexAttr& cpCAttr, std::string shopName){
 		return SQL_EXEC_ERROR;
 	}
 	if (sql_query.next())
-		sql_query2.prepare("update CPComplexAttr set least_price=?,max_times=? where shop=? and ean=?");
+		sql_query2.prepare("update CPComplexAttr set least_price=?,highest_price=?,max_times=? where shop=? and ean=?");
 	else
-		sql_query2.prepare("insert into CPComplexAttr(least_price,max_times,shop,ean) values(?,?,?,?)");
+		sql_query2.prepare("insert into CPComplexAttr(least_price,highest_price,max_times,shop,ean) values(?,?,?,?,?)");
 	sql_query2.addBindValue(cpCAttr.least_price);
+	sql_query2.addBindValue(cpCAttr.highest_price);
 	sql_query2.addBindValue(cpCAttr.max_times);
 	sql_query2.addBindValue(shopName.c_str());
 	sql_query2.addBindValue(cpCAttr.ean.c_str());
@@ -396,7 +402,7 @@ int DataManager::DelAllCPComplexAttr(std::string shopName){
 int DataManager::GetCPComplexAttr(std::map<std::string, CPComplexAttr>& vec, std::string shopName){
 	if (ConnectDataBase() != SQL_OK) return SQL_OPEN_ERROR;
 	QSqlQuery sql_query(dataBase);
-	QString str = "select ean,least_price,max_times from CPComplexAttr where shop=?";
+	QString str = "select ean,least_price,highest_price,max_times from CPComplexAttr where shop=?";
 	sql_query.prepare(str);
 	sql_query.addBindValue(shopName.c_str());
 	if (!sql_query.exec()) {
@@ -409,7 +415,8 @@ int DataManager::GetCPComplexAttr(std::map<std::string, CPComplexAttr>& vec, std
 		CPComplexAttr info;
 		info.ean = sql_query.value(0).toString().toStdString();
 		info.least_price = sql_query.value(1).toDouble();
-		info.max_times = sql_query.value(2).toInt();
+		info.highest_price = sql_query.value(2).toDouble();
+		info.max_times = sql_query.value(3).toInt();
 		vec[info.ean] = info;
 	}
 	dataBase.close();

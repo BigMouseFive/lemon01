@@ -88,7 +88,7 @@ Lemon01::Lemon01(QWidget *parent)
 		ui.myShopList->setItemDelegate(new NoFocusDelegate());
 		ui.whitelist->setItemDelegate(new NoFocusDelegate());
 
-		ui.tableWidget->setColumnCount(3);
+		ui.tableWidget->setColumnCount(4);
 		ui.tableWidget->setColumnWidth(0, 200);
 		ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 		ui.tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -139,6 +139,7 @@ Lemon01::Lemon01(QWidget *parent)
 			this, SLOT(SlotTableContextRequested(const QPoint&)));
 		connect(ui.lowwerspin, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
 		connect(ui.percentspin, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
+		connect(ui.high_percentspin, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
 		connect(ui.times, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
 		connect(ui.upload, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
 		connect(ui.time, SIGNAL(valueChanged(const QString&)), this, SLOT(SlotUpdateCPAttr(const QString&)));
@@ -216,6 +217,7 @@ void Lemon01::setEmpty(CPAttr* attr){
 		ui.selectShop->setText(QString::fromStdString(attr->shop));
 		ui.lowwerspin->setValue(attr->lowwer);
 		ui.percentspin->setValue(attr->percent * 100);
+		ui.high_percentspin->setValue(attr->high_percent * 100);
 		ui.times->setValue(attr->max_times);
 		ui.upload->setValue(attr->max_percent * 100);
 		ui.time->setValue(attr->minute);
@@ -226,6 +228,7 @@ void Lemon01::setEmpty(CPAttr* attr){
 	else{
 		ui.lowwerspin->setValue(0);
 		ui.percentspin->setValue(0);
+		ui.high_percentspin->setValue(0);
 		ui.times->setValue(0);
 		ui.upload->setValue(0);
 		ui.time->setValue(0);
@@ -239,7 +242,7 @@ void Lemon01::setEmpty(CPAttr* attr){
 		ui.tableWidget->clear();
 		ui.whitelist->clear();
 		QStringList headers;
-		headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+		headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最高价") << QStringLiteral("最大改价次数");
 		ui.tableWidget->setHorizontalHeaderLabels(headers);
 	}
 }
@@ -1072,7 +1075,7 @@ void Lemon01::SlotDelAllEanAct(bool flag){
 	if (ui.tableWidget->rowCount() == 0) return;
 	ui.tableWidget->clear();
 	QStringList headers;
-	headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+	headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最高价") << QStringLiteral("最大改价次数");
 	ui.tableWidget->setHorizontalHeaderLabels(headers);
 	ui.tableWidget->setRowCount(0);
 	DataManager::GetInstance()->DelAllCPComplexAttr(currentShop);
@@ -1090,7 +1093,8 @@ void Lemon01::SlotAddEanAct(bool){
 			item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 			ui.tableWidget->setItem(row, 0, item);
 			ui.tableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(attr.least_price, 'f', 2)));
-			ui.tableWidget->setItem(row, 2, new QTableWidgetItem(QString("%1").arg(attr.max_times)));
+			ui.tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(attr.highest_price, 'f', 2)));
+			ui.tableWidget->setItem(row, 3, new QTableWidgetItem(QString("%1").arg(attr.max_times)));
 			DataManager::GetInstance()->AddCPComplexAttr(attr, currentShop);
 		}
 	}
@@ -1099,7 +1103,8 @@ void Lemon01::SlotUpdateEanAct(bool){
 	CPComplexAttr attr;
 	attr.ean = ui.tableWidget->item(tableRow, 0)->text().toStdString();
 	attr.least_price = ui.tableWidget->item(tableRow, 1)->text().toDouble();
-	attr.max_times = ui.tableWidget->item(tableRow, 2)->text().toInt();
+	attr.highest_price = ui.tableWidget->item(tableRow, 2)->text().toDouble();
+	attr.max_times = ui.tableWidget->item(tableRow, 3)->text().toInt();
 	std::string tmp_ean = attr.ean;
 	AddEanAttr a(attr);
 	auto ret = a.exec();
@@ -1108,7 +1113,8 @@ void Lemon01::SlotUpdateEanAct(bool){
 		if (tmp_ean == attr.ean || !IsEanInTable(attr.ean)){
 			ui.tableWidget->item(tableRow, 0)->setText(QString::fromStdString(attr.ean));
 			ui.tableWidget->item(tableRow, 1)->setText(QString("%1").arg(attr.least_price));
-			ui.tableWidget->item(tableRow, 2)->setText(QString("%1").arg(attr.max_times));
+			ui.tableWidget->item(tableRow, 2)->setText(QString("%1").arg(attr.highest_price));
+			ui.tableWidget->item(tableRow, 3)->setText(QString("%1").arg(attr.max_times));
 			DataManager::GetInstance()->AddCPComplexAttr(attr, currentShop);
 		}
 	}
@@ -1129,7 +1135,7 @@ void Lemon01::SlotImportProductAttrAct(bool){
 		DataManager::GetInstance()->GetCPComplexAttr(cpComplexAttr, currentShop);
 		ui.tableWidget->clear();
 		QStringList headers;
-		headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+		headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最高价") << QStringLiteral("最大改价次数");
 		ui.tableWidget->setHorizontalHeaderLabels(headers);
 		ui.tableWidget->setRowCount(cpComplexAttr.size()); 
 		int i = 0;
@@ -1138,7 +1144,8 @@ void Lemon01::SlotImportProductAttrAct(bool){
 			item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 			ui.tableWidget->setItem(i, 0, item);
 			ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number(iter->second.least_price, 'f', 2)));
-			ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
+			ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(iter->second.highest_price, 'f', 2)));
+			ui.tableWidget->setItem(i, 3, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
 			progress->setValue(45 + i * 54 / cpComplexAttr.size());
 		}
 	}
@@ -1334,7 +1341,7 @@ void Lemon01::DisplayAttr(AutoMachine* machine){
 	ui.whitelist->clear();
 	ui.tableWidget->clear();
 	QStringList headers;
-	headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最大改价次数");
+	headers << "SKU" << QStringLiteral("最低价") << QStringLiteral("最高价") << QStringLiteral("最大改价次数");
 	ui.tableWidget->setHorizontalHeaderLabels(headers); 
 	
 	auto cpAttr = machine->GetCPAttr();
@@ -1357,7 +1364,8 @@ void Lemon01::DisplayAttr(AutoMachine* machine){
 		item->setFlags(item->flags() & (~Qt::ItemIsEditable));
 		ui.tableWidget->setItem(i, 0, item);
 		ui.tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number(iter->second.least_price, 'f', 2)));
-		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
+		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(iter->second.highest_price, 'f', 2)));
+		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(QString("%1").arg(iter->second.max_times)));
 		progress->setValue(50 + i * 49 / cpComplexAttr->size());
 	}
 	progress->setValue(99);
@@ -1454,6 +1462,7 @@ void Lemon01::SlotAutoUpdate(){
 			attr.max_times = ui.times->value();
 			attr.minute = ui.time->value();
 			attr.percent = ui.percentspin->value() / 100.0;
+			attr.high_percent = ui.high_percentspin->value() / 100.0;
 			attr.my_shop = "";
 			if (ui.myShopList->count() > 0){
 				std::string shops = ui.myShopList->item(0)->text().toStdString();
@@ -1467,7 +1476,8 @@ void Lemon01::SlotAutoUpdate(){
 				CPComplexAttr cattr;
 				cattr.ean = ui.tableWidget->item(i, 0)->text().toStdString();
 				cattr.least_price = ui.tableWidget->item(i, 1)->text().toDouble();
-				cattr.max_times = ui.tableWidget->item(i, 2)->text().toInt();
+				cattr.highest_price = ui.tableWidget->item(i, 2)->text().toDouble();
+				cattr.max_times = ui.tableWidget->item(i, 3)->text().toInt();
 				vec.push_back(cattr);
 			}
 			machine->UpdateAttr(attr, vec);
@@ -1560,6 +1570,7 @@ void Lemon01::SlotUpdateCPAttr(const QString& str){
 	CPAttr attr;
 	attr.lowwer = ui.lowwerspin->value();
 	attr.percent = ui.percentspin->value() / 100.0;
+	attr.high_percent = ui.high_percentspin->value() / 100.0;
 	attr.max_percent = ui.upload->value() / 100.0;
 	attr.max_times = ui.times->value();
 	attr.minute = ui.time->value();

@@ -35,6 +35,7 @@ typedef struct _CPAttr{
 	int max_times;
 	double max_percent;
 	double percent;
+	double high_percent;
 	double lowwer;
 	int control;
 	std::string my_shop;
@@ -64,10 +65,12 @@ typedef struct _CPAttr{
 typedef struct _CPComplexAttr{
 	std::string ean;
 	double least_price;
+	double highest_price;
 	int max_times;
-	_CPComplexAttr(std::string ean = "", double least_price = 0, int max_times = 10){
+	_CPComplexAttr(std::string ean = "", double least_price = 0, double highest_price = 0, int max_times = 10){
 		this->ean = ean;
 		this->least_price = least_price;
+		this->highest_price = highest_price;
 		this->max_times = max_times;
 	}
 }CPComplexAttr;

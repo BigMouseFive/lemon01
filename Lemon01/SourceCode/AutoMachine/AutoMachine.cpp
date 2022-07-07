@@ -279,8 +279,10 @@ void AutoMachine::UpdateAttr(CPAttr& attr, std::vector<CPComplexAttr>& vec){
 		eans.push_back(it->ean);
 		if (iter != cpComplexAttr.end()){
 			if (iter->second.least_price != it->least_price ||
+				iter->second.highest_price != it->highest_price ||
 				iter->second.max_times != it->max_times){
 				iter->second.least_price = it->least_price;
+				iter->second.highest_price = it->highest_price;
 				iter->second.max_times = it->max_times;
 				DataManager::GetInstance()->AddCPComplexAttr(iter->second, _name);
 			}

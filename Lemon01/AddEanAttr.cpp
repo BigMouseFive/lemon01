@@ -6,6 +6,7 @@ AddEanAttr::AddEanAttr(CPComplexAttr attr, QWidget *parent)
 	ui.setupUi(this);
 	ui.ean->setText(QString::fromStdString(attr.ean));
 	ui.leastPrice->setValue(attr.least_price);
+	ui.highestPrice->setValue(attr.highest_price);
 	ui.maxTimes->setValue(attr.max_times);
 }
 
@@ -17,6 +18,7 @@ AddEanAttr::~AddEanAttr()
 void AddEanAttr::GetEanAttr(CPComplexAttr& attr){
 	attr.ean = ui.ean->text().remove(QRegExp("\\s")).toStdString();
 	attr.least_price = ui.leastPrice->value();
+	attr.highest_price = ui.highestPrice->value();
 	attr.max_times = ui.maxTimes->value();
 }
 

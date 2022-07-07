@@ -19,25 +19,29 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
       <widget class="QLabel" name="labelEan">
        <property name="text">
         <string>SKU</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item>
       <widget class="QLineEdit" name="ean"/>
      </item>
-     <item row="1" column="0">
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
       <widget class="QLabel" name="labelLeastPrice">
        <property name="text">
         <string>最低价</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item>
       <widget class="QDoubleSpinBox" name="leastPrice">
        <property name="suffix">
         <string>SAR</string>
@@ -47,14 +51,39 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QLabel" name="labelHighestPrice_2">
+       <property name="text">
+        <string>最高价</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="highestPrice">
+       <property name="suffix">
+        <string>SAR</string>
+       </property>
+       <property name="maximum">
+        <double>19961117.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
       <widget class="QLabel" name="labelMaxTimes">
        <property name="text">
         <string>最大修改次数</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item>
       <widget class="QSpinBox" name="maxTimes">
        <property name="suffix">
         <string>次</string>
